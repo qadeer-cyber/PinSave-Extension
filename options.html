@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Affiliate Pin Saver — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+
+<div class="opts-wrap">
+
+  <!-- Header -->
+  <header class="opts-header">
+    <svg viewBox="0 0 24 24" class="opts-logo-icon" aria-hidden="true">
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+    </svg>
+    <div>
+      <h1>Affiliate Pin Saver</h1>
+      <p>Settings & Preferences</p>
+    </div>
+  </header>
+
+  <!-- Status -->
+  <div id="status" class="opts-status hidden"></div>
+
+  <!-- Form -->
+  <form id="settings-form" autocomplete="off">
+
+    <!-- Amazon -->
+    <section class="opts-section">
+      <h2>Amazon Associate</h2>
+
+      <div class="opts-field">
+        <label for="associate-tag">Amazon Associate Tag <span class="required">*</span></label>
+        <input id="associate-tag" type="text" placeholder="e.g. yourtag-20" required>
+        <p class="opts-hint">Found in your Amazon Associates dashboard. Example: <code>yourtag-20</code></p>
+      </div>
+    </section>
+
+    <!-- Pinterest -->
+    <section class="opts-section">
+      <h2>Pinterest Defaults</h2>
+
+      <div class="opts-field">
+        <label for="default-board">Default Pinterest Board Name</label>
+        <input id="default-board" type="text" placeholder="e.g. Amazon Finds">
+        <p class="opts-hint">Shown as a suggestion in the popup. You select the board on Pinterest itself.</p>
+      </div>
+
+      <div class="opts-field">
+        <label for="default-category">Default Product Category</label>
+        <select id="default-category">
+          <option value="">Auto-detect from caption</option>
+          <option value="tech">Tech Gadgets</option>
+          <option value="kitchen">Kitchen & Cooking</option>
+          <option value="home-organization">Home Organization</option>
+          <option value="beauty">Beauty & Skincare</option>
+          <option value="fashion">Fashion & Bags</option>
+          <option value="office">Home Office</option>
+          <option value="fitness">Fitness & Wellness</option>
+          <option value="art">Art & Crafts</option>
+          <option value="eco">Eco-Friendly</option>
+          <option value="kids">Kids & Toys</option>
+          <option value="pet">Pets</option>
+          <option value="general">General / Other</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Disclosure -->
+    <section class="opts-section">
+      <h2>Disclosure Text</h2>
+
+      <div class="opts-field">
+        <label for="default-disclosure">Default Affiliate Disclosure</label>
+        <textarea id="default-disclosure" rows="3" placeholder="#ad As an Amazon Associate, I earn from qualifying purchases."></textarea>
+      </div>
+
+      <div class="opts-field">
+        <label for="default-price-disclaimer">Default Price Disclaimer</label>
+        <textarea id="default-price-disclaimer" rows="2" placeholder="Prices, deals, and coupon codes may change or end at any time."></textarea>
+      </div>
+    </section>
+
+    <!-- Behaviour -->
+    <section class="opts-section">
+      <h2>Behaviour</h2>
+
+      <div class="opts-field opts-toggle">
+        <label for="hover-buttons">
+          <span>Enable hover "Pin Affiliate" button on Facebook images</span>
+          <input id="hover-buttons" type="checkbox">
+          <span class="opts-switch"></span>
+        </label>
+        <p class="opts-hint">Shows a small pin button when hovering over large product images on Facebook.</p>
+      </div>
+
+      <div class="opts-field opts-toggle">
+        <label for="fb-only-mode">
+          <span>Facebook-only mode (disable on other sites)</span>
+          <input id="fb-only-mode" type="checkbox" checked>
+          <span class="opts-switch"></span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Privacy note -->
+    <section class="opts-section opts-privacy">
+      <h2>Privacy</h2>
+      <p>All settings are stored locally in your browser using <code>chrome.storage.local</code>. No data is sent to any external server. Page content is processed locally.</p>
+    </section>
+
+    <!-- Save -->
+    <div class="opts-actions">
+      <button type="submit" class="opts-btn-primary">Save Settings</button>
+      <button type="button" id="btn-reset" class="opts-btn-secondary">Reset to Defaults</button>
+    </div>
+
+  </form>
+
+</div>
+
+<script src="options.js"></script>
+</body>
+</html>
