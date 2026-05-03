@@ -380,6 +380,50 @@ body {
   color: var(--gray-700);
 }
 
+/* ── Phase 4: Quality badge + warnings ──────────────────────── */
+.aps-q-quality-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 11px;
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+.aps-q-quality-badge.good { background: #e6f4ea; color: #1e7a36; border-color: #c6e6cf; }
+.aps-q-quality-badge.warn { background: #fff4e0; color: #b45309; border-color: #f3d8a8; }
+.aps-q-quality-badge.bad  { background: #fde8e8; color: #b3261e; border-color: #f3c4c4; }
+
+.aps-q-item-warnings {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.aps-q-item-warnings li {
+  font-size: 11px;
+  line-height: 1.35;
+  color: #b45309;
+  padding-left: 12px;
+  position: relative;
+}
+.aps-q-item-warnings li::before {
+  content: "•";
+  position: absolute;
+  left: 2px;
+  color: #b45309;
+}
+
 /* ── Utilities ───────────────────────────────────────────────── */
 .hidden { display: none !important; }
 

@@ -12,9 +12,10 @@
 
 // ─── State ─────────────────────────────────────────────────────────────────
 
-let allItems   = [];
-let editingId  = null;
-let confirmCb  = null;
+let allItems     = [];
+let editingId    = null;
+let confirmCb    = null;
+let templatesMap = null; // Loaded lazily from utils/templates.js.
 
 // ─── DOM refs ──────────────────────────────────────────────────────────────
 
@@ -36,6 +37,7 @@ const els = {
   filterStatus:     $('filter-status'),
   filterBoard:      $('filter-board'),
   filterSort:       $('filter-sort'),
+  filterQuality:    $('filter-quality'),
 
   // Grid + empty
   grid:             $('queue-grid'),
@@ -45,6 +47,7 @@ const els = {
   btnExportCsv:     $('btn-export-csv'),
   btnClearPosted:   $('btn-clear-posted'),
   btnClearAll:      $('btn-clear-all'),
+  btnAutofixAll:    $('btn-autofix-all'),
 
   // Edit modal
   editModal:        $('edit-modal'),
@@ -174,10 +177,11 @@ async function saveEdit() {
 // ─── Render ────────────────────────────────────────────────────────────────
 
 function applyFiltersAndSort(items) {
-  const q       = (els.filterSearch.value || '').trim().toLowerCase();
-  const status  = els.filterStatus.value;
-  const board   = els.filterBoard.value;
-  const sort    = els.filterSort.value;
+  const q        = (els.filterSearch.value || '').trim().toLowerCase();
+  const status   = els.filterStatus.value;
+  const board    = els.filterBoard.value;
+  const sort     = els.filterSort.value;
+  const quality  = els.filterQuality ? els.filterQuality.value : 'all';
 
   let out = items.slice();
 
@@ -196,6 +200,22 @@ function applyFiltersAndSort(items) {
   }
   if (board && board !== 'all') {
     out = out.filter(it => (it.suggestedBoard || '') === board);
+  }
+
+  // Phase 4 — Quality filter.
+  if (quality && quality !== 'all') {
+    out = out.filter(it => {
+      const score    = scorePinPackage(it);
+      const warnings = getQualityWarnings(it);
+      switch (quality) {
+        case 'ready':              return score >= QUALITY_GOOD_THRESHOLD;
+        case 'needs-review':       return score < QUALITY_GOOD_THRESHOLD;
+        case 'missing-affiliate':  return warnings.includes('Missing affiliate link') ||
+                                          warnings.includes('Affiliate link does not include tag=');
+        case 'missing-disclosure': return warnings.includes('Missing affiliate disclosure');
+        default:                   return true;
+      }
+    });
   }
 
   switch (sort) {
@@ -270,6 +290,18 @@ function renderItem(item) {
     ph.textContent = 'No image';
     thumbWrap.appendChild(ph);
   }
+
+  // Phase 4 — Quality badge overlay (top-right corner of the thumb).
+  const score   = scorePinPackage(item);
+  const qBadge  = document.createElement('span');
+  qBadge.className   = 'aps-q-quality-badge ' + (
+    score >= QUALITY_GOOD_THRESHOLD ? 'good' :
+    score >= QUALITY_NEEDS_REVIEW_THRESHOLD ? 'warn' : 'bad'
+  );
+  qBadge.textContent = `${score}/100`;
+  qBadge.title       = `Pin Quality Score: ${score}/100`;
+  thumbWrap.appendChild(qBadge);
+
   card.appendChild(thumbWrap);
 
   // ── body ──
@@ -300,6 +332,19 @@ function renderItem(item) {
   meta.innerHTML = metaParts.join(' · ');
   body.appendChild(meta);
 
+  // Phase 4 — inline warning list per item.
+  const warnings = getQualityWarnings(item);
+  if (warnings.length) {
+    const ul = document.createElement('ul');
+    ul.className = 'aps-q-item-warnings';
+    for (const w of warnings) {
+      const li = document.createElement('li');
+      li.textContent = w;
+      ul.appendChild(li);
+    }
+    body.appendChild(ul);
+  }
+
   card.appendChild(body);
 
   // ── actions ──
@@ -317,6 +362,7 @@ function renderItem(item) {
   actions.appendChild(btn('Open Pinterest',    'aps-q-btn-primary',   () => openPinterestForItem(item),       { wide: true }));
   actions.appendChild(btn('Copy Full Package', 'aps-q-btn-secondary', () => copyToClipboard(buildFullPinPackageFromItem(item), 'Full Pin Package')));
   actions.appendChild(btn('Copy Affiliate',    'aps-q-btn-secondary', () => copyToClipboard(item.affiliateUrl || '', 'Affiliate link')));
+  actions.appendChild(btn('Auto-Fix',          'aps-q-btn-secondary', () => autoFixItem(item.id)));
   actions.appendChild(btn('Edit',              'aps-q-btn-secondary', () => openEditModal(item)));
   actions.appendChild(btn('Mark Posted',       'aps-q-btn-secondary', () => markStatus(item.id, 'posted')));
   if (item.status !== 'skipped') {
@@ -356,6 +402,119 @@ async function render() {
   const frag = document.createDocumentFragment();
   for (const item of filtered) frag.appendChild(renderItem(item));
   els.grid.appendChild(frag);
+}
+
+// ─── Phase 4: Auto-Fix helpers ─────────────────────────────────────────────
+
+async function ensureTemplatesLoaded() {
+  if (templatesMap) return templatesMap;
+  if (typeof getSavedTemplates !== 'function') {
+    templatesMap = (typeof getDefaultTemplates === 'function') ? getDefaultTemplates() : {};
+    return templatesMap;
+  }
+  try {
+    templatesMap = await getSavedTemplates();
+  } catch {
+    templatesMap = (typeof getDefaultTemplates === 'function') ? getDefaultTemplates() : {};
+  }
+  return templatesMap;
+}
+
+function _categoryForItem(item) {
+  if (typeof detectProductCategory === 'function') {
+    try {
+      const cd = detectProductCategory(item.productTitle || '', item.facebookCaption || '');
+      if (cd && cd.category) return cd.category;
+    } catch { /* ignore */ }
+  }
+  return 'default';
+}
+
+function _altGeneratorForItem(item) {
+  if (typeof generateAltText !== 'function') return null;
+  return () => {
+    let cd = null;
+    if (typeof detectProductCategory === 'function') {
+      try {
+        cd = detectProductCategory(item.productTitle || '', item.facebookCaption || '');
+      } catch { /* ignore */ }
+    }
+    return generateAltText(item.productTitle || item.pinterestTitle || '', cd, item.facebookCaption || '');
+  };
+}
+
+async function autoFixItem(id) {
+  const list = await getQueue();
+  const item = list.find(it => it.id === id);
+  if (!item) {
+    showStatus('Pin not found in queue.', 'warning');
+    return;
+  }
+
+  const templates = await ensureTemplatesLoaded();
+  const template  = (typeof getTemplateForCategory === 'function')
+    ? getTemplateForCategory(_categoryForItem(item), templates)
+    : null;
+
+  let fixed = autoFixPinPackage(item, { template, altGenerator: _altGeneratorForItem(item) });
+  if (template && typeof applyTemplateToPin === 'function') {
+    fixed = applyTemplateToPin(fixed, template);
+  }
+
+  await updateQueueItem(id, {
+    pinterestTitle:       fixed.pinterestTitle,
+    pinterestDescription: fixed.pinterestDescription,
+    hashtags:             fixed.hashtags,
+    suggestedBoard:       fixed.suggestedBoard,
+    taggedTopics:         fixed.taggedTopics,
+    altText:              fixed.altText,
+  });
+  await render();
+  showStatus('Pin auto-fixed.', 'success');
+}
+
+async function autoFixAllDrafts() {
+  const list   = await getQueue();
+  const drafts = list.filter(it => it.status === 'draft');
+  if (!drafts.length) {
+    showStatus('No draft pins to auto-fix.', 'warning');
+    return;
+  }
+
+  openConfirm({
+    title:   'Auto-Fix all drafts?',
+    message: `Apply auto-fix to ${drafts.length} draft pin${drafts.length === 1 ? '' : 's'}? Posted and skipped pins will not be touched.`,
+    okLabel: 'Auto-Fix Drafts',
+    okClass: 'aps-q-btn-primary',
+  }, async () => {
+    const templates = await ensureTemplatesLoaded();
+    let fixedCount = 0;
+    for (const it of drafts) {
+      if (it.status !== 'draft') continue;
+
+      const template = (typeof getTemplateForCategory === 'function')
+        ? getTemplateForCategory(_categoryForItem(it), templates)
+        : null;
+
+      let fixed = autoFixPinPackage(it, { template, altGenerator: _altGeneratorForItem(it) });
+      if (template && typeof applyTemplateToPin === 'function') {
+        fixed = applyTemplateToPin(fixed, template);
+      }
+
+      await updateQueueItem(it.id, {
+        pinterestTitle:       fixed.pinterestTitle,
+        pinterestDescription: fixed.pinterestDescription,
+        hashtags:             fixed.hashtags,
+        suggestedBoard:       fixed.suggestedBoard,
+        taggedTopics:         fixed.taggedTopics,
+        altText:              fixed.altText,
+      });
+      fixedCount += 1;
+    }
+    closeConfirm();
+    await render();
+    showStatus(`Auto-fixed ${fixedCount} draft pin${fixedCount === 1 ? '' : 's'}.`, 'success');
+  });
 }
 
 // ─── Item actions ──────────────────────────────────────────────────────────
@@ -484,11 +643,13 @@ function bindEvents() {
   els.btnExportCsv  .addEventListener('click', exportCsv);
   els.btnClearPosted.addEventListener('click', clearPosted);
   els.btnClearAll   .addEventListener('click', clearAll);
+  if (els.btnAutofixAll) els.btnAutofixAll.addEventListener('click', autoFixAllDrafts);
 
   els.filterSearch.addEventListener('input',  render);
   els.filterStatus.addEventListener('change', render);
   els.filterBoard .addEventListener('change', render);
   els.filterSort  .addEventListener('change', render);
+  if (els.filterQuality) els.filterQuality.addEventListener('change', render);
 
   // Edit modal
   els.btnEditSave  .addEventListener('click', saveEdit);

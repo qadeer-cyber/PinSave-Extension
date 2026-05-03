@@ -96,6 +96,19 @@ const els = {
   btnDupView:          $('btn-dup-view'),
   btnDupCancel:        $('btn-dup-cancel'),
   btnDupSave:          $('btn-dup-save'),
+
+  // Phase 4 — Pin Quality
+  qualitySection:      $('quality-section'),
+  qualityBadge:        $('quality-badge'),
+  qualityWarnings:     $('quality-warnings'),
+  btnAutoFix:          $('btn-auto-fix'),
+
+  qualModal:           $('qual-modal'),
+  qualMessage:         $('qual-message'),
+  qualWarnings:        $('qual-warnings'),
+  btnQualCancel:       $('btn-qual-cancel'),
+  btnQualAutofix:      $('btn-qual-autofix'),
+  btnQualSave:         $('btn-qual-save'),
 };
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -256,9 +269,19 @@ async function init() {
   const stored = await chrome.storage.local.get([
     'associateTag', 'hoverButtonsEnabled', 'defaultBoard', 'defaultDisclosure',
     'defaultPriceDisclaimer', 'defaultCategory', 'facebookOnlyMode',
+    'qualityWarningsEnabled',
   ]);
   state.settings    = stored;
   state.associateTag = (stored.associateTag || '').trim();
+  state.qualityWarningsEnabled = stored.qualityWarningsEnabled !== false;
+
+  // Load saved templates (or defaults).
+  try {
+    state.templates = await getSavedTemplates();
+  } catch (e) {
+    console.warn('[AffiliatePin] templates load failed:', e);
+    state.templates = getDefaultTemplates();
+  }
 
   // Check if on Facebook
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -603,6 +626,7 @@ function regeneratePinterestContent() {
 
   updateCharCounts();
   updateCaptureStatus();
+  updateQualityUI();
 }
 
 function renderCaptionPreview() {
@@ -733,16 +757,43 @@ function bindEvents(tabId) {
   }
 
   // Live char counts + keep state.parsed in sync with edits
-  els.pinTitle.addEventListener('input', updateCharCounts);
+  els.pinTitle.addEventListener('input', () => {
+    updateCharCounts();
+    updateQualityUI();
+  });
   els.pinDesc.addEventListener('input', () => {
     updateCharCounts();
     if (state.parsed) state.parsed.pinterestDescription = els.pinDesc.value;
+    updateQualityUI();
   });
   els.pinHashtags.addEventListener('input', () => {
     if (state.parsed) state.parsed.hashtags = els.pinHashtags.value;
+    updateQualityUI();
   });
   els.pinAlt.addEventListener('input', () => {
     if (state.parsed) state.parsed.altText = els.pinAlt.value;
+    updateQualityUI();
+  });
+  els.suggestedBoard.addEventListener('input', updateQualityUI);
+  els.taggedTopics.addEventListener('input', updateQualityUI);
+
+  // Phase 4 — Auto-Fix button.
+  if (els.btnAutoFix) {
+    els.btnAutoFix.addEventListener('click', () => applyAutoFixToFields(true));
+  }
+
+  // Phase 4 — Quality save-warning modal buttons.
+  if (els.btnQualCancel)  els.btnQualCancel .addEventListener('click', closeQualModal);
+  if (els.btnQualAutofix) els.btnQualAutofix.addEventListener('click', () => {
+    applyAutoFixToFields(true);
+    closeQualModal();
+  });
+  if (els.btnQualSave)    els.btnQualSave   .addEventListener('click', () => {
+    closeQualModal();
+    trySaveCurrentToQueue(false, /*skipQualityCheck=*/true);
+  });
+  document.querySelectorAll('#qual-modal [data-close-qual]').forEach(el => {
+    el.addEventListener('click', closeQualModal);
   });
 
   // Change image — re-show the picker so the user can override.
@@ -833,7 +884,7 @@ function buildQueuePayloadFromState() {
   };
 }
 
-async function trySaveCurrentToQueue(allowDuplicate) {
+async function trySaveCurrentToQueue(allowDuplicate, skipQualityCheck) {
   const payload = buildQueuePayloadFromState();
 
   // Minimal validation — image is the only hard requirement; everything
@@ -845,6 +896,16 @@ async function trySaveCurrentToQueue(allowDuplicate) {
   if (!payload.pinterestTitle && !payload.productTitle) {
     showStatus('Generate a Pin Package first (click Re-generate).', 'warning');
     return;
+  }
+
+  // Phase 4 — warn before saving low-quality pins (when the user has
+  // quality warnings enabled, default on).
+  if (!skipQualityCheck && state.qualityWarningsEnabled !== false) {
+    const score = scorePinPackage(payload);
+    if (score < QUALITY_NEEDS_REVIEW_THRESHOLD) {
+      openQualModal(payload);
+      return;
+    }
   }
 
   try {
@@ -871,6 +932,112 @@ function openDupModal(existing) {
 
 function closeDupModal() {
   els.dupModal.classList.add('hidden');
+}
+
+// ─── Phase 4: Pin Quality UI ───────────────────────────────────────────────
+
+function _activeTemplate() {
+  if (!state.templates || typeof getTemplateForCategory !== 'function') return null;
+  const cat = (state.parsed && state.parsed.category)
+           || (state.settings && state.settings.defaultCategory)
+           || 'default';
+  return getTemplateForCategory(cat, state.templates);
+}
+
+function updateQualityUI() {
+  if (!els.qualityBadge) return;
+  if (state.qualityWarningsEnabled === false) {
+    els.qualitySection && els.qualitySection.classList.add('hidden');
+    return;
+  }
+  els.qualitySection && els.qualitySection.classList.remove('hidden');
+
+  const payload = buildQueuePayloadFromState();
+  const score    = scorePinPackage(payload);
+  const warnings = getQualityWarnings(payload);
+
+  els.qualityBadge.textContent = `${score}/100`;
+  els.qualityBadge.className   = 'aps-quality-badge ' + (
+    score >= QUALITY_GOOD_THRESHOLD ? 'good' :
+    score >= QUALITY_NEEDS_REVIEW_THRESHOLD ? 'warn' : 'bad'
+  );
+
+  els.qualityWarnings.innerHTML = '';
+  for (const w of warnings) {
+    const li = document.createElement('li');
+    li.textContent = w;
+    els.qualityWarnings.appendChild(li);
+  }
+}
+
+function applyAutoFixToFields(showStatusToast) {
+  const payload = buildQueuePayloadFromState();
+  const template = _activeTemplate();
+
+  // Use the existing alt-text generator when available so generated alt
+  // text matches the rest of the extension's tone.
+  const altGen = (typeof generateAltText === 'function' && state.parsed)
+    ? (pin) => generateAltText(
+        pin.productTitle || state.parsed.productTitle || '',
+        {
+          category:       (state.parsed && state.parsed.category)       || 'general',
+          suggestedBoard: (state.parsed && state.parsed.suggestedBoard) || '',
+          taggedTopics:   (state.parsed && state.parsed.taggedTopics)   || [],
+          hashtags:       (state.parsed && state.parsed.hashtags)       || '',
+          useCases:       (template && template.useCases)               || ['everyday use'],
+          seoPhrase:      (state.parsed && state.parsed.seoPhrase)      || '',
+        },
+        state.caption || ''
+      )
+    : null;
+
+  let fixed = autoFixPinPackage(payload, { template, altGenerator: altGen });
+
+  // Then layer template defaults for any *still*-empty fields (board,
+  // topics, etc).
+  if (template) fixed = applyTemplateToPin(fixed, template);
+
+  // Push back into the form.
+  if (els.pinTitle)       els.pinTitle.value       = fixed.pinterestTitle       || els.pinTitle.value;
+  if (els.pinDesc)        els.pinDesc.value        = fixed.pinterestDescription || els.pinDesc.value;
+  if (els.pinHashtags)    els.pinHashtags.value    = fixed.hashtags             || els.pinHashtags.value;
+  if (els.suggestedBoard) els.suggestedBoard.value = fixed.suggestedBoard       || els.suggestedBoard.value;
+  if (els.taggedTopics)   els.taggedTopics.value   = fixed.taggedTopics         || els.taggedTopics.value;
+  if (els.pinAlt)         els.pinAlt.value         = fixed.altText              || els.pinAlt.value;
+
+  // Keep state.parsed in sync with the visible fields.
+  if (state.parsed) {
+    state.parsed.pinterestTitle       = els.pinTitle.value;
+    state.parsed.pinterestDescription = els.pinDesc.value;
+    state.parsed.hashtags             = els.pinHashtags.value;
+    state.parsed.suggestedBoard       = els.suggestedBoard.value;
+    state.parsed.taggedTopics         = els.taggedTopics.value;
+    state.parsed.altText              = els.pinAlt.value;
+  }
+
+  updateCharCounts();
+  updateQualityUI();
+  if (showStatusToast) showStatus('Auto-Fix applied to pin copy.', 'success');
+}
+
+function openQualModal(payload) {
+  const warnings = getQualityWarnings(payload || buildQueuePayloadFromState());
+  if (els.qualWarnings) {
+    els.qualWarnings.innerHTML = '';
+    for (const w of warnings) {
+      const li = document.createElement('li');
+      li.textContent = w;
+      els.qualWarnings.appendChild(li);
+    }
+  }
+  if (els.qualMessage) {
+    els.qualMessage.textContent = 'This pin has quality warnings. Save anyway?';
+  }
+  if (els.qualModal) els.qualModal.classList.remove('hidden');
+}
+
+function closeQualModal() {
+  if (els.qualModal) els.qualModal.classList.add('hidden');
 }
 
 function openQueueDashboard() {

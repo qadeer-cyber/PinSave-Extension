@@ -222,4 +222,23 @@ body {
 }
 .opts-btn-secondary:hover { background: var(--gray-100); }
 
+.opts-actions-inline { margin-top: 6px; }
+.opts-templates-tabs {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin: 8px 0 12px; padding: 4px;
+  background: var(--white); border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+}
+.opts-templates-tab {
+  padding: 6px 10px; font-size: 12px; font-weight: 600;
+  background: transparent; color: var(--gray-700);
+  border: 1px solid transparent; border-radius: 999px; cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.opts-templates-tab:hover { background: var(--gray-100); }
+.opts-templates-tab.active {
+  background: var(--red); color: var(--white); border-color: var(--red-dark);
+}
+.opts-templates-editor .opts-field { margin-bottom: 12px; }
+
 .hidden { display: none !important; }

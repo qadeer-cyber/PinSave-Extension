@@ -180,6 +180,18 @@
       <p class="aps-hint">Edit the caption (or paste your own) then click <strong>Re-generate Pin Package</strong> below to refresh the title, description, hashtags, board, topics and alt text.</p>
     </section>
 
+    <!-- Phase 4: Pin Quality Score -->
+    <section id="quality-section" class="aps-section aps-quality">
+      <div class="aps-section-header">
+        <h2>Pin Quality</h2>
+        <span id="quality-badge" class="aps-quality-badge" aria-live="polite">—/100</span>
+      </div>
+      <ul id="quality-warnings" class="aps-quality-warnings" aria-live="polite"></ul>
+      <div class="aps-row-actions">
+        <button id="btn-auto-fix" class="aps-small-btn" title="Apply Phase 4 auto-fix to this pin">Auto-Fix Pin Copy</button>
+      </div>
+    </section>
+
     <!-- Actions -->
     <section class="aps-section aps-actions">
       <button id="btn-regenerate" class="aps-btn-secondary" title="Re-run Pinterest content generation against the current caption + Amazon URL">
@@ -224,10 +236,27 @@
     <p>Please navigate to a<br><strong>Facebook group or post</strong><br>to use this extension.</p>
   </div>
 
+  <!-- Save-warning dialog (Phase 4 — quality below threshold) -->
+  <div id="qual-modal" class="aps-modal hidden" role="dialog" aria-modal="true" aria-labelledby="qual-title">
+    <div class="aps-modal-backdrop" data-close-qual></div>
+    <div class="aps-modal-card">
+      <h3 id="qual-title">Low quality pin</h3>
+      <p id="qual-message">This pin has quality warnings. Save anyway?</p>
+      <ul id="qual-warnings" class="aps-quality-warnings"></ul>
+      <div class="aps-modal-actions">
+        <button id="btn-qual-cancel"  class="aps-small-btn" data-close-qual>Cancel</button>
+        <button id="btn-qual-autofix" class="aps-small-btn">Auto-Fix</button>
+        <button id="btn-qual-save"    class="aps-btn-secondary">Save Anyway</button>
+      </div>
+    </div>
+  </div>
+
   <script src="utils/amazon.js"></script>
   <script src="utils/textParser.js"></script>
   <script src="utils/pinterest.js"></script>
   <script src="utils/queue.js"></script>
+  <script src="utils/templates.js"></script>
+  <script src="utils/quality.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
