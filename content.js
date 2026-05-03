@@ -351,7 +351,10 @@
     }
 
     return {
-      src,
+      mode: 'quick',
+      source: 'Quick Capture',
+      selectedImageUrl: src,
+      src, // legacy compatibility
       currentSrc,
       caption,
       amazonUrls,
@@ -359,7 +362,8 @@
       // Mark this payload as a single-image quick capture so the popup never
       // pulls a full page image gallery on top of the user's selected image.
       singleImage: true,
-      capturedAt: Date.now(),
+      sourceFacebookUrl: location.href,
+      capturedAt: new Date().toISOString(),
     };
   }
 
@@ -387,9 +391,9 @@
         // here. If a future caller wants a per-image label, route it through
         // safeText() so missing values fall back to "Pin Affiliate" and we
         // never render the literal string "undefined".
-        btn.textContent = safeText(undefined, 'Pin Affiliate');
-        btn.title      = safeText(undefined, 'Save this image as affiliate pin');
-        btn.setAttribute('aria-label', safeText(undefined, 'Pin Affiliate'));
+        btn.textContent = safeText('Pin Affiliate', 'Pin Affiliate');
+        btn.title      = safeText('Pin Affiliate', 'Pin Affiliate');
+        btn.setAttribute('aria-label', safeText('Pin Affiliate', 'Pin Affiliate'));
         btn.type       = 'button';
 
         // Bind the actual <img> element so the handler always knows which
