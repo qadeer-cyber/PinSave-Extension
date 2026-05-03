@@ -18,7 +18,9 @@ let state = {
   parsed:         null,   // result from parseCaption()
   associateTag:   '',     // loaded from storage
   settings:       {},     // all settings from chrome.storage.local
-  quickCapture:   null,   // { src, currentSrc, caption, amazonUrls, capturedAt }
+  quickCapture:   null,   // { src, currentSrc, caption, amazonUrls, containerKind, capturedAt }
+  source:         'picker', // 'quick-capture' | 'picker' | 'manual'
+  containerKind:  null,   // 'article' | 'feed' | 'scored' | 'page-fallback' | null
 };
 
 // ─── DOM References ────────────────────────────────────────────────────────
@@ -39,11 +41,22 @@ const els = {
   selectedPreviewLink: $('selected-preview-link'),
   quickCaptureHint:    $('quick-capture-hint'),
 
+  amazonLinkPickerRow: $('amazon-link-picker-row'),
+  amazonLinkPicker:    $('amazon-link-picker'),
   amazonLinksArea:     $('amazon-links-area'),
   noAmazonMsg:         $('no-amazon-msg'),
   manualAmazonUrl:     $('manual-amazon-url'),
   affiliateUrl:        $('affiliate-url'),
   affiliateWarning:    $('affiliate-warning'),
+  imageWarning:        $('image-warning'),
+
+  // Capture status diagnostics (Phase 2.1)
+  capSource:           $('cap-source'),
+  capImage:            $('cap-image'),
+  capCaption:          $('cap-caption'),
+  capLinks:            $('cap-links'),
+  capAffiliate:        $('cap-affiliate'),
+  capWarning:          $('cap-warning'),
 
   pinTitle:            $('pin-title'),
   pinDesc:             $('pin-description'),
@@ -61,6 +74,7 @@ const els = {
   btnRefresh:          $('btn-refresh'),
   btnOptions:          $('btn-options'),
   btnChangeImage:      $('btn-change-image'),
+  btnCopyImageUrl:     $('btn-copy-image-url'),
   btnCopyTitle:        $('btn-copy-title'),
   btnCopyDescription:  $('btn-copy-description'),
   btnCopyHashtags:     $('btn-copy-hashtags'),
@@ -70,6 +84,7 @@ const els = {
   btnCopyAffiliate:    $('btn-copy-affiliate'),
   btnCopyCaption:      $('btn-copy-caption'),
   btnCopyFull:         $('btn-copy-full'),
+  btnRegenerate:       $('btn-regenerate'),
   btnOpenPinterest:    $('btn-open-pinterest'),
 };
 
@@ -109,6 +124,121 @@ function updateCharCounts() {
   els.descChars.style.color  = desc.length  > 480 ? '#c62828' : '#767676';
 }
 
+// ─── Capture Status (Phase 2.1) ────────────────────────────────────────────
+
+function setCapValue(el, text, kind) {
+  if (!el) return;
+  el.textContent = text;
+  el.className = 'aps-cap-value' + (kind ? ` ${kind}` : '');
+}
+
+/**
+ * Refresh the diagnostics panel from current state. Called after every
+ * meaningful state change (scan, image select, link select, regenerate).
+ */
+function updateCaptureStatus() {
+  // Source
+  const srcLabel = state.source === 'quick-capture' ? 'Quick Capture'
+                 : state.source === 'manual'        ? 'Manual'
+                 : 'Image Picker';
+  setCapValue(els.capSource, srcLabel, state.source === 'quick-capture' ? 'ok' : 'muted');
+
+  // Image
+  if (state.selectedSrc) {
+    setCapValue(els.capImage, 'Selected', 'ok');
+  } else {
+    setCapValue(els.capImage, 'Missing', 'missing');
+  }
+
+  // Caption
+  const captionLen = (state.caption || '').trim().length;
+  if (captionLen >= 40) {
+    let label = 'Extracted';
+    let kind  = 'ok';
+    if (state.containerKind === 'page-fallback') {
+      label = 'Extracted (page fallback)';
+      kind  = 'warn';
+    } else if (state.source === 'manual') {
+      label = 'Manually edited';
+      kind  = 'ok';
+    }
+    setCapValue(els.capCaption, label, kind);
+  } else if (captionLen > 0) {
+    setCapValue(els.capCaption, 'Very short', 'warn');
+  } else {
+    setCapValue(els.capCaption, 'Missing', 'missing');
+  }
+
+  // Amazon links
+  const n = state.amazonUrls.length;
+  if (n === 0) {
+    setCapValue(els.capLinks, '0 (paste manual URL)', 'missing');
+  } else if (n === 1) {
+    setCapValue(els.capLinks, '1 link', 'ok');
+  } else {
+    setCapValue(els.capLinks, `${n} links — pick one`, 'warn');
+  }
+
+  // Affiliate
+  if (state.affiliateUrl) {
+    setCapValue(els.capAffiliate, 'Generated', 'ok');
+  } else if (!state.associateTag) {
+    setCapValue(els.capAffiliate, 'Set Associate tag in Options', 'missing');
+  } else if (n === 0 && !els.manualAmazonUrl.value.trim()) {
+    setCapValue(els.capAffiliate, 'Needs Amazon URL', 'warn');
+  } else {
+    setCapValue(els.capAffiliate, 'Pending', 'warn');
+  }
+
+  // Aggregate warning line
+  const warnings = [];
+  if (state.containerKind === 'page-fallback') {
+    warnings.push('Caption came from page-wide fallback — verify it matches the post.');
+  }
+  if (state.source === 'quick-capture' && captionLen < 40 && !state.amazonUrls.length) {
+    warnings.push('Quick capture got very little text. Re-pick image or paste caption manually.');
+  }
+  if (warnings.length) {
+    els.capWarning.textContent = warnings.join(' ');
+    els.capWarning.classList.remove('hidden');
+  } else {
+    els.capWarning.classList.add('hidden');
+  }
+}
+
+// ─── Image URL warnings (Phase 2.1) ────────────────────────────────────────
+
+function evaluateImageUrl(url) {
+  if (!url) return { ok: false, message: 'No image selected.' };
+
+  if (/^blob:/i.test(url)) {
+    return { ok: false, message: 'Image is a blob: URL — Pinterest cannot load it. Use Change Image or upload manually.' };
+  }
+  if (/^data:/i.test(url)) {
+    return { ok: false, message: 'Image is a data: URL — Pinterest cannot load it. Use Change Image or upload manually.' };
+  }
+  if (url.length < 24) {
+    return { ok: false, message: 'Image URL looks suspiciously short. It may not load on Pinterest.' };
+  }
+  // Facebook CDN URLs can include short-lived signatures (oh=, oe=).
+  // They often work for a few hours but can expire — warn but don't block.
+  if (/scontent[^.]*\.fbcdn\.net|fbsbx\.com/i.test(url) && /[?&](oh|oe|_nc_ohc|_nc_sid)=/i.test(url)) {
+    return { ok: true, message: 'Facebook CDN URL — usually works, but the signed link can expire. Publish soon, or use Change Image / upload manually if Pinterest rejects it.' };
+  }
+  return { ok: true, message: '' };
+}
+
+function refreshImageWarning() {
+  if (!els.imageWarning) return;
+  const evald = evaluateImageUrl(state.selectedSrc || '');
+  if (evald.message) {
+    els.imageWarning.textContent = evald.message;
+    els.imageWarning.classList.remove('hidden');
+  } else {
+    els.imageWarning.classList.add('hidden');
+  }
+}
+
 // ─── Init ──────────────────────────────────────────────────────────────────
 
 async function init() {
@@ -145,9 +275,14 @@ async function init() {
   await chrome.storage.session.remove(['quickCapture', 'hoverSelectedSrc']);
 
   if (quickCap && quickCap.src) {
-    state.quickCapture = quickCap;
-    state.caption      = quickCap.caption || '';
-    state.amazonUrls   = Array.isArray(quickCap.amazonUrls) ? quickCap.amazonUrls : [];
+    state.quickCapture  = quickCap;
+    state.caption       = quickCap.caption || '';
+    state.amazonUrls    = Array.isArray(quickCap.amazonUrls) ? quickCap.amazonUrls : [];
+    state.source        = 'quick-capture';
+    state.containerKind = quickCap.containerKind || null;
+  } else {
+    state.source        = 'picker';
+    state.containerKind = null;
   }
 
   const preferSrc = (quickCap && quickCap.src) || legacySrc || null;
@@ -277,6 +412,7 @@ function selectImage(imgData, opts = {}) {
   els.selectedPreview.src          = imgData.src;
   els.selectedPreviewLink.href     = imgData.src;
   els.previewSection.classList.remove('hidden');
+  refreshImageWarning();
 
   // Re-extract caption near this image if appropriate (skip when the
   // quick-capture flow already gave us the right caption).
@@ -290,8 +426,9 @@ function selectImage(imgData, opts = {}) {
     chrome.tabs.sendMessage(tab.id, { action: 'extractCaption', nearSrc: imgData.src })
       .then(resp => {
         if (resp?.success && resp.caption) {
-          state.caption    = resp.caption;
-          state.amazonUrls = resp.amazonUrls || [];
+          state.caption       = resp.caption;
+          state.amazonUrls    = resp.amazonUrls || [];
+          state.containerKind = resp.containerKind || null;
           renderCaptionPreview();
           renderAmazonLinks();
           if (state.amazonUrls.length > 0) selectAmazonUrl(state.amazonUrls[0]);
@@ -307,8 +444,10 @@ function selectImage(imgData, opts = {}) {
 // ─── Amazon Links Rendering ────────────────────────────────────────────────
 
 function renderAmazonLinks() {
-  // Clear previous options (keep no-amazon-msg and manual input)
+  // Clear previous radio rows + dropdown options.
   els.amazonLinksArea.querySelectorAll('.aps-amazon-link-option').forEach(el => el.remove());
+  els.amazonLinkPicker.innerHTML = '';
+  els.amazonLinkPickerRow.classList.add('hidden');
   els.noAmazonMsg.classList.add('hidden');
 
   if (state.amazonUrls.length === 0) {
@@ -316,30 +455,42 @@ function renderAmazonLinks() {
     return;
   }
 
+  // 2+ links → use a real <select> dropdown so the user can pick the right
+  // product link instead of clicking through tiny radios.
   if (state.amazonUrls.length > 1) {
-    showStatus('Multiple Amazon links found. Select one.', 'info');
+    showStatus('Multiple Amazon links found. Pick the right one in the dropdown.', 'info');
+    els.amazonLinkPickerRow.classList.remove('hidden');
+
+    state.amazonUrls.forEach((url, i) => {
+      const opt = document.createElement('option');
+      opt.value       = url;
+      opt.textContent = `${i + 1}. ${url}`;
+      if (i === 0) opt.selected = true;
+      els.amazonLinkPicker.appendChild(opt);
+    });
+    return;
   }
 
-  state.amazonUrls.forEach((url, i) => {
-    const wrap = document.createElement('label');
-    wrap.className = 'aps-amazon-link-option';
-    wrap.dataset.url = url;
+  // Single link → keep the original radio row for visibility.
+  const url = state.amazonUrls[0];
+  const wrap = document.createElement('label');
+  wrap.className = 'aps-amazon-link-option active';
+  wrap.dataset.url = url;
 
-    const radio = document.createElement('input');
-    radio.type  = 'radio';
-    radio.name  = 'amazon-url';
-    radio.value = url;
-    if (i === 0) radio.checked = true;
+  const radio = document.createElement('input');
+  radio.type    = 'radio';
+  radio.name    = 'amazon-url';
+  radio.value   = url;
+  radio.checked = true;
 
-    const span = document.createElement('span');
-    span.textContent = url;
+  const span = document.createElement('span');
+  span.textContent = url;
 
-    wrap.appendChild(radio);
-    wrap.appendChild(span);
-    wrap.addEventListener('click', () => selectAmazonUrl(url));
+  wrap.appendChild(radio);
+  wrap.appendChild(span);
+  wrap.addEventListener('click', () => selectAmazonUrl(url));
 
-    els.amazonLinksArea.insertBefore(wrap, els.noAmazonMsg);
-  });
+  els.amazonLinksArea.insertBefore(wrap, els.noAmazonMsg);
 }
 
 async function selectAmazonUrl(rawUrl) {
@@ -352,6 +503,12 @@ async function selectAmazonUrl(rawUrl) {
     el.classList.toggle('active', isMe);
     if (radio) radio.checked = isMe;
   });
+
+  // Keep dropdown in sync if it exists.
+  if (els.amazonLinkPicker && els.amazonLinkPicker.value !== rawUrl) {
+    const match = Array.from(els.amazonLinkPicker.options).find(o => o.value === rawUrl);
+    if (match) els.amazonLinkPicker.value = rawUrl;
+  }
 
   await resolveAndConvert(rawUrl);
 }
@@ -433,6 +590,7 @@ function regeneratePinterestContent() {
   els.taggedTopics.value   = Array.isArray(taggedTopics) ? taggedTopics.join(', ') : '';
 
   updateCharCounts();
+  updateCaptureStatus();
 }
 
 function renderCaptionPreview() {
@@ -478,8 +636,11 @@ function openPinterest() {
     return;
   }
 
-  // Pre-copy Full Pin Package so user can paste any field on Pinterest.
-  navigator.clipboard.writeText(buildFullPinPackage()).catch(() => {});
+  // Auto-copy the Full Pin Package so the user can paste any field on
+  // Pinterest even if Pinterest ignores ?description= URL params.
+  const fullPin = buildFullPinPackage();
+  let copied = false;
+  navigator.clipboard.writeText(fullPin).then(() => { copied = true; }).catch(() => {});
 
   const pinterestUrl = buildPinterestCreateUrl({
     imageUrl,
@@ -489,7 +650,14 @@ function openPinterest() {
 
   chrome.runtime.sendMessage({ action: 'openTab', url: pinterestUrl })
     .then(() => {
-      showStatus('Pinterest opened. Pin Package copied — paste & publish manually.', 'success');
+      // Re-check copy state after the async clipboard call resolved.
+      setTimeout(() => {
+        if (copied) {
+          showStatus('Pinterest opened. Full pin package copied to clipboard.', 'success');
+        } else {
+          showStatus('Pinterest opened. Use Copy Full Pin Package, then paste manually.', 'info');
+        }
+      }, 50);
     })
     .catch(() => {
       showStatus('Could not open Pinterest. Copy the affiliate link and open Pinterest manually.', 'error');
@@ -501,7 +669,9 @@ function openPinterest() {
 function bindEvents(tabId) {
 
   els.btnRefresh.addEventListener('click', () => {
-    state.quickCapture = null;
+    state.quickCapture  = null;
+    state.source        = 'picker';
+    state.containerKind = null;
     scanPage(tabId, null);
   });
 
@@ -509,11 +679,46 @@ function bindEvents(tabId) {
     chrome.runtime.openOptionsPage();
   });
 
-  // Manual Amazon URL
+  // Manual Amazon URL — Phase 2.1 fallback when Facebook detection fails.
+  // Switches the source label to 'manual' so Capture Status shows the
+  // user is overriding.
   els.manualAmazonUrl.addEventListener('change', async () => {
     const val = els.manualAmazonUrl.value.trim();
-    if (val) await resolveAndConvert(val);
+    if (!val) return;
+    state.source = 'manual';
+    await resolveAndConvert(val);
   });
+
+  // Multiple-link dropdown selector (Phase 2.1).
+  if (els.amazonLinkPicker) {
+    els.amazonLinkPicker.addEventListener('change', async () => {
+      const val = els.amazonLinkPicker.value;
+      if (val) await selectAmazonUrl(val);
+    });
+  }
+
+  // Editable caption — track edits so the user can re-generate against
+  // their own text when Facebook extraction failed.
+  els.captionPreview.addEventListener('input', () => {
+    state.caption = els.captionPreview.value;
+    state.source  = 'manual';
+    updateCaptureStatus();
+  });
+
+  // Re-generate Pin Package (Phase 2.1).
+  if (els.btnRegenerate) {
+    els.btnRegenerate.addEventListener('click', async () => {
+      // If the user typed a manual Amazon URL, prefer it over auto-detection.
+      const manual = els.manualAmazonUrl.value.trim();
+      if (manual) {
+        state.source = 'manual';
+        await resolveAndConvert(manual);
+      } else {
+        regeneratePinterestContent();
+      }
+      showStatus('Pin Package regenerated from current caption + Amazon URL.', 'success');
+    });
+  }
 
   // Live char counts + keep state.parsed in sync with edits
   els.pinTitle.addEventListener('input', updateCharCounts);
@@ -533,8 +738,17 @@ function bindEvents(tabId) {
     els.btnChangeImage.addEventListener('click', () => {
       els.imagePickerSection.classList.remove('hidden');
       els.quickCaptureHint.classList.add('hidden');
+      state.source = 'picker';
+      updateCaptureStatus();
       // Smooth scroll the picker into view.
       els.imagePickerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  // Copy Image URL (Phase 2.1)
+  if (els.btnCopyImageUrl) {
+    els.btnCopyImageUrl.addEventListener('click', () => {
+      copyToClipboard(state.selectedSrc || '', 'Image URL');
     });
   }
 

@@ -31,6 +31,21 @@
   <!-- ── Main Content ───────────────────────────────────────── -->
   <main id="main-content" class="hidden">
 
+    <!-- Capture Status (Phase 2.1 diagnostics) -->
+    <section id="capture-status-section" class="aps-section aps-capture-status">
+      <div class="aps-section-header">
+        <h2>Capture Status</h2>
+      </div>
+      <ul class="aps-capture-list">
+        <li><span class="aps-cap-label">Source</span>     <span id="cap-source"   class="aps-cap-value">—</span></li>
+        <li><span class="aps-cap-label">Image</span>      <span id="cap-image"    class="aps-cap-value">—</span></li>
+        <li><span class="aps-cap-label">Caption</span>    <span id="cap-caption"  class="aps-cap-value">—</span></li>
+        <li><span class="aps-cap-label">Amazon links</span><span id="cap-links"   class="aps-cap-value">—</span></li>
+        <li><span class="aps-cap-label">Affiliate</span>  <span id="cap-affiliate" class="aps-cap-value">—</span></li>
+      </ul>
+      <p id="cap-warning" class="aps-warning hidden"></p>
+    </section>
+
     <!-- Step 1: Image Grid (fallback / when no quick-capture) -->
     <section id="image-picker-section" class="aps-section">
       <div class="aps-section-header">
@@ -45,25 +60,36 @@
     <section id="preview-section" class="aps-section hidden">
       <div class="aps-section-header">
         <h2>Selected Image</h2>
-        <button id="btn-change-image" class="aps-small-btn" title="Pick a different image">Change Image</button>
+        <div class="aps-section-actions">
+          <button id="btn-copy-image-url" class="aps-small-btn" title="Copy image URL">Copy URL</button>
+          <button id="btn-change-image"   class="aps-small-btn" title="Pick a different image">Change Image</button>
+        </div>
       </div>
       <div class="aps-preview-wrap">
         <img id="selected-preview" src="" alt="Selected product image" class="aps-preview-img">
         <a id="selected-preview-link" href="#" target="_blank" class="aps-preview-link">Open image ↗</a>
       </div>
       <p id="quick-capture-hint" class="aps-hint hidden">Auto-selected from your hover click on Facebook.</p>
+      <p id="image-warning"      class="aps-warning hidden"></p>
     </section>
 
     <!-- Step 2: Amazon Links -->
     <section class="aps-section">
       <h2>Amazon Link</h2>
+
+      <!-- Dropdown shown only when 2+ Amazon links were found -->
+      <div id="amazon-link-picker-row" class="aps-field-row hidden">
+        <label for="amazon-link-picker" class="aps-label">Detected Amazon Links</label>
+        <select id="amazon-link-picker" class="aps-input"></select>
+      </div>
+
       <div id="amazon-links-area">
-        <!-- Populated dynamically -->
+        <!-- Single-link rows populated dynamically (kept as radios for ≤1 link) -->
         <p id="no-amazon-msg" class="aps-hint hidden">No Amazon link detected. Paste it below.</p>
       </div>
 
       <div class="aps-field-row">
-        <label for="manual-amazon-url" class="aps-label">Manual Amazon URL (optional)</label>
+        <label for="manual-amazon-url" class="aps-label">Manual Amazon URL (paste fallback)</label>
         <input id="manual-amazon-url" type="url" placeholder="https://www.amazon.com/dp/..." class="aps-input">
       </div>
 
@@ -144,17 +170,21 @@
       </div>
     </section>
 
-    <!-- Step 4: Caption Preview -->
+    <!-- Step 4: Caption (editable for manual fallback) -->
     <section class="aps-section">
       <div class="aps-section-header">
-        <h2>Extracted Facebook Caption</h2>
+        <h2>Facebook Caption (editable)</h2>
         <button id="btn-copy-caption" class="aps-small-btn" title="Copy Facebook caption">Copy</button>
       </div>
-      <textarea id="caption-preview" rows="5" readonly class="aps-textarea aps-readonly" placeholder="Caption extracted from Facebook post…"></textarea>
+      <textarea id="caption-preview" rows="5" class="aps-textarea" placeholder="Caption extracted from Facebook post — edit or paste your own, then click Re-generate."></textarea>
+      <p class="aps-hint">Edit the caption (or paste your own) then click <strong>Re-generate Pin Package</strong> below to refresh the title, description, hashtags, board, topics and alt text.</p>
     </section>
 
     <!-- Actions -->
     <section class="aps-section aps-actions">
+      <button id="btn-regenerate" class="aps-btn-secondary" title="Re-run Pinterest content generation against the current caption + Amazon URL">
+        Re-generate Pin Package
+      </button>
       <button id="btn-copy-full" class="aps-btn-secondary" title="Copy the full Pin Package (title + description + hashtags + board + topics + alt text + affiliate link)">
         Copy Full Pin Package
       </button>
