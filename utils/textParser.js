@@ -183,6 +183,35 @@ const DEFAULT_CATEGORY_DATA = {
   seoPhrase:      'Amazon Find for Everyday Use',
 };
 
+
+const FACEBOOK_METADATA_RE = /\b(author|admin|group expert|all[- ]star contributor|top contributor|contributor|reply|follow|like|comment|share|see more|active now)\b/i;
+
+function sanitizeFacebookCaption(rawText) {
+  if (!rawText) return '';
+  let text = String(rawText);
+  for (const { from, to } of NORMALIZE_PATTERNS) text = text.replace(from, to);
+  text = text.replace(/\r/g, '');
+  text = text.replace(/\b[A-Za-z0-9]{24,}\b/g, ' ');
+  text = text.replace(/\b(?:JdJB5aXMnK\.comDeals)\b/gi, ' ');
+  const lines = text.split('\n').map(l => collapseSpaces(l));
+  const kept = [];
+  for (let line of lines) {
+    if (!line) {
+      if (kept.length && kept[kept.length-1] !== '') kept.push('');
+      continue;
+    }
+    const low=line.toLowerCase();
+    if (FACEBOOK_METADATA_RE.test(low) && !/(amazon|amzn\.to|a\.co|coupon|code|price drop|lightning drop|prime discount|half off|sale|deal|#ad|\[ad\])/i.test(line)) continue;
+    line = line.replace(/^.*?(\[ad\]\s+)/i,'$1');
+    line = line.replace(/^(?:[a-z0-9._-]+\.com(?:deals?)?)\s*/i,'');
+    line = line.replace(/\bqpon\b/gi,'Coupon').replace(/pr[!1i]ce\s*drop/gi,'Price Drop').replace(/lightning\s*drop/gi,'Lightning Drop');
+    line = collapseSpaces(line);
+    if (!line) continue;
+    kept.push(line);
+  }
+  const out = kept.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+  return out;
+}
 // ─── Coupon / Deal Detection ───────────────────────────────────────────────
 
 const COUPON_PATTERNS = [
@@ -849,23 +878,23 @@ function generateAltText(productTitle, categoryData, caption) {
  * }}
  */
 function parseCaption(rawText, affiliateUrl) {
-  const cleanedCaption = cleanCaption(rawText);
-  const productTitle   = extractProductTitle(rawText);
-  const couponCode     = extractCouponCode(rawText);
-  const dealType       = extractDealType(rawText);
-  const categoryData   = detectProductCategory(productTitle, rawText);
+  const cleanedCaption = sanitizeFacebookCaption(rawText);
+  const productTitle   = extractProductTitle(cleanedCaption);
+  const couponCode     = extractCouponCode(cleanedCaption);
+  const dealType       = extractDealType(cleanedCaption);
+  const categoryData   = detectProductCategory(productTitle, cleanedCaption);
 
   const pinterestTitle       = generatePinterestTitle(productTitle, categoryData);
   const pinterestDescription = generatePinterestDescription({
     productTitle,
-    caption: rawText,
+    caption: cleanedCaption,
     couponCode,
     dealType,
     affiliateUrl,
     categoryData,
   });
   const hashtags = generateHashtags(categoryData, productTitle);
-  const altText  = generateAltText(productTitle, categoryData, rawText);
+  const altText  = generateAltText(productTitle, categoryData, cleanedCaption);
 
   return {
     productTitle,
@@ -904,6 +933,7 @@ if (typeof module !== 'undefined' && module.exports) {
     extractCouponCode,
     extractDealType,
     cleanCaption,
+    sanitizeFacebookCaption,
     detectProductCategory,
     detectCategory, // legacy
     generatePinterestTitle,
