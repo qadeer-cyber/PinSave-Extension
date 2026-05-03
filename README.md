@@ -85,6 +85,57 @@ Phase 4 layers a templates system and a quality-scoring engine on top of the exi
 
 ---
 
+## What's New in Phase 5 (Premium macOS-Style Dashboard UI)
+
+Phase 5 redesigns the Queue dashboard into a polished macOS-style productivity-app shell, adds an on-device Analytics view, and applies a light premium polish to the popup and Options pages — without touching any existing functionality.
+
+### What was redesigned
+
+- **App shell.** Queue page is now a proper sidebar + sticky toolbar + main content layout. The sidebar is a translucent dark panel with rounded active-pill items (Queue, Analytics, Templates, Settings). The toolbar carries the page title, sub-line, search bar, filter dropdowns, and action buttons (Auto-Fix All Drafts, Refresh, Export CSV).
+- **Premium dark theme.** The dashboard uses a deep graphite background (`#0e1014`) with translucent surfaces, soft layered shadows, and CSS custom properties for the full design system (`--bg`, `--bg-panel`, `--accent`, `--success`, `--warning`, `--danger`, `--radius-*`, etc.). System-font stack uses `SF Pro Text` / `SF Pro Display` first.
+- **Summary cards.** Total / Draft / Opened / Posted / Skipped / Captured Today / Ready to Post / Missing Affiliate / Old Drafts are rendered as glassy metric cards with status dots, tabular-numeric values, and a subtle hover lift.
+- **Queue item cards.** Cleaner grid: image preview on the left, metadata stack (title, board, affiliate, coupon/deal, source, created date) on the right, and an actions row that separates copy actions from status actions. Status pills (Draft/Opened/Posted/Skipped) and the Pin Quality badge are rendered as refined coloured tokens.
+- **Quality score badge.** Colour-coded pill (green ≥80, amber 50–79, red <50) with the warning count beside it. Old-draft and quality warnings render as soft tinted banners with an action button on the right.
+- **Analytics view.** New tab with five summary cards (Total Saved, Posted, Conversion %, Avg Pin Quality, Captured This Week) plus four panels:
+  - **Daily Activity** — CSS-only 14-day bar chart of capture counts.
+  - **Status Breakdown** — Canvas donut chart with a legend (no external libraries).
+  - **Top Boards** — Progress-row list (top 8 boards by save count).
+  - **Deal Types** — Progress-row list classifying items into Coupon / Percent off / Lightning / Prime / Discount / No deal signal.
+  - **Quality Distribution** — Excellent / Good / Needs review / Weak buckets.
+  - All analytics are computed locally from `chrome.storage.local`. **No external API calls. No tracking. No remote services.**
+- **Tab switching.** Sidebar nav items toggle Queue ↔ Analytics with a smooth fade-in. The toolbar context (title, sub, action buttons) updates per view.
+- **Popup polish.** Same `SF Pro Text` font stack, blue macOS-accent focus rings (`rgba(10,132,255,0.18)` halo), refined button hover/active states with a 1px translate-down on press, smoother input borders, layered shadows. Pinterest-red brand identity is preserved.
+- **Options polish.** Same focus-ring + button-polish treatment, slightly larger card padding, soft border on each `.opts-section` card, refined template-tab focus state.
+- **Manifest bumped 1.4.1 → 1.5.0.**
+
+### Files changed
+
+- `queue.html` — full app-shell rebuild: sidebar nav, toolbar, summary card grid, queue/analytics view containers, banners, modals.
+- `queue.css` — premium dark design system (CSS variables, panels, cards, tokens, progress lists, donut, bars, legend, banners, modal styling, responsive rules).
+- `queue.js` — new `renderAnalytics`, `renderDailyBars`, `renderStatusDonut` (HiDPI-aware Canvas), `renderProgressList`, `renderBoardProgress`, `renderDealProgress` (with a `classifyDeal` rule that prefers explicit `couponCode`), `renderQualityProgress`, `setView` (Queue/Analytics tab switching), `openOptionsAnchor` for sidebar Templates/Settings shortcuts; sidebar nav + Old-Drafts banner action wired up.
+- `popup.css`, `options.css` — design-token refresh (font stack, focus rings, shadows, smoother transitions, refined buttons). No HTML/JS changes required.
+- `manifest.json` — version bump.
+- `README.md` — this section.
+
+### How to test Phase 5
+
+1. Load the branch as an unpacked extension in Chrome.
+2. Save a few pins to the queue from Facebook (or use existing items).
+3. Open the queue dashboard — the new sidebar + toolbar layout should render with summary cards and queue item cards in the premium dark theme.
+4. Click **Analytics** in the sidebar — the Analytics view fades in with the five summary cards, daily-activity bar chart, status donut, board/deal/quality progress lists.
+5. Click **Templates** or **Settings** in the sidebar — Options page should open in a new tab.
+6. Back on Queue, exercise existing functionality: search, status filter, board filter, quality filter, sort, per-item Auto-Fix, Auto-Fix All Drafts, Edit, Mark Posted, Skip / Reopen, Delete, Export CSV. All should still work.
+7. Open the popup and Options pages — both should feel slightly more refined (focus rings, button presses, fonts) but functionally unchanged.
+
+### Known limitations
+
+- Analytics is computed in-memory on every render. With thousands of queue items the donut/bars are still snappy, but the deal-classifier regex pass is O(n × small).
+- The donut chart uses a single 280×280 HiDPI canvas; very narrow viewports will scale it down via CSS but won't reflow into a different chart type.
+- Templates and Settings sidebar shortcuts open the Options page in a new tab; a hash anchor is appended (`#templates`) but the Options page does not yet auto-scroll to that section. Existing tabs in the Options template editor still work.
+- The popup retains its Pinterest-red header to preserve brand identity; only typography, focus rings, button polish, and shadows were updated.
+
+---
+
 ## What's New in 1.4.1 (Facebook Detection + Options Runtime Fix)
 
 A targeted runtime patch that addresses three regressions reported on real Facebook tabs:

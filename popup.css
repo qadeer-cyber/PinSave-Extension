@@ -5,17 +5,20 @@
 :root {
   --red:      #e60023;
   --red-dark: #ad081b;
+  --accent:   #0a84ff;
   --white:    #ffffff;
-  --gray-50:  #f8f8f8;
-  --gray-100: #efefef;
-  --gray-300: #cdcdcd;
-  --gray-500: #767676;
-  --gray-700: #333333;
-  --black:    #111111;
-  --radius:   12px;
-  --radius-sm: 6px;
-  --shadow:   0 2px 8px rgba(0,0,0,.12);
-  --font:     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --gray-50:  #f7f8fa;
+  --gray-100: #eef0f3;
+  --gray-300: #cfd3d9;
+  --gray-500: #6b7280;
+  --gray-700: #2c2f36;
+  --black:    #0e1014;
+  --radius:   10px;
+  --radius-sm: 7px;
+  --shadow:   0 1px 2px rgba(15,17,21,0.04), 0 4px 12px rgba(15,17,21,0.06);
+  --shadow-md: 0 1px 2px rgba(15,17,21,0.04), 0 8px 24px rgba(15,17,21,0.10);
+  --font:     -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --transition: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html { font-size: 13px; }
@@ -207,7 +210,9 @@ h2 {
   resize: vertical;
 }
 .aps-input:focus,
-.aps-textarea:focus { border-color: var(--red); box-shadow: 0 0 0 2px rgba(230,0,35,.1); }
+.aps-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(10,132,255,0.18); }
+
+select.aps-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(10,132,255,0.18); }
 
 .aps-readonly { background: var(--gray-50); cursor: default; }
 .aps-readonly:focus { border-color: var(--gray-300); box-shadow: none; }
@@ -232,47 +237,52 @@ h2 {
   background: var(--gray-50);
   border: 1px solid var(--gray-300);
   border-radius: var(--radius-sm);
-  padding: 5px 10px;
+  padding: 6px 11px;
   font-size: 11px;
   font-weight: 600;
   color: var(--gray-700);
   cursor: pointer;
   white-space: nowrap;
-  transition: background .15s;
+  transition: background .18s var(--transition), border-color .18s var(--transition), transform .12s var(--transition);
   flex-shrink: 0;
 }
-.aps-small-btn:hover { background: var(--gray-100); }
-.aps-small-btn:active { background: var(--gray-300); }
+.aps-small-btn:hover  { background: var(--white); border-color: var(--gray-500); }
+.aps-small-btn:active { background: var(--gray-100); transform: translateY(1px); }
+.aps-small-btn:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(10,132,255,0.18); }
 
 .aps-btn-primary {
   width: 100%;
-  padding: 11px;
+  padding: 11px 14px;
   background: var(--red);
   color: var(--white);
   border: none;
   border-radius: var(--radius);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.005em;
   cursor: pointer;
-  transition: background .15s, transform .1s;
+  box-shadow: 0 1px 2px rgba(230,0,35,0.30), inset 0 1px 0 rgba(255,255,255,0.18);
+  transition: background .18s var(--transition), transform .12s var(--transition), box-shadow .18s var(--transition);
 }
-.aps-btn-primary:hover  { background: var(--red-dark); }
-.aps-btn-primary:active { transform: scale(.98); }
+.aps-btn-primary:hover  { background: var(--red-dark); box-shadow: 0 2px 6px rgba(230,0,35,0.35), inset 0 1px 0 rgba(255,255,255,0.18); }
+.aps-btn-primary:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(230,0,35,0.25); }
+.aps-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(10,132,255,0.35), 0 1px 2px rgba(230,0,35,0.30); }
 
 .aps-btn-secondary {
   width: 100%;
-  padding: 10px;
+  padding: 10px 14px;
   background: var(--white);
   color: var(--red);
   border: 1.5px solid var(--red);
   border-radius: var(--radius);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 12.5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background .15s, transform .1s;
+  transition: background .18s var(--transition), transform .12s var(--transition);
 }
-.aps-btn-secondary:hover  { background: #fff0f1; }
-.aps-btn-secondary:active { transform: scale(.98); }
+.aps-btn-secondary:hover  { background: #fff5f6; }
+.aps-btn-secondary:active { transform: translateY(1px); }
+.aps-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(10,132,255,0.20); }
 
 .aps-row-actions {
   display: flex;
