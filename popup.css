@@ -284,6 +284,71 @@ select.aps-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba
 .aps-btn-secondary:active { transform: translateY(1px); }
 .aps-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(10,132,255,0.20); }
 
+.aps-btn-ghost {
+  width: 100%;
+  padding: 9px 14px;
+  background: transparent;
+  color: var(--gray-700, #444);
+  border: 1px solid var(--gray-300, #d8d8d8);
+  border-radius: var(--radius);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .18s var(--transition), transform .12s var(--transition);
+}
+.aps-btn-ghost:hover  { background: rgba(0,0,0,0.04); }
+.aps-btn-ghost:active { transform: translateY(1px); }
+.aps-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(10,132,255,0.20); }
+
+/* ── Start Screen (clean popup-icon-click experience) ───────── */
+.aps-start { padding: 0; background: transparent; box-shadow: none; }
+.aps-start-card {
+  padding: 22px 18px 18px;
+  background: var(--white);
+  border: 1px solid var(--gray-200, #ececec);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04), 0 1px 0 rgba(255,255,255,0.6) inset;
+  text-align: center;
+}
+.aps-start-title {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.aps-start-text {
+  margin: 0 0 16px;
+  color: var(--gray-600, #6a6a6a);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.aps-start-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Setup Warning Card ─────────────────────────────────────── */
+.aps-setup-warning {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  background: #fff8e6;
+  border: 1px solid #f3d77a;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.aps-setup-warning-body { flex: 1; min-width: 0; }
+.aps-setup-warning-body strong { display: block; font-size: 12.5px; color: #8a6a00; margin-bottom: 2px; }
+.aps-setup-warning-body p { margin: 0; font-size: 11.5px; color: #8a6a00; line-height: 1.4; }
+.aps-setup-warning .aps-btn-secondary {
+  width: auto;
+  flex-shrink: 0;
+  padding: 7px 11px;
+  font-size: 11.5px;
+}
+
 .aps-row-actions {
   display: flex;
   align-items: center;

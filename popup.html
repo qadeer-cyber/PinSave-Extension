@@ -31,8 +31,33 @@
   <!-- ── Main Content ───────────────────────────────────────── -->
   <main id="main-content" class="hidden">
 
+    <!-- Setup warning — Associate tag missing -->
+    <section id="setup-warning" class="aps-section aps-setup-warning hidden" role="alert">
+      <div class="aps-setup-warning-body">
+        <strong>Amazon Associate tag missing</strong>
+        <p>Add your tag in Options so affiliate links are generated automatically.</p>
+      </div>
+      <button id="btn-setup-options" class="aps-btn-secondary" type="button">Open Options</button>
+    </section>
+
+    <!-- Clean Start Screen — shown when popup opens without a Quick Capture -->
+    <section id="start-section" class="aps-section aps-start hidden">
+      <div class="aps-start-card">
+        <h2 class="aps-start-title">Start a Pin</h2>
+        <p class="aps-start-text">
+          Hover a Facebook product image and click <strong>Pin Affiliate</strong>,
+          or scan this page for images.
+        </p>
+        <div class="aps-start-actions">
+          <button id="btn-scan-page" class="aps-btn-primary" type="button">Scan Page Images</button>
+          <button id="btn-paste-amazon" class="aps-btn-secondary" type="button">Paste Amazon URL Manually</button>
+          <button id="btn-start-options" class="aps-btn-ghost" type="button">Open Options</button>
+        </div>
+      </div>
+    </section>
+
     <!-- Capture Status (Phase 2.1 diagnostics) -->
-    <section id="capture-status-section" class="aps-section aps-capture-status">
+    <section id="capture-status-section" class="aps-section aps-capture-status hidden">
       <div class="aps-section-header">
         <h2>Capture Status</h2>
       </div>
@@ -47,7 +72,7 @@
     </section>
 
     <!-- Step 1: Image Grid (fallback / when no quick-capture) -->
-    <section id="image-picker-section" class="aps-section">
+    <section id="image-picker-section" class="aps-section hidden">
       <div class="aps-section-header">
         <h2>Choose Product Image</h2>
         <button id="btn-refresh" class="aps-small-btn" title="Re-scan page">↻ Refresh</button>
@@ -74,7 +99,7 @@
     </section>
 
     <!-- Step 2: Amazon Links -->
-    <section class="aps-section">
+    <section id="amazon-section" class="aps-section hidden">
       <h2>Amazon Link</h2>
 
       <!-- Dropdown shown only when 2+ Amazon links were found -->
@@ -104,8 +129,11 @@
     </section>
 
     <!-- Step 3: Pinterest Content -->
-    <section class="aps-section">
+    <section id="pinterest-section" class="aps-section hidden">
       <h2>Pinterest Content</h2>
+      <p id="pin-empty-hint" class="aps-hint hidden">
+        Paste or edit the caption below to generate pin content.
+      </p>
 
       <!-- Pinterest Title -->
       <div class="aps-field-row">
@@ -171,7 +199,7 @@
     </section>
 
     <!-- Step 4: Caption (editable for manual fallback) -->
-    <section class="aps-section">
+    <section id="caption-section" class="aps-section hidden">
       <div class="aps-section-header">
         <h2>Facebook Caption (editable)</h2>
         <button id="btn-copy-caption" class="aps-small-btn" title="Copy Facebook caption">Copy</button>
@@ -181,7 +209,7 @@
     </section>
 
     <!-- Phase 4: Pin Quality Score -->
-    <section id="quality-section" class="aps-section aps-quality">
+    <section id="quality-section" class="aps-section aps-quality hidden">
       <div class="aps-section-header">
         <h2>Pin Quality</h2>
         <span id="quality-badge" class="aps-quality-badge" aria-live="polite">—/100</span>
@@ -193,7 +221,7 @@
     </section>
 
     <!-- Actions -->
-    <section class="aps-section aps-actions">
+    <section id="actions-section" class="aps-section aps-actions hidden">
       <button id="btn-regenerate" class="aps-btn-secondary" title="Re-run Pinterest content generation against the current caption + Amazon URL">
         Re-generate Pin Package
       </button>

@@ -39,6 +39,24 @@
   let hoverButtonsEnabled = false;
   let hoverObserver = null;
 
+  // ─── Defensive helpers ─────────────────────────────────────────────────────
+
+  /**
+   * Coerce a value to a non-empty trimmed string. Returns the fallback when the
+   * value is null/undefined/empty/whitespace OR is the literal string
+   * "undefined" / "null" (which can happen when callers do
+   *   `'foo ' + product.title` and `product.title` is undefined).
+   *
+   * Used everywhere we render dynamic text into the hover button so a missing
+   * field never leaks the word "undefined" into the UI.
+   */
+  function safeText(value, fallback = 'Pin Affiliate') {
+    if (value === null || value === undefined) return fallback;
+    const s = String(value).trim();
+    if (!s || /^(undefined|null)$/i.test(s)) return fallback;
+    return s;
+  }
+
   // ─── Image Scoring & Collection ────────────────────────────────────────────
 
   function isIgnoredSrc(src) {
@@ -338,6 +356,9 @@
       caption,
       amazonUrls,
       containerKind,
+      // Mark this payload as a single-image quick capture so the popup never
+      // pulls a full page image gallery on top of the user's selected image.
+      singleImage: true,
       capturedAt: Date.now(),
     };
   }
@@ -362,8 +383,14 @@
 
         const btn = document.createElement('button');
         btn.className = 'afpin-hover-btn';
-        btn.textContent = 'Pin Affiliate';
-        btn.title      = 'Save this image as affiliate pin';
+        // Always-defined hover label — never inject dynamic product titles
+        // here. If a future caller wants a per-image label, route it through
+        // safeText() so missing values fall back to "Pin Affiliate" and we
+        // never render the literal string "undefined".
+        btn.textContent = safeText(undefined, 'Pin Affiliate');
+        btn.title      = safeText(undefined, 'Save this image as affiliate pin');
+        btn.setAttribute('aria-label', safeText(undefined, 'Pin Affiliate'));
+        btn.type       = 'button';
 
         // Bind the actual <img> element so the handler always knows which
         // image / post container the user clicked on.

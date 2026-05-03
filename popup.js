@@ -37,6 +37,20 @@ const els = {
   btnInjectHelper:     $('btn-inject-helper'),
   statusBar:           $('status-bar'),
 
+  // Start screen + progressive disclosure
+  startSection:        $('start-section'),
+  btnScanPage:         $('btn-scan-page'),
+  btnPasteAmazon:      $('btn-paste-amazon'),
+  btnStartOptions:     $('btn-start-options'),
+  setupWarning:        $('setup-warning'),
+  btnSetupOptions:     $('btn-setup-options'),
+  captureStatusSection:$('capture-status-section'),
+  amazonSection:       $('amazon-section'),
+  pinterestSection:    $('pinterest-section'),
+  pinEmptyHint:        $('pin-empty-hint'),
+  captionSection:      $('caption-section'),
+  actionsSection:      $('actions-section'),
+
   imagePickerSection:  $('image-picker-section'),
   imageGrid:           $('image-grid'),
   noImagesMsg:         $('no-images-msg'),
@@ -127,6 +141,138 @@ function showStatus(msg, type = 'info') {
 function setLoading(on) {
   els.loading.classList.toggle('hidden', !on);
   els.mainContent.classList.toggle('hidden', on);
+}
+
+// ─── Defensive text helper (mirrors content.js safeText) ───────────────────
+
+/**
+ * Trim a value to a non-empty string. Returns fallback for null/undefined/
+ * empty/whitespace and the literal strings "undefined" / "null". Used for
+ * any UI label that could otherwise leak the word "undefined".
+ */
+function safeText(value, fallback = '') {
+  if (value === null || value === undefined) return fallback;
+  const s = String(value).trim();
+  if (!s || /^(undefined|null)$/i.test(s)) return fallback;
+  return s;
+}
+
+// ─── Section visibility helpers ────────────────────────────────────────────
+
+function _show(el)  { if (el) el.classList.remove('hidden'); }
+function _hide(el)  { if (el) el.classList.add('hidden'); }
+
+/**
+ * Show the clean "Start a Pin" card and hide everything else. Used when the
+ * user opens the popup directly (no Quick Capture handoff).
+ */
+function showStartScreen() {
+  state.uiMode = 'start';
+  _show(els.startSection);
+  _hide(els.captureStatusSection);
+  _hide(els.imagePickerSection);
+  _hide(els.previewSection);
+  _hide(els.amazonSection);
+  _hide(els.pinterestSection);
+  _hide(els.captionSection);
+  _hide(els.qualitySection);
+  _hide(els.actionsSection);
+  _hide(els.noImagesMsg);
+}
+
+/**
+ * Reveal the full pin-building workflow (capture status + preview + amazon +
+ * pinterest content + caption + quality + actions). Used after Quick Capture
+ * or after the user picks an image / pastes a manual Amazon URL.
+ */
+function showWorkingSections() {
+  state.uiMode = 'working';
+  _hide(els.startSection);
+  _show(els.captureStatusSection);
+  _show(els.previewSection);
+  _show(els.amazonSection);
+  _show(els.captionSection);
+  _show(els.actionsSection);
+  // Pinterest content + quality only show once we have something usable.
+  applyProgressiveDisclosure();
+}
+
+/**
+ * Show the "manual paste" entry point: caption + amazon manual URL fields,
+ * plus the actions bar. No image gallery, no preview until the user supplies
+ * an image. Used by the Start screen's "Paste Amazon URL Manually" button.
+ */
+function showManualEntry() {
+  state.uiMode = 'manual';
+  _hide(els.startSection);
+  _show(els.captureStatusSection);
+  _show(els.amazonSection);
+  _show(els.captionSection);
+  _show(els.actionsSection);
+  // Image preview and Pinterest content stay hidden until the user picks
+  // an image and the package has something to show.
+  applyProgressiveDisclosure();
+  // Focus the manual URL field so the user can paste immediately.
+  if (els.manualAmazonUrl) {
+    setTimeout(() => els.manualAmazonUrl.focus(), 0);
+  }
+}
+
+/**
+ * Toggle Pinterest content + Quality sections based on whether we have
+ * meaningful inputs (image AND (caption OR Amazon URL)). Keeps the popup
+ * from showing empty / stale Pinterest fields with a fake quality score.
+ */
+function applyProgressiveDisclosure() {
+  const hasImage   = !!state.selectedSrc;
+  const hasCaption = (state.caption || '').trim().length > 0
+                  || (els.captionPreview && els.captionPreview.value.trim().length > 0);
+  const hasAmazon  = !!state.selectedAmazon
+                  || !!state.affiliateUrl
+                  || (els.manualAmazonUrl && !!els.manualAmazonUrl.value.trim());
+  const ready      = hasImage && (hasCaption || hasAmazon);
+
+  if (ready) {
+    _show(els.pinterestSection);
+    _show(els.qualitySection);
+    _hide(els.pinEmptyHint);
+  } else {
+    // Hide Pinterest content + quality so we don't display a stale
+    // 97/100 score next to garbage metadata-derived titles.
+    if (state.uiMode === 'working' || state.uiMode === 'manual') {
+      _hide(els.pinterestSection);
+      _hide(els.qualitySection);
+    }
+  }
+}
+
+// ─── Metadata-pollution guard ──────────────────────────────────────────────
+
+const METADATA_RE = /\b(author|admin|group expert|all[- ]star contributor|top contributor|contributor|reply|follow|moderator|see more|active now|like|comment|share)\b/i;
+
+/**
+ * True when a candidate caption/title looks like Facebook author/admin/group
+ * metadata rather than a real product description. Used to suppress garbage
+ * pin titles and avoid generating a high quality score off junk text.
+ *
+ * Heuristic: the text contains one of the metadata "tells" (Author / Admin /
+ * Group expert / All-star contributor / Reply / Follow / Like / Comment /
+ * Share / etc.) AND has *none* of our product signals. Each token uses word
+ * boundaries so e.g. "off" doesn't match inside "Coffee".
+ */
+function looksLikeMetadata(text) {
+  const t = (text || '').trim();
+  if (!t) return false;
+
+  // Caption is "useful" when it mentions a product/deal signal — those
+  // override the metadata heuristic so legit posts don't get nuked.
+  const productSignal = /(amazon|amzn\.to|a\.co|#ad|\bcoupon\b|\bcode\b|price drop|lightning|prime|\bdeal\b|\bsale\b|\boff\b|\bdiscount\b)/i;
+  if (productSignal.test(t)) return false;
+
+  // Pure metadata-looking text that has none of the product signals is
+  // treated as polluted. The regex hits the worst offenders we've seen
+  // in production screenshots.
+  return METADATA_RE.test(t);
 }
 
 async function copyToClipboard(text, label) {
@@ -408,10 +554,20 @@ async function init() {
   }
 
   state.sourceFacebookUrl = url;
+  state.lastTabId = tab.id;
 
-  if (!state.associateTag) {
-    showStatus('Amazon Associate tag not set. Go to Options.', 'warning');
+  // Show / hide the setup-warning card based on Associate tag presence.
+  if (els.setupWarning) {
+    if (!state.associateTag) {
+      _show(els.setupWarning);
+    } else {
+      _hide(els.setupWarning);
+    }
   }
+
+  // Wire up always-on workflow handlers (Start screen buttons, change-image,
+  // copy buttons, etc.) before deciding which view to show.
+  bindEvents(tab.id);
 
   // ── Quick-capture support ───────────────────────────────────────────────
   // Phase 2 hover-click flow stores the clicked image URL + nearby post
@@ -419,23 +575,55 @@ async function init() {
   // consume it here, populate state, and clear it so it isn't reused.
   const session  = await chrome.storage.session.get(['quickCapture', 'hoverSelectedSrc']);
   const quickCap = session.quickCapture || null;
-  const legacySrc = session.hoverSelectedSrc || null;
   await chrome.storage.session.remove(['quickCapture', 'hoverSelectedSrc']);
 
+  setLoading(false);
+
   if (quickCap && quickCap.src) {
-    state.quickCapture  = quickCap;
-    state.caption       = quickCap.caption || '';
-    state.amazonUrls    = Array.isArray(quickCap.amazonUrls) ? quickCap.amazonUrls : [];
-    state.source        = 'quick-capture';
-    state.containerKind = quickCap.containerKind || null;
-  } else {
-    state.source        = 'picker';
-    state.containerKind = null;
+    // Single-image quick capture flow — use ONLY the clicked image, do not
+    // run a full page image scan, do not populate the picker gallery.
+    await applyQuickCapture(quickCap);
+    return;
   }
 
-  const preferSrc = (quickCap && quickCap.src) || legacySrc || null;
-  await scanPage(tab.id, preferSrc);
-  bindEvents(tab.id);
+  // No quick-capture handoff → user opened the popup directly. Show the
+  // clean "Start a Pin" card; do not auto-scan the page.
+  state.source        = 'picker';
+  state.containerKind = null;
+  showStartScreen();
+}
+
+/**
+ * Single-image flow when the user clicked the on-page hover button. We hand
+ * the captured payload straight into the popup state and render the working
+ * UI without ever invoking scanPage(), so the user only ever sees the image
+ * they clicked on (no gallery, no random page images).
+ */
+async function applyQuickCapture(quickCap) {
+  state.quickCapture  = quickCap;
+  state.caption       = quickCap.caption || '';
+  state.amazonUrls    = Array.isArray(quickCap.amazonUrls) ? quickCap.amazonUrls : [];
+  state.source        = 'quick-capture';
+  state.containerKind = quickCap.containerKind || null;
+  state.images        = []; // never populate gallery from quick capture
+
+  // Show working sections (preview + amazon + caption + actions). Pinterest
+  // content + quality reveal automatically once we have caption/Amazon.
+  showWorkingSections();
+  _hide(els.imagePickerSection);
+  _show(els.quickCaptureHint);
+
+  // Render the single selected image in the preview without touching the
+  // picker gallery.
+  selectImage({ src: quickCap.src }, { reextractCaption: false });
+  renderCaptionPreview();
+  renderAmazonLinks();
+
+  if (state.amazonUrls.length > 0) {
+    await selectAmazonUrl(state.amazonUrls[0]);
+  } else {
+    regeneratePinterestContent();
+  }
 }
 
 // ─── Page Scan ─────────────────────────────────────────────────────────────
@@ -474,19 +662,18 @@ async function scanPage(tabId, preferSrc) {
       state.amazonUrls = resp.amazonUrls || [];
     }
 
+    // Reveal the working UI now that we have content to render.
+    showWorkingSections();
+    _show(els.imagePickerSection);
+    if (state.quickCapture && state.quickCapture.src) {
+      _show(els.quickCaptureHint);
+    } else {
+      _hide(els.quickCaptureHint);
+    }
+
     renderImageGrid(preferSrc);
     renderAmazonLinks();
     renderCaptionPreview();
-
-    // Hide the picker by default when quick-capture filled everything in;
-    // user can click "Change Image" to bring it back.
-    if (state.quickCapture && state.quickCapture.src) {
-      els.imagePickerSection.classList.add('hidden');
-      els.quickCaptureHint.classList.remove('hidden');
-    } else {
-      els.imagePickerSection.classList.remove('hidden');
-      els.quickCaptureHint.classList.add('hidden');
-    }
 
     // Auto-select the preferred (quick-capture or legacy hover) image,
     // falling back to the first scanned image.
@@ -729,17 +916,48 @@ function regeneratePinterestContent() {
     taggedTopics,
   } = state.parsed;
 
-  els.pinTitle.value       = pinterestTitle       || '';
-  els.pinDesc.value        = pinterestDescription || '';
-  els.pinHashtags.value    = hashtags             || '';
-  els.pinAlt.value         = altText              || '';
-  els.couponCode.value     = couponCode           || '';
-  els.suggestedBoard.value = suggestedBoard       || 'Amazon Finds & Daily Deals';
-  els.taggedTopics.value   = Array.isArray(taggedTopics) ? taggedTopics.join(', ') : '';
+  // ── Metadata-pollution guard ────────────────────────────────────────────
+  // If the caption is dominated by Facebook author/admin/group metadata
+  // (no Amazon URL, no #ad, no deal language) AND the parser produced a
+  // title that looks like that metadata, suppress the auto-generated copy
+  // entirely. We never want to render "Milena MiticAuthorAdmin…" as a
+  // Pinterest title — and we never want to flash a 97/100 quality badge
+  // next to it. The user can edit the caption to recover.
+  const captionPolluted = looksLikeMetadata(state.caption);
+  const titlePolluted   = looksLikeMetadata(pinterestTitle);
+  const polluted        = captionPolluted || titlePolluted;
+
+  if (polluted) {
+    els.pinTitle.value       = '';
+    els.pinDesc.value        = '';
+    els.pinHashtags.value    = '';
+    els.pinAlt.value         = '';
+    els.couponCode.value     = '';
+    els.suggestedBoard.value = '';
+    els.taggedTopics.value   = '';
+    if (els.pinEmptyHint) {
+      els.pinEmptyHint.textContent =
+        'Paste or edit the caption below to generate pin content. The detected text looks like Facebook metadata, not a product description.';
+      _show(els.pinEmptyHint);
+    }
+    // Wipe parsed so quality scoring sees an empty package and reports a
+    // realistic (low) score instead of 97/100 from junk.
+    state.parsed = {};
+  } else {
+    els.pinTitle.value       = pinterestTitle       || '';
+    els.pinDesc.value        = pinterestDescription || '';
+    els.pinHashtags.value    = hashtags             || '';
+    els.pinAlt.value         = altText              || '';
+    els.couponCode.value     = couponCode           || '';
+    els.suggestedBoard.value = suggestedBoard       || 'Amazon Finds & Daily Deals';
+    els.taggedTopics.value   = Array.isArray(taggedTopics) ? taggedTopics.join(', ') : '';
+    _hide(els.pinEmptyHint);
+  }
 
   updateCharCounts();
   updateCaptureStatus();
   updateQualityUI();
+  applyProgressiveDisclosure();
 }
 
 function renderCaptionPreview() {
@@ -879,6 +1097,34 @@ function bindAlwaysOnEvents() {
 function bindEvents(tabId) {
   state.lastTabId = tabId;
 
+  // bindEvents() is now called early (before applyQuickCapture) and may run
+  // again after the user clicks "Scan Page Images". Skip the second call so
+  // we don't stack duplicate listeners.
+  if (state._eventsBound) return;
+  state._eventsBound = true;
+
+  // Start screen — Scan Page Images
+  if (els.btnScanPage) {
+    els.btnScanPage.addEventListener('click', () => {
+      scanPage(tabId, null);
+    });
+  }
+
+  // Start screen — Paste Amazon URL Manually
+  if (els.btnPasteAmazon) {
+    els.btnPasteAmazon.addEventListener('click', () => {
+      showManualEntry();
+    });
+  }
+
+  // Start screen + setup warning — Open Options shortcuts
+  if (els.btnStartOptions) {
+    els.btnStartOptions.addEventListener('click', openOptions);
+  }
+  if (els.btnSetupOptions) {
+    els.btnSetupOptions.addEventListener('click', openOptions);
+  }
+
   els.btnRefresh.addEventListener('click', () => {
     state.quickCapture  = null;
     state.source        = 'picker';
@@ -894,6 +1140,10 @@ function bindEvents(tabId) {
     if (!val) return;
     state.source = 'manual';
     await resolveAndConvert(val);
+    applyProgressiveDisclosure();
+  });
+  els.manualAmazonUrl.addEventListener('input', () => {
+    applyProgressiveDisclosure();
   });
 
   // Multiple-link dropdown selector (Phase 2.1).
@@ -910,6 +1160,7 @@ function bindEvents(tabId) {
     state.caption = els.captionPreview.value;
     state.source  = 'manual';
     updateCaptureStatus();
+    applyProgressiveDisclosure();
   });
 
   // Re-generate Pin Package (Phase 2.1).
@@ -967,15 +1218,23 @@ function bindEvents(tabId) {
     el.addEventListener('click', closeQualModal);
   });
 
-  // Change image — re-show the picker so the user can override.
+  // Change image — fall back to the picker. If we haven't scanned the page
+  // yet (quick-capture flow stays single-image until the user explicitly
+  // asks for alternatives), trigger a scan now so the gallery is populated.
   if (els.btnChangeImage) {
     els.btnChangeImage.addEventListener('click', () => {
-      els.imagePickerSection.classList.remove('hidden');
-      els.quickCaptureHint.classList.add('hidden');
+      _show(els.imagePickerSection);
+      _hide(els.quickCaptureHint);
       state.source = 'picker';
       updateCaptureStatus();
-      // Smooth scroll the picker into view.
-      els.imagePickerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      if (!state.images || state.images.length === 0) {
+        // Quick-capture flow → no gallery yet; fetch one on demand.
+        scanPage(state.lastTabId, state.selectedSrc || null);
+      } else {
+        // Already scanned → just scroll to the picker.
+        els.imagePickerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   }
 
