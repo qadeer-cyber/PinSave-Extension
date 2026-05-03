@@ -86,6 +86,16 @@ const els = {
   btnCopyFull:         $('btn-copy-full'),
   btnRegenerate:       $('btn-regenerate'),
   btnOpenPinterest:    $('btn-open-pinterest'),
+  btnSaveQueue:        $('btn-save-queue'),
+  btnOpenQueue:        $('btn-open-queue'),
+
+  // Duplicate-warning modal
+  dupModal:            $('dup-modal'),
+  dupMessage:          $('dup-message'),
+  dupExisting:         $('dup-existing'),
+  btnDupView:          $('btn-dup-view'),
+  btnDupCancel:        $('btn-dup-cancel'),
+  btnDupSave:          $('btn-dup-save'),
 };
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -260,6 +270,8 @@ async function init() {
     els.notFacebook.classList.remove('hidden');
     return;
   }
+
+  state.sourceFacebookUrl = url;
 
   if (!state.associateTag) {
     showStatus('Amazon Associate tag not set. Go to Options.', 'warning');
@@ -772,6 +784,102 @@ function bindEvents(tabId) {
   });
 
   els.btnOpenPinterest.addEventListener('click', openPinterest);
+
+  // ── Phase 3: Save to Queue / Open Queue ──────────────────────────────────
+  if (els.btnSaveQueue) {
+    els.btnSaveQueue.addEventListener('click', () => trySaveCurrentToQueue(false));
+  }
+  if (els.btnOpenQueue) {
+    els.btnOpenQueue.addEventListener('click', openQueueDashboard);
+  }
+
+  // Duplicate-warning modal
+  if (els.btnDupCancel) els.btnDupCancel.addEventListener('click', closeDupModal);
+  if (els.btnDupSave)   els.btnDupSave  .addEventListener('click', () => {
+    closeDupModal();
+    trySaveCurrentToQueue(true);
+  });
+  if (els.btnDupView)   els.btnDupView  .addEventListener('click', () => {
+    closeDupModal();
+    openQueueDashboard();
+  });
+  document.querySelectorAll('#dup-modal [data-close-dup]').forEach(el => {
+    el.addEventListener('click', closeDupModal);
+  });
+}
+
+// ─── Phase 3 queue helpers ─────────────────────────────────────────────────
+
+function buildQueuePayloadFromState() {
+  const parsed = state.parsed || {};
+  return {
+    productTitle:         parsed.productTitle         || '',
+    pinterestTitle:       (els.pinTitle && els.pinTitle.value.trim())       || parsed.pinterestTitle       || '',
+    pinterestDescription: (els.pinDesc  && els.pinDesc.value.trim())        || parsed.pinterestDescription || '',
+    hashtags:             (els.pinHashtags && els.pinHashtags.value.trim())|| parsed.hashtags             || '',
+    suggestedBoard:       (els.suggestedBoard && els.suggestedBoard.value.trim()) || parsed.suggestedBoard || '',
+    taggedTopics:         (els.taggedTopics && els.taggedTopics.value.trim()) || (Array.isArray(parsed.taggedTopics) ? parsed.taggedTopics.join(', ') : ''),
+    altText:              (els.pinAlt && els.pinAlt.value.trim())          || parsed.altText             || '',
+    facebookCaption:      (els.captionPreview && els.captionPreview.value) || state.caption              || '',
+    sourceFacebookUrl:    state.sourceFacebookUrl || '',
+    selectedImageUrl:     state.selectedSrc      || '',
+    amazonUrl:            state.selectedAmazon
+                         || (state.amazonUrls && state.amazonUrls[0])
+                         || (els.manualAmazonUrl && els.manualAmazonUrl.value.trim())
+                         || '',
+    affiliateUrl:         state.affiliateUrl     || (els.affiliateUrl && els.affiliateUrl.value.trim()) || '',
+    couponCode:           parsed.couponCode      || (els.couponCode && els.couponCode.value.trim()) || '',
+    dealType:             parsed.dealType        || '',
+  };
+}
+
+async function trySaveCurrentToQueue(allowDuplicate) {
+  const payload = buildQueuePayloadFromState();
+
+  // Minimal validation — image is the only hard requirement; everything
+  // else can be edited in the queue dashboard.
+  if (!payload.selectedImageUrl) {
+    showStatus('Pick an image before saving to queue.', 'warning');
+    return;
+  }
+  if (!payload.pinterestTitle && !payload.productTitle) {
+    showStatus('Generate a Pin Package first (click Re-generate).', 'warning');
+    return;
+  }
+
+  try {
+    const result = await saveQueueItem(payload, { allowDuplicate });
+    if (result.saved) {
+      showStatus('Saved to queue.', 'success');
+      return;
+    }
+    if (result.duplicate) {
+      openDupModal(result.duplicate);
+    }
+  } catch (e) {
+    console.error('[AffiliatePin] queue save failed:', e);
+    showStatus('Could not save to queue: ' + e.message, 'error');
+  }
+}
+
+function openDupModal(existing) {
+  const title  = existing.pinterestTitle || existing.productTitle || '(untitled pin)';
+  const when   = existing.createdAt ? new Date(existing.createdAt).toLocaleString() : '';
+  els.dupExisting.textContent = `Existing: "${title}"${when ? ' — saved ' + when : ''}.`;
+  els.dupModal.classList.remove('hidden');
+}
+
+function closeDupModal() {
+  els.dupModal.classList.add('hidden');
+}
+
+function openQueueDashboard() {
+  const url = chrome.runtime.getURL('queue.html');
+  if (chrome.tabs && chrome.tabs.create) {
+    chrome.tabs.create({ url, active: true });
+  } else {
+    chrome.runtime.sendMessage({ action: 'openTab', url });
+  }
 }
 
 // ─── Boot ──────────────────────────────────────────────────────────────────

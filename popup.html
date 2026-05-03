@@ -188,6 +188,12 @@
       <button id="btn-copy-full" class="aps-btn-secondary" title="Copy the full Pin Package (title + description + hashtags + board + topics + alt text + affiliate link)">
         Copy Full Pin Package
       </button>
+      <button id="btn-save-queue" class="aps-btn-secondary" title="Save the current pin package to your local batch queue">
+        Save to Queue
+      </button>
+      <button id="btn-open-queue" class="aps-btn-secondary" title="Open the queue dashboard in a new tab">
+        Open Queue
+      </button>
       <button id="btn-open-pinterest" class="aps-btn-primary">
         Open Pinterest Create
       </button>
@@ -195,6 +201,21 @@
         You must manually select your board and publish on Pinterest. This extension never auto-publishes.
       </p>
     </section>
+
+    <!-- Duplicate-warning dialog (hidden by default) -->
+    <div id="dup-modal" class="aps-modal hidden" role="dialog" aria-modal="true" aria-labelledby="dup-title">
+      <div class="aps-modal-backdrop" data-close-dup></div>
+      <div class="aps-modal-card">
+        <h3 id="dup-title">Already in queue</h3>
+        <p id="dup-message">This product is already in your queue.</p>
+        <p id="dup-existing" class="aps-hint"></p>
+        <div class="aps-modal-actions">
+          <button id="btn-dup-view"   class="aps-small-btn">View Existing</button>
+          <button id="btn-dup-cancel" class="aps-small-btn" data-close-dup>Cancel</button>
+          <button id="btn-dup-save"   class="aps-btn-secondary">Save Anyway</button>
+        </div>
+      </div>
+    </div>
 
   </main>
 
@@ -206,6 +227,7 @@
   <script src="utils/amazon.js"></script>
   <script src="utils/textParser.js"></script>
   <script src="utils/pinterest.js"></script>
+  <script src="utils/queue.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

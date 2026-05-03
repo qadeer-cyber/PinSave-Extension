@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Affiliate Pin Queue</title>
+  <link rel="stylesheet" href="queue.css">
+</head>
+<body>
+
+  <header class="aps-q-header">
+    <div class="aps-q-title">
+      <span class="aps-q-icon" aria-hidden="true">📌</span>
+      <h1>Affiliate Pin Queue</h1>
+    </div>
+    <div class="aps-q-header-actions">
+      <button id="btn-export-csv"     class="aps-q-btn aps-q-btn-secondary">Export CSV</button>
+      <button id="btn-clear-posted"   class="aps-q-btn aps-q-btn-secondary">Clear Posted</button>
+      <button id="btn-clear-all"      class="aps-q-btn aps-q-btn-danger">Clear All</button>
+    </div>
+  </header>
+
+  <!-- Toast / status banner -->
+  <div id="status-bar" class="aps-q-status hidden" role="alert" aria-live="polite"></div>
+
+  <!-- Summary cards -->
+  <section class="aps-q-summary" aria-label="Queue summary">
+    <div class="aps-q-card"><span class="aps-q-card-label">Total</span>          <span id="sum-total"   class="aps-q-card-value">0</span></div>
+    <div class="aps-q-card"><span class="aps-q-card-label">Draft</span>          <span id="sum-draft"   class="aps-q-card-value">0</span></div>
+    <div class="aps-q-card"><span class="aps-q-card-label">Opened</span>         <span id="sum-opened"  class="aps-q-card-value">0</span></div>
+    <div class="aps-q-card"><span class="aps-q-card-label">Posted</span>         <span id="sum-posted"  class="aps-q-card-value">0</span></div>
+    <div class="aps-q-card"><span class="aps-q-card-label">Skipped</span>        <span id="sum-skipped" class="aps-q-card-value">0</span></div>
+    <div class="aps-q-card"><span class="aps-q-card-label">Captured Today</span> <span id="sum-today"   class="aps-q-card-value">0</span></div>
+  </section>
+
+  <!-- Filters -->
+  <section class="aps-q-filters" aria-label="Filters">
+    <input id="filter-search" type="search" placeholder="Search title, board, ASIN, caption…" class="aps-q-input">
+    <select id="filter-status" class="aps-q-select" aria-label="Status filter">
+      <option value="all">All statuses</option>
+      <option value="draft">Draft</option>
+      <option value="opened">Opened</option>
+      <option value="posted">Posted</option>
+      <option value="skipped">Skipped</option>
+    </select>
+    <select id="filter-board" class="aps-q-select" aria-label="Board filter">
+      <option value="all">All boards</option>
+    </select>
+    <select id="filter-sort" class="aps-q-select" aria-label="Sort">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="board">Board (A→Z)</option>
+      <option value="status">Status</option>
+    </select>
+  </section>
+
+  <main id="queue-grid" class="aps-q-grid"></main>
+
+  <p id="empty-msg" class="aps-q-empty hidden">
+    Your queue is empty. Capture a Facebook product post in the popup and click <strong>Save to Queue</strong>.
+  </p>
+
+  <!-- ── Edit modal ────────────────────────────────────────────────────── -->
+  <div id="edit-modal" class="aps-q-modal hidden" role="dialog" aria-modal="true" aria-labelledby="edit-title">
+    <div class="aps-q-modal-backdrop" data-close-modal></div>
+    <div class="aps-q-modal-card">
+      <header class="aps-q-modal-header">
+        <h2 id="edit-title">Edit Pin</h2>
+        <button class="aps-q-modal-close" data-close-modal aria-label="Close">×</button>
+      </header>
+
+      <div class="aps-q-modal-body">
+        <label class="aps-q-label">Pinterest Title
+          <input id="edit-pin-title" type="text" maxlength="100" class="aps-q-input">
+        </label>
+
+        <label class="aps-q-label">Pinterest Description
+          <textarea id="edit-pin-description" rows="6" maxlength="500" class="aps-q-textarea"></textarea>
+        </label>
+
+        <label class="aps-q-label">Hashtags
+          <input id="edit-hashtags" type="text" class="aps-q-input">
+        </label>
+
+        <label class="aps-q-label">Suggested Board
+          <input id="edit-board" type="text" class="aps-q-input">
+        </label>
+
+        <label class="aps-q-label">Tagged Topics
+          <input id="edit-topics" type="text" class="aps-q-input">
+        </label>
+
+        <label class="aps-q-label">Alt Text
+          <input id="edit-alt" type="text" maxlength="500" class="aps-q-input">
+        </label>
+
+        <label class="aps-q-label">Affiliate URL
+          <input id="edit-affiliate" type="url" class="aps-q-input">
+        </label>
+
+        <label class="aps-q-label">Facebook Caption
+          <textarea id="edit-caption" rows="4" class="aps-q-textarea"></textarea>
+        </label>
+      </div>
+
+      <footer class="aps-q-modal-footer">
+        <button id="btn-edit-cancel" class="aps-q-btn aps-q-btn-secondary" data-close-modal>Cancel</button>
+        <button id="btn-edit-save"   class="aps-q-btn aps-q-btn-primary">Save</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ── Confirm dialog ────────────────────────────────────────────────── -->
+  <div id="confirm-modal" class="aps-q-modal hidden" role="dialog" aria-modal="true">
+    <div class="aps-q-modal-backdrop" data-close-modal></div>
+    <div class="aps-q-modal-card aps-q-modal-card-sm">
+      <header class="aps-q-modal-header">
+        <h2 id="confirm-title">Confirm</h2>
+      </header>
+      <div class="aps-q-modal-body">
+        <p id="confirm-message">Are you sure?</p>
+      </div>
+      <footer class="aps-q-modal-footer">
+        <button id="btn-confirm-cancel" class="aps-q-btn aps-q-btn-secondary" data-close-modal>Cancel</button>
+        <button id="btn-confirm-ok"     class="aps-q-btn aps-q-btn-danger">Confirm</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Templates loaded as plain scripts, in order of dependency -->
+  <script src="utils/amazon.js"></script>
+  <script src="utils/textParser.js"></script>
+  <script src="utils/pinterest.js"></script>
+  <script src="utils/queue.js"></script>
+  <script src="queue.js"></script>
+</body>
+</html>

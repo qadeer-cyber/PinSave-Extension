@@ -390,5 +390,50 @@ h2 {
   gap: 6px;
 }
 
+/* ── Modal (duplicate-warning) ──────────────────────────────── */
+.aps-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.aps-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+}
+.aps-modal-card {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--radius);
+  width: 320px;
+  max-width: 92vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 16px;
+  box-shadow: 0 6px 22px rgba(0,0,0,.18);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.aps-modal-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+}
+.aps-modal-card p {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--gray-700);
+}
+.aps-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 /* ── Utilities ──────────────────────────────────────────────── */
 .hidden { display: none !important; }
