@@ -31,8 +31,8 @@
   <!-- ── Main Content ───────────────────────────────────────── -->
   <main id="main-content" class="hidden">
 
-    <!-- Step 1: Image Grid -->
-    <section class="aps-section">
+    <!-- Step 1: Image Grid (fallback / when no quick-capture) -->
+    <section id="image-picker-section" class="aps-section">
       <div class="aps-section-header">
         <h2>Choose Product Image</h2>
         <button id="btn-refresh" class="aps-small-btn" title="Re-scan page">↻ Refresh</button>
@@ -43,11 +43,15 @@
 
     <!-- Selected Image Preview -->
     <section id="preview-section" class="aps-section hidden">
-      <h2>Selected Image</h2>
+      <div class="aps-section-header">
+        <h2>Selected Image</h2>
+        <button id="btn-change-image" class="aps-small-btn" title="Pick a different image">Change Image</button>
+      </div>
       <div class="aps-preview-wrap">
         <img id="selected-preview" src="" alt="Selected product image" class="aps-preview-img">
         <a id="selected-preview-link" href="#" target="_blank" class="aps-preview-link">Open image ↗</a>
       </div>
+      <p id="quick-capture-hint" class="aps-hint hidden">Auto-selected from your hover click on Facebook.</p>
     </section>
 
     <!-- Step 2: Amazon Links -->
@@ -77,58 +81,83 @@
     <section class="aps-section">
       <h2>Pinterest Content</h2>
 
+      <!-- Pinterest Title -->
       <div class="aps-field-row">
-        <label for="pin-title" class="aps-label">Title</label>
-        <input id="pin-title" type="text" maxlength="100" class="aps-input" placeholder="Generated title…">
+        <label for="pin-title" class="aps-label">Pinterest Title</label>
+        <div class="aps-input-with-btn">
+          <input id="pin-title" type="text" maxlength="100" class="aps-input" placeholder="Generated title…">
+          <button id="btn-copy-title" class="aps-small-btn" title="Copy Pinterest title">Copy</button>
+        </div>
         <span id="title-chars" class="aps-char-count">0/100</span>
       </div>
 
+      <!-- Pinterest Description -->
       <div class="aps-field-row">
-        <label for="pin-description" class="aps-label">Description</label>
-        <textarea id="pin-description" rows="7" maxlength="500" class="aps-textarea" placeholder="Generated description…"></textarea>
-        <span id="desc-chars" class="aps-char-count">0/500</span>
-      </div>
-
-      <div class="aps-field-row">
-        <label for="pin-hashtags" class="aps-label">Hashtags</label>
-        <input id="pin-hashtags" type="text" class="aps-input" placeholder="#AmazonFinds #AmazonDeals…">
-      </div>
-
-      <div class="aps-field-row">
-        <label for="pin-alt" class="aps-label">Alt Text</label>
-        <input id="pin-alt" type="text" maxlength="500" class="aps-input" placeholder="Descriptive alt text…">
-      </div>
-
-      <div class="aps-field-row">
-        <label for="coupon-code" class="aps-label">Coupon / Code (if detected)</label>
-        <div class="aps-input-with-btn">
-          <input id="coupon-code" type="text" class="aps-input" placeholder="e.g. 7AQ7TNHY">
-          <button id="btn-copy-caption" class="aps-small-btn" title="Copy description + hashtags">Copy Caption</button>
+        <label for="pin-description" class="aps-label">Pinterest Description</label>
+        <textarea id="pin-description" rows="8" maxlength="500" class="aps-textarea" placeholder="Generated description…"></textarea>
+        <div class="aps-row-actions">
+          <span id="desc-chars" class="aps-char-count-inline">0/500</span>
+          <button id="btn-copy-description" class="aps-small-btn" title="Copy Pinterest description">Copy</button>
         </div>
       </div>
 
+      <!-- Hashtags -->
+      <div class="aps-field-row">
+        <label for="pin-hashtags" class="aps-label">Hashtags</label>
+        <div class="aps-input-with-btn">
+          <input id="pin-hashtags" type="text" class="aps-input" placeholder="#AmazonFinds #AmazonMustHaves…">
+          <button id="btn-copy-hashtags" class="aps-small-btn" title="Copy hashtags">Copy</button>
+        </div>
+      </div>
+
+      <!-- Suggested Board -->
       <div class="aps-field-row">
         <label class="aps-label">Suggested Board</label>
         <div class="aps-input-with-btn">
           <input id="suggested-board" type="text" readonly class="aps-input aps-readonly">
-          <button id="btn-copy-board" class="aps-small-btn">Copy</button>
+          <button id="btn-copy-board" class="aps-small-btn" title="Copy suggested board name">Copy</button>
         </div>
       </div>
 
+      <!-- Tagged Topics -->
       <div class="aps-field-row">
         <label class="aps-label">Tagged Topics (paste into Pinterest)</label>
-        <input id="tagged-topics" type="text" readonly class="aps-input aps-readonly" placeholder="Topics will appear here…">
+        <div class="aps-input-with-btn">
+          <input id="tagged-topics" type="text" readonly class="aps-input aps-readonly" placeholder="Topics will appear here…">
+          <button id="btn-copy-topics" class="aps-small-btn" title="Copy tagged topics">Copy</button>
+        </div>
+      </div>
+
+      <!-- Alt Text -->
+      <div class="aps-field-row">
+        <label for="pin-alt" class="aps-label">Alt Text</label>
+        <div class="aps-input-with-btn">
+          <input id="pin-alt" type="text" maxlength="500" class="aps-input" placeholder="Descriptive alt text…">
+          <button id="btn-copy-alt" class="aps-small-btn" title="Copy alt text">Copy</button>
+        </div>
+      </div>
+
+      <!-- Coupon -->
+      <div class="aps-field-row">
+        <label for="coupon-code" class="aps-label">Coupon / Code (if detected)</label>
+        <input id="coupon-code" type="text" class="aps-input" placeholder="e.g. 7AQ7TNHY">
       </div>
     </section>
 
     <!-- Step 4: Caption Preview -->
     <section class="aps-section">
-      <h2>Extracted Caption</h2>
+      <div class="aps-section-header">
+        <h2>Extracted Facebook Caption</h2>
+        <button id="btn-copy-caption" class="aps-small-btn" title="Copy Facebook caption">Copy</button>
+      </div>
       <textarea id="caption-preview" rows="5" readonly class="aps-textarea aps-readonly" placeholder="Caption extracted from Facebook post…"></textarea>
     </section>
 
     <!-- Actions -->
     <section class="aps-section aps-actions">
+      <button id="btn-copy-full" class="aps-btn-secondary" title="Copy the full Pin Package (title + description + hashtags + board + topics + alt text + affiliate link)">
+        Copy Full Pin Package
+      </button>
       <button id="btn-open-pinterest" class="aps-btn-primary">
         Open Pinterest Create
       </button>

@@ -11,10 +11,31 @@ Affiliate Pin Saver helps with a manual Amazon affiliate to Pinterest workflow:
 - Scans the visible Facebook post for likely product images and Amazon links.
 - Converts full Amazon product links into clean URLs with your locally saved Associate tag.
 - Resolves Amazon short links when Chrome can follow the redirect.
-- Generates editable Pinterest title, description, hashtags, alt text, board suggestion, and topics.
-- Opens Pinterest's create flow and copies the caption text so you can review and publish manually.
+- Generates a complete Pinterest pin package: SEO-friendly title, description, hashtags, alt text, suggested board, tagged topics, and a clean caption.
+- Detects coupon codes and deal types (e.g. "Use: SAVE20", "30% off", "Price Drop", "Half off with CODE", "Lightning Drop").
+- Cleans up Facebook caption noise: `[ad]`, `AD`, `Pr!ce Drop`, `Qpon`, decorative emojis, engagement bait ("comment, like, share"), duplicate Amazon links, duplicate disclosure lines.
+- One-click hover capture on Facebook product images — the extension grabs the exact image and the same post's caption + Amazon link without forcing you to manually re-pick the image.
+- Opens Pinterest's Create flow and copies the full Pin Package to your clipboard so you can review and publish manually.
 
-It does not track users, call analytics services, or submit/publish pins automatically.
+It does not track users, call analytics services, generate AI content, or submit/publish pins automatically.
+
+---
+
+## What's New in Phase 2
+
+Phase 2 adds the Pinterest Pin Copy Generator and the hover-click Quick Capture flow:
+
+- **Improved product title extraction**: strips `[ad]`, `AD`, leading emojis, deal banners, links, and coupon codes; enriches weak titles using the description (e.g. "Foam Flip Flop Slippers" → "Memory Foam Flip Flop Slippers").
+- **Category detection** with 9 mappings (tech, home-organization, kitchen, beauty, fashion, office, art, eco, default), each with its own suggested board, tagged topics, hashtags, use cases, and SEO phrase.
+- **Pinterest title generator**: `[Product Title] | [Category SEO Phrase]`, capped at 100 chars, no clickbait or all-caps.
+- **Pinterest description generator**: emoji + 2–3 sentence rewritten body, "Perfect for [use cases]", optional deal/code line, "Shop here 👇", affiliate URL, and a single `#ad` disclosure.
+- **Hashtag generator**: 8–12 deduped, category-relevant hashtags. Always includes `#AmazonFinds`.
+- **Alt text generator**: descriptive, no hashtags, no salesy language.
+- **Coupon & deal detection**: `Use: CODE`, `code: CODE`, `coupon CODE`, `Half off with CODE`, `30% off`, `Price Drop`, `Pr!ce Drop`, `Lightning DROP`, `Prime discount`, `Clip coupon`, `Qpon`, `Deal`, `Sale`. Stylised forms are normalised (`Pr!ce Drop` → `Price Drop`, `Qpon` → `Coupon`).
+- **Caption cleanup engine**: removes `[ad]`, `AD`, decorative emojis (`📎 👇 🔗 ⬇️`), engagement bait, duplicate disclosure, duplicate Amazon links, broken spacing.
+- **New popup sections**: Pinterest Title, Pinterest Description, Hashtags, Suggested Board, Tagged Topics, Alt Text, Coupon Code, Affiliate Link, plus the extracted Facebook caption.
+- **New copy buttons** on every field, plus **Copy Full Pin Package** which copies a labelled, multi-line block (`Title:` / `Description:` / `Hashtags:` / `Board:` / `Tagged Topics:` / `Alt Text:` / `Affiliate Link:`).
+- **Hover-click Quick Capture**: when the "Pin Affiliate" hover button is clicked on a Facebook product image, the extension captures *that exact image* plus the caption + Amazon link from the same `[role="article"]` post container. The popup then opens with everything pre-selected — no need to re-pick the image. Use the **Change Image** button if the wrong one was captured. Quick-capture data is cleared after the popup consumes it so old images aren't reused. The same flow runs from the right-click "Save to Pinterest (Affiliate)" context menu on an image.
 
 ---
 
@@ -243,4 +264,5 @@ Expected: extracts ASIN `B09XYZ1234`, builds clean affiliate URL, extracts coupo
 
 | Version | Changes |
 |---|---|
-| 1.0.0 | Initial release |
+| 1.0.0 | Initial release. |
+| 1.1.0 | **Phase 2.** Pinterest Pin Copy Generator: title/description/hashtags/alt-text generators, 9-category detection, coupon & deal detection with normalisation, caption cleanup engine, full popup UI overhaul with per-field copy buttons + Copy Full Pin Package. Hover-click Quick Capture: clicking the "Pin Affiliate" hover button now grabs the exact image + same-post caption + Amazon link in one click; popup opens pre-filled with a Change Image fallback. Manual publishing on Pinterest is still required — the extension never auto-publishes. |
