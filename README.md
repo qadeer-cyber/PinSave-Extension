@@ -39,6 +39,19 @@ Phase 2 adds the Pinterest Pin Copy Generator and the hover-click Quick Capture 
 
 ---
 
+## What's New in Phase 2.1 (Runtime Hardening)
+
+Phase 2.1 doesn't add new features — it makes the existing Quick Capture flow reliable on real Facebook + Pinterest:
+
+- **Robust same-post detection**: Quick Capture now climbs parent elements from the clicked image and *scores* candidate containers, preferring `[role="article"]` / `<article>`, then feed/main, with a deal-keyword bonus and a penalty for very large containers. Comments, reaction bars, navigation, sidebars, suggested-post rails, sponsored cards and dialogs are excluded.
+- **Capture Status diagnostics panel**: at the top of the popup, a compact status block shows Source (Quick Capture / Image Picker / Manual), Image, Caption (with a "page fallback" warning when extraction fell back), Amazon links count, Affiliate state, and a free-form warning line.
+- **Multiple Amazon link selector**: when the post contains 2+ Amazon links, a dropdown appears so you can pick the right product link before generating the affiliate URL. A single link still uses the original radio row.
+- **Manual paste fallback**: the caption box is now editable. Paste your own caption or fix what Facebook gave you, optionally paste a manual Amazon URL, then hit **Re-generate Pin Package** to refresh the title, description, hashtags, board, topics and alt text against your inputs. This works even when Facebook DOM extraction fails.
+- **Auto-copy on Open Pinterest**: clicking **Open Pinterest Create** now automatically copies the **Full Pin Package** to your clipboard alongside opening Pinterest, so you can paste any field manually if Pinterest ignores the URL parameters.
+- **Image URL warnings**: warns when the selected image URL is `blob:`, `data:`, suspiciously short, or a signed Facebook CDN URL whose signature can expire. Adds a **Copy URL** button next to **Change Image**. The warnings never block the workflow.
+
+---
+
 ## Quick Install
 
 1. Clone this repository.
@@ -266,3 +279,4 @@ Expected: extracts ASIN `B09XYZ1234`, builds clean affiliate URL, extracts coupo
 |---|---|
 | 1.0.0 | Initial release. |
 | 1.1.0 | **Phase 2.** Pinterest Pin Copy Generator: title/description/hashtags/alt-text generators, 9-category detection, coupon & deal detection with normalisation, caption cleanup engine, full popup UI overhaul with per-field copy buttons + Copy Full Pin Package. Hover-click Quick Capture: clicking the "Pin Affiliate" hover button now grabs the exact image + same-post caption + Amazon link in one click; popup opens pre-filled with a Change Image fallback. Manual publishing on Pinterest is still required — the extension never auto-publishes. |
+| 1.2.0 | **Phase 2.1 — Runtime Hardening.** Robust same-post detection (parent climb + scored candidate selection, excludes comments / sidebar / nav / suggested rails / sponsored / dialog). New Capture Status diagnostics panel showing Source / Image / Caption / Amazon links / Affiliate state. Multi-link dropdown selector when a post has 2+ Amazon URLs. Editable caption box + manual Amazon URL field + "Re-generate Pin Package" button so the workflow keeps working when Facebook extraction fails. Auto-copy of the Full Pin Package when Open Pinterest Create is clicked. Image-URL warnings for blob:/data:/short/expiring CDN URLs plus a Copy Image URL button. No new features — all hardening of the Phase 2 flow. |

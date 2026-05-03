@@ -344,5 +344,51 @@ h2 {
 }
 .aps-empty strong { color: var(--gray-700); }
 
+/* ── Capture Status (Phase 2.1) ─────────────────────────────── */
+.aps-capture-status { background: var(--gray-50); }
+
+.aps-capture-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  font-size: 11px;
+}
+.aps-capture-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px dashed var(--gray-100);
+}
+.aps-capture-list li:last-child { border-bottom: none; }
+
+.aps-cap-label {
+  color: var(--gray-500);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.aps-cap-value {
+  color: var(--gray-700);
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+.aps-cap-value.ok      { color: #2e7d32; }
+.aps-cap-value.warn    { color: #b45309; }
+.aps-cap-value.missing { color: #c62828; }
+.aps-cap-value.muted   { color: var(--gray-500); font-weight: 400; }
+
+.aps-section-actions {
+  display: flex;
+  gap: 6px;
+}
+
 /* ── Utilities ──────────────────────────────────────────────── */
 .hidden { display: none !important; }
