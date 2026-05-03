@@ -354,13 +354,11 @@ function updateCaptureStatus() {
 
   // Affiliate
   if (state.affiliateUrl) {
-    setCapValue(els.capAffiliate, 'Generated', 'ok');
-  } else if (!state.associateTag) {
-    setCapValue(els.capAffiliate, 'Set Associate tag in Options', 'missing');
+    setCapValue(els.capAffiliate, 'Manual link set', 'ok');
   } else if (n === 0 && !els.manualAmazonUrl.value.trim()) {
-    setCapValue(els.capAffiliate, 'Needs Amazon URL', 'warn');
+    setCapValue(els.capAffiliate, 'Paste affiliate URL', 'warn');
   } else {
-    setCapValue(els.capAffiliate, 'Pending', 'warn');
+    setCapValue(els.capAffiliate, 'Pending manual URL', 'warn');
   }
 
   // Aggregate warning line
@@ -862,47 +860,11 @@ async function selectAmazonUrl(rawUrl) {
 }
 
 async function resolveAndConvert(rawUrl) {
-  const tag = state.associateTag;
-
-  if (!tag) {
-    els.affiliateUrl.value = '';
-    showWarning('Amazon Associate tag is missing. Go to Options to set it.');
-    regeneratePinterestContent();
-    return;
-  }
-
-  // Resolve short link first.
-  if (isShortAmazonUrl(rawUrl)) {
-    showStatus('Resolving short Amazon link…', 'info');
-    try {
-      const resp = await chrome.runtime.sendMessage({ action: 'resolveShortUrl', url: rawUrl });
-      if (resp.success && resp.resolvedUrl) {
-        rawUrl = resp.resolvedUrl;
-        showStatus('Short link resolved.', 'success');
-      } else {
-        showWarning('Could not resolve short Amazon link. Paste the full Amazon URL manually.');
-        els.affiliateUrl.value = '';
-        state.affiliateUrl = null;
-        regeneratePinterestContent();
-        return;
-      }
-    } catch {
-      showWarning('Could not resolve short link. Paste the full Amazon URL manually.');
-      els.affiliateUrl.value = '';
-      state.affiliateUrl = null;
-      regeneratePinterestContent();
-      return;
-    }
-  }
-
-  const { affiliateUrl, warning } = normalizeAmazonUrl(rawUrl, tag);
-
-  state.affiliateUrl  = affiliateUrl;
-  state.affiliateWarn = warning;
-
-  els.affiliateUrl.value = affiliateUrl || '';
-
-  if (warning) showWarning(warning);
+  const manual = (rawUrl || '').trim();
+  state.affiliateUrl = manual || null;
+  state.affiliateWarn = null;
+  els.affiliateUrl.value = manual;
+  if (!manual) showWarning('Paste your final Amazon affiliate link manually.');
   else els.affiliateWarning.classList.add('hidden');
 
   regeneratePinterestContent();
@@ -1119,7 +1081,7 @@ function bindEvents(tabId) {
   // Start screen — Scan Page Images
   if (els.btnScanPage) {
     els.btnScanPage.addEventListener('click', () => {
-      scanPage(tabId, null);
+      showStatus('Gallery scanning is disabled. Use Pin Affiliate hover capture and paste your final affiliate link manually.', 'info');
     });
   }
 
@@ -1139,10 +1101,7 @@ function bindEvents(tabId) {
   }
 
   els.btnRefresh.addEventListener('click', () => {
-    state.quickCapture  = null;
-    state.source        = 'picker';
-    state.containerKind = null;
-    scanPage(tabId, null);
+    showStatus('Gallery scanning is disabled in manual-link mode.', 'info');
   });
 
   // Manual Amazon URL — Phase 2.1 fallback when Facebook detection fails.
@@ -1236,18 +1195,7 @@ function bindEvents(tabId) {
   // asks for alternatives), trigger a scan now so the gallery is populated.
   if (els.btnChangeImage) {
     els.btnChangeImage.addEventListener('click', () => {
-      _show(els.imagePickerSection);
-      _hide(els.quickCaptureHint);
-      state.source = 'picker';
-      updateCaptureStatus();
-
-      if (!state.images || state.images.length === 0) {
-        // Quick-capture flow → no gallery yet; fetch one on demand.
-        scanPage(state.lastTabId, state.selectedSrc || null);
-      } else {
-        // Already scanned → just scroll to the picker.
-        els.imagePickerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      showStatus('Image gallery is removed. Capture the correct image using Pin Affiliate hover on Facebook.', 'info');
     });
   }
 
