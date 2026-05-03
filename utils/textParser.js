@@ -207,19 +207,16 @@ function sanitizeFacebookCaption(rawText) {
     line = line.replace(/\bqpon\b/gi,'Coupon').replace(/pr[!1i]ce\s*drop/gi,'Price Drop').replace(/lightning\s*drop/gi,'Lightning Drop');
     // Remove compressed alphanumeric junk tokens frequently found in copied
     // Facebook DOM text blobs (e.g. opntresSodu2m909cgc...).
-    line = line
-      .split(/\s+/)
-      .filter(tok => {
-        if (!tok) return false;
-        const bare = tok.replace(/[^A-Za-z0-9]/g, '');
-        if (bare.length < 16) return true;
-        const hasLetters = /[A-Za-z]/.test(bare);
-        const hasDigits  = /\d/.test(bare);
-        // Keep URLs and plausible human tokens, drop mixed long gibberish.
-        if (/^https?:\/\//i.test(tok)) return true;
-        return !(hasLetters && hasDigits);
-      })
-      .join(' ');
+    line = line.split(/\s+/).filter(tok => {
+      if (!tok) return false;
+      if (/^https?:\/\//i.test(tok)) return true; // always keep links
+      const bare = tok.replace(/[^A-Za-z0-9]/g, '');
+      if (bare.length < 16) return true;
+      const hasLetters = /[A-Za-z]/.test(bare);
+      const hasDigits = /\d/.test(bare);
+      // Drop long mixed alphanumeric blobs that look like copied DOM noise.
+      return !(hasLetters && hasDigits);
+    }).join(' ');
     line = collapseSpaces(line);
     if (!line) continue;
     kept.push(line);
