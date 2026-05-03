@@ -205,6 +205,18 @@ function sanitizeFacebookCaption(rawText) {
     line = line.replace(/^.*?(\[ad\]\s+)/i,'$1');
     line = line.replace(/^(?:[a-z0-9._-]+\.com(?:deals?)?)\s*/i,'');
     line = line.replace(/\bqpon\b/gi,'Coupon').replace(/pr[!1i]ce\s*drop/gi,'Price Drop').replace(/lightning\s*drop/gi,'Lightning Drop');
+    // Remove compressed alphanumeric junk tokens frequently found in copied
+    // Facebook DOM text blobs (e.g. opntresSodu2m909cgc...).
+    line = line.split(/\s+/).filter(tok => {
+      if (!tok) return false;
+      if (/^https?:\/\//i.test(tok)) return true; // always keep links
+      const bare = tok.replace(/[^A-Za-z0-9]/g, '');
+      if (bare.length < 16) return true;
+      const hasLetters = /[A-Za-z]/.test(bare);
+      const hasDigits = /\d/.test(bare);
+      // Drop long mixed alphanumeric blobs that look like copied DOM noise.
+      return !(hasLetters && hasDigits);
+    }).join(' ');
     line = collapseSpaces(line);
     if (!line) continue;
     kept.push(line);
@@ -515,6 +527,9 @@ function extractProductTitle(caption) {
     const first = stripEmojis(applyTitleStripPhrases(lines[0] || '')).trim();
     candidate = first.substring(0, 70).trim();
   }
+
+  // Never allow Facebook metadata lines to become product titles.
+  if (FACEBOOK_METADATA_RE.test(candidate)) return '';
 
   // 2) Enrich from the first description sentence:
   //    - Prepend descriptive words from the description if they sit right
