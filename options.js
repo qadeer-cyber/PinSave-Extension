@@ -10,7 +10,7 @@ const DEFAULTS = {
   defaultCategory:        '',
   defaultDisclosure:      '#ad As an Amazon Associate, I earn from qualifying purchases.',
   defaultPriceDisclaimer: 'Prices, deals, and coupon codes may change or end at any time.',
-  hoverButtonsEnabled:    false,
+  hoverButtonsEnabled:    true,
   facebookOnlyMode:       true,
   qualityWarningsEnabled: true,
 };
@@ -75,7 +75,12 @@ async function saveSettings(e) {
   await chrome.storage.local.set(settings);
 
   // Notify active Facebook tabs to toggle hover buttons
-  const tabs = await chrome.tabs.query({ url: ['https://facebook.com/*', 'https://www.facebook.com/*', 'https://m.facebook.com/*'] });
+  const tabs = await chrome.tabs.query({ url: [
+    'https://facebook.com/*',
+    'https://www.facebook.com/*',
+    'https://m.facebook.com/*',
+    'https://web.facebook.com/*',
+  ] });
   tabs.forEach(tab => {
     chrome.tabs.sendMessage(tab.id, { action: 'setHoverButtons', enabled: settings.hoverButtonsEnabled }).catch(() => {});
   });

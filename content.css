@@ -4,7 +4,8 @@
   position: absolute;
   top: 8px;
   left: 8px;
-  z-index: 9999;
+  /* Facebook uses very high z-indexes for overlays; stay above them. */
+  z-index: 2147483600;
   background: #e60023; /* Pinterest red */
   color: #fff;
   border: none;
@@ -21,6 +22,7 @@
   white-space: nowrap;
   transition: background 0.15s ease, transform 0.1s ease;
   line-height: 1;
+  pointer-events: auto;
 }
 
 .afpin-hover-btn:hover {
@@ -28,8 +30,13 @@
   transform: scale(1.04);
 }
 
-/* Show button only when hovering parent */
+/* Show button when:
+   - any ancestor is hovered (covers nested wrappers Facebook uses), OR
+   - the wrapper that explicitly opted-in via [data-afpin-host] is hovered, OR
+   - the button itself is hovered (so it stays visible while the cursor sits on it). */
+:hover > .afpin-hover-btn,
 *:hover > .afpin-hover-btn,
-[style*="position: relative"]:hover > .afpin-hover-btn {
+[data-afpin-host]:hover .afpin-hover-btn,
+.afpin-hover-btn:hover {
   display: flex;
 }

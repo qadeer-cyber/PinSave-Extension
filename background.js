@@ -18,7 +18,8 @@ chrome.runtime.onInstalled.addListener(() => {
     documentUrlPatterns: [
       'https://facebook.com/*',
       'https://www.facebook.com/*',
-      'https://m.facebook.com/*'
+      'https://m.facebook.com/*',
+      'https://web.facebook.com/*'
     ],
   });
 });

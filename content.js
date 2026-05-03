@@ -389,6 +389,11 @@
         const wStyle = getComputedStyle(wrapper);
         if (wStyle.position === 'static') wrapper.style.position = 'relative';
 
+        // Mark the wrapper so content.css can show the button on hover via a
+        // simple `[data-afpin-host]:hover .afpin-hover-btn` selector that does
+        // not depend on direct-child relationships.
+        wrapper.setAttribute('data-afpin-host', '1');
+
         wrapper.appendChild(btn);
       });
     });
@@ -416,6 +421,11 @@
   // ─── Message Listener ──────────────────────────────────────────────────────
 
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+
+    if (msg.action === 'ping') {
+      sendResponse({ success: true, version: 'content-1.4.1', host: location.hostname });
+      return false;
+    }
 
     if (msg.action === 'scanPage') {
       try {
@@ -501,9 +511,13 @@
 
   // ─── Init ──────────────────────────────────────────────────────────────────
 
-  // Read settings on load
+  // Read settings on load. Hover buttons default to ON when the user has not
+  // saved a preference yet, so the extension is useful out of the box.
   chrome.storage.local.get(['hoverButtonsEnabled']).then(data => {
-    if (data.hoverButtonsEnabled) initHoverButtons(true);
+    const enabled = data && Object.prototype.hasOwnProperty.call(data, 'hoverButtonsEnabled')
+      ? !!data.hoverButtonsEnabled
+      : true;
+    if (enabled) initHoverButtons(true);
   });
 
 })();
