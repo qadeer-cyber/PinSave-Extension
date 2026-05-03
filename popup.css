@@ -259,6 +259,33 @@ h2 {
 .aps-btn-primary:hover  { background: var(--red-dark); }
 .aps-btn-primary:active { transform: scale(.98); }
 
+.aps-btn-secondary {
+  width: 100%;
+  padding: 10px;
+  background: var(--white);
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+.aps-btn-secondary:hover  { background: #fff0f1; }
+.aps-btn-secondary:active { transform: scale(.98); }
+
+.aps-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  gap: 8px;
+}
+.aps-char-count-inline {
+  font-size: 10px;
+  color: var(--gray-500);
+}
+
 /* ── Amazon Link Picker ─────────────────────────────────────── */
 .aps-amazon-link-option {
   display: flex;

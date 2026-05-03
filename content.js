@@ -179,6 +179,40 @@
 
   // ─── Hover Pin Button ──────────────────────────────────────────────────────
 
+  /**
+   * Build a "quick capture" payload from a clicked product image element.
+   * Captures the exact image src + the caption / Amazon links from the SAME
+   * Facebook post container (not comments, sidebar, or other posts).
+   */
+  function buildQuickCapture(imgEl) {
+    const src        = (imgEl && (imgEl.currentSrc || imgEl.src)) || '';
+    const currentSrc = (imgEl && imgEl.currentSrc) || '';
+
+    let caption    = '';
+    let amazonUrls = [];
+
+    // Restrict caption extraction to the post container that holds the
+    // clicked image. Falls back to the whole-page extractor if the article
+    // can't be found.
+    const article = imgEl && imgEl.closest('[role="article"]');
+    if (article) {
+      const text = extractFromArticle(article);
+      caption    = collapseWhitespace(text);
+      amazonUrls = findAmazonUrls(caption);
+    } else {
+      caption    = extractCaption(src);
+      amazonUrls = findAmazonUrls(caption);
+    }
+
+    return {
+      src,
+      currentSrc,
+      caption,
+      amazonUrls,
+      capturedAt: Date.now(),
+    };
+  }
+
   function addHoverButtons() {
     document.querySelectorAll('[role="article"]').forEach(article => {
       article.querySelectorAll('img').forEach(img => {
@@ -202,19 +236,27 @@
         btn.textContent = 'Pin Affiliate';
         btn.title      = 'Save this image as affiliate pin';
 
+        // Bind the actual <img> element so the handler always knows which
+        // image / post container the user clicked on.
         btn.addEventListener('click', e => {
           e.preventDefault();
           e.stopPropagation();
-          // Open popup-like side panel by messaging background which triggers popup
-          // In MV3 we cannot open popup from content, so send message to popup if open,
-          // or store the src for popup to pick up on next open.
-          chrome.storage.session.set({ hoverSelectedSrc: src }).then(() => {
-            // Try to notify the popup if it's open (may fail if closed)
-            chrome.runtime.sendMessage({ action: 'hoverImageSelected', src }).catch(() => {});
+
+          const payload = buildQuickCapture(img);
+
+          // We can't open the popup from a content script in MV3, so we
+          // stash the payload in session storage and let the popup pick it
+          // up on next open. Also keep the legacy `hoverSelectedSrc` key
+          // for backwards compatibility.
+          chrome.storage.session.set({
+            quickCapture:     payload,
+            hoverSelectedSrc: payload.src,
+          }).then(() => {
+            chrome.runtime.sendMessage({ action: 'hoverImageSelected', src: payload.src })
+              .catch(() => {});
           });
         });
 
-        // Make wrapper relatively positioned for absolute btn
         const wStyle = getComputedStyle(wrapper);
         if (wStyle.position === 'static') wrapper.style.position = 'relative';
 
@@ -276,11 +318,26 @@
     }
 
     if (msg.action === 'openHoverPanel') {
-      // Context menu triggered with a src URL
-      if (msg.srcUrl) {
-        chrome.storage.session.set({ hoverSelectedSrc: msg.srcUrl });
+      // Context menu triggered with a src URL — find the matching <img> in
+      // the DOM so we can build the same quick-capture payload we'd build
+      // from the hover button.
+      try {
+        if (msg.srcUrl) {
+          const imgEl = Array.from(document.querySelectorAll('img')).find(i =>
+            (i.currentSrc || i.src || '') === msg.srcUrl || i.src === msg.srcUrl
+          ) || null;
+          const payload = imgEl
+            ? buildQuickCapture(imgEl)
+            : { src: msg.srcUrl, currentSrc: '', caption: '', amazonUrls: [], capturedAt: Date.now() };
+          chrome.storage.session.set({
+            quickCapture:     payload,
+            hoverSelectedSrc: payload.src,
+          });
+        }
+        sendResponse({ success: true });
+      } catch (e) {
+        sendResponse({ success: false, error: e.message });
       }
-      sendResponse({ success: true });
       return false;
     }
 
