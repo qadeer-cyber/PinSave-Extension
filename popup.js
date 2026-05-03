@@ -21,6 +21,7 @@ let state = {
   quickCapture:   null,   // { src, currentSrc, caption, amazonUrls, containerKind, capturedAt }
   source:         'picker', // 'quick-capture' | 'picker' | 'manual'
   containerKind:  null,   // 'article' | 'feed' | 'scored' | 'page-fallback' | null
+  lastTabId:      null,   // active tab id (for re-injection / refresh)
 };
 
 // ─── DOM References ────────────────────────────────────────────────────────
@@ -31,6 +32,9 @@ const els = {
   loading:             $('loading'),
   mainContent:         $('main-content'),
   notFacebook:         $('not-facebook'),
+  notFacebookHeadline: $('not-facebook-headline'),
+  notFacebookDetail:   $('not-facebook-detail'),
+  btnInjectHelper:     $('btn-inject-helper'),
   statusBar:           $('status-bar'),
 
   imagePickerSection:  $('image-picker-section'),
@@ -264,7 +268,95 @@ function refreshImageWarning() {
 
 // ─── Init ──────────────────────────────────────────────────────────────────
 
+/**
+ * True when the given URL belongs to a Facebook host we support.
+ * Accepts: facebook.com, www.facebook.com, m.facebook.com, web.facebook.com.
+ * Robust against trailing paths, query strings, and port numbers.
+ */
+function isFacebookUrl(url) {
+  if (!url) return false;
+  let host;
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  return host === 'facebook.com' || host.endsWith('.facebook.com');
+}
+
+/**
+ * Try to inject content.js + content.css into the active tab if the content
+ * script isn't responding. Used as a runtime fallback when the manifest
+ * registration didn't take effect (e.g. extension was just reloaded).
+ *
+ * Returns true on success, false otherwise.
+ */
+async function injectContentScript(tabId) {
+  if (!chrome.scripting || !chrome.scripting.executeScript) return false;
+  try {
+    await chrome.scripting.insertCSS({
+      target: { tabId, allFrames: false },
+      files:  ['content.css'],
+    });
+    await chrome.scripting.executeScript({
+      target: { tabId, allFrames: false },
+      files:  ['content.js'],
+    });
+    return true;
+  } catch (e) {
+    console.warn('[AffiliatePin] manual content-script injection failed:', e);
+    return false;
+  }
+}
+
+/**
+ * Ping the content script. Returns true if it answers within 600ms.
+ */
+async function pingContentScript(tabId) {
+  try {
+    const resp = await Promise.race([
+      chrome.tabs.sendMessage(tabId, { action: 'ping' }),
+      new Promise(resolve => setTimeout(() => resolve(null), 600)),
+    ]);
+    return !!(resp && resp.success);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Show the "not Facebook" / "content script not responding" empty state.
+ * mode: 'not-facebook' | 'no-content-script' | 'no-tab-url'
+ */
+function showEmptyState(mode, extraMsg) {
+  els.loading.classList.add('hidden');
+  els.mainContent.classList.add('hidden');
+  els.notFacebook.classList.remove('hidden');
+
+  const headline = els.notFacebookHeadline;
+  const detail   = els.notFacebookDetail;
+  const inject   = els.btnInjectHelper;
+
+  if (mode === 'no-content-script') {
+    if (headline) headline.textContent = 'Facebook detected, but content script is not active.';
+    if (detail)   detail.textContent   = 'Click below to inject the helper, or refresh the Facebook tab and reopen the popup.';
+    if (inject)   inject.classList.remove('hidden');
+  } else if (mode === 'no-tab-url') {
+    if (headline) headline.textContent = 'Cannot access this tab.';
+    if (detail)   detail.textContent   = extraMsg || 'Refresh the Facebook page and try again.';
+    if (inject)   inject.classList.add('hidden');
+  } else {
+    if (headline) headline.textContent = 'Open a Facebook page to use this extension.';
+    if (detail)   detail.textContent   = 'Works on facebook.com, www.facebook.com, m.facebook.com, and web.facebook.com (groups, pages, posts, photos).';
+    if (inject)   inject.classList.add('hidden');
+  }
+}
+
 async function init() {
+  // Bind always-on events first so Options/Refresh work even when the popup
+  // can't reach the active tab or the user isn't on Facebook.
+  bindAlwaysOnEvents();
+
   // Load settings
   const stored = await chrome.storage.local.get([
     'associateTag', 'hoverButtonsEnabled', 'defaultBoard', 'defaultDisclosure',
@@ -286,11 +378,32 @@ async function init() {
   // Check if on Facebook
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const url   = tab?.url || '';
-  const onFB  = /^https?:\/\/(www\.|m\.)?facebook\.com/.test(url);
 
-  if (!onFB) {
-    els.loading.classList.add('hidden');
-    els.notFacebook.classList.remove('hidden');
+  if (!tab || !url) {
+    showEmptyState('no-tab-url');
+    return;
+  }
+
+  if (!isFacebookUrl(url)) {
+    showEmptyState('not-facebook');
+    return;
+  }
+
+  // We're on Facebook. Make sure the content script is responding;
+  // if not, fall back to chrome.scripting injection.
+  let alive = await pingContentScript(tab.id);
+  if (!alive) {
+    const injected = await injectContentScript(tab.id);
+    if (injected) {
+      // Give the content script a moment to register its message listener.
+      await new Promise(r => setTimeout(r, 100));
+      alive = await pingContentScript(tab.id);
+    }
+  }
+  if (!alive) {
+    state.sourceFacebookUrl = url;
+    state.lastTabId = tab.id;
+    showEmptyState('no-content-script');
     return;
   }
 
@@ -702,17 +815,75 @@ function openPinterest() {
 
 // ─── Event Bindings ────────────────────────────────────────────────────────
 
+/**
+ * Open the Options page using the official API, falling back to opening it
+ * as a tab when openOptionsPage isn't available (e.g. older Chrome builds).
+ */
+function openOptions() {
+  if (chrome.runtime && chrome.runtime.openOptionsPage) {
+    try {
+      chrome.runtime.openOptionsPage();
+      return;
+    } catch (e) {
+      console.warn('[AffiliatePin] openOptionsPage failed, falling back:', e);
+    }
+  }
+  if (chrome.tabs && chrome.tabs.create && chrome.runtime && chrome.runtime.getURL) {
+    chrome.tabs.create({ url: chrome.runtime.getURL('options.html') });
+  }
+}
+
+/**
+ * Always-on bindings — these are wired up before Facebook detection so the
+ * Options button (and the diagnostic Inject button) work even when the popup
+ * is showing the empty state.
+ */
+function bindAlwaysOnEvents() {
+  if (els.btnOptions && !els.btnOptions.dataset.bound) {
+    els.btnOptions.dataset.bound = '1';
+    els.btnOptions.addEventListener('click', openOptions);
+  }
+
+  if (els.btnInjectHelper && !els.btnInjectHelper.dataset.bound) {
+    els.btnInjectHelper.dataset.bound = '1';
+    els.btnInjectHelper.addEventListener('click', async () => {
+      const tabId = state.lastTabId;
+      if (!tabId) {
+        showStatus('No active Facebook tab found.', 'error');
+        return;
+      }
+      els.btnInjectHelper.disabled = true;
+      els.btnInjectHelper.textContent = 'Injecting…';
+      const ok = await injectContentScript(tabId);
+      if (ok) {
+        // Give content.js a beat to register listeners before reload.
+        await new Promise(r => setTimeout(r, 120));
+        const alive = await pingContentScript(tabId);
+        if (alive) {
+          // Re-run init now that the content script is responsive.
+          els.notFacebook.classList.add('hidden');
+          els.btnInjectHelper.classList.add('hidden');
+          els.btnInjectHelper.disabled = false;
+          els.btnInjectHelper.textContent = 'Inject / Reload Extension Helper';
+          init();
+          return;
+        }
+      }
+      els.btnInjectHelper.disabled = false;
+      els.btnInjectHelper.textContent = 'Inject / Reload Extension Helper';
+      showStatus('Could not inject helper. Refresh the Facebook tab and try again.', 'error');
+    });
+  }
+}
+
 function bindEvents(tabId) {
+  state.lastTabId = tabId;
 
   els.btnRefresh.addEventListener('click', () => {
     state.quickCapture  = null;
     state.source        = 'picker';
     state.containerKind = null;
     scanPage(tabId, null);
-  });
-
-  els.btnOptions.addEventListener('click', () => {
-    chrome.runtime.openOptionsPage();
   });
 
   // Manual Amazon URL — Phase 2.1 fallback when Facebook detection fails.

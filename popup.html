@@ -231,9 +231,15 @@
 
   </main>
 
-  <!-- ── No Facebook Warning ────────────────────────────────── -->
+  <!-- ── Empty / Diagnostic State ───────────────────────────── -->
   <div id="not-facebook" class="aps-empty hidden">
-    <p>Please navigate to a<br><strong>Facebook group or post</strong><br>to use this extension.</p>
+    <p id="not-facebook-headline"><strong>Open a Facebook page to use this extension.</strong></p>
+    <p id="not-facebook-detail" class="aps-empty-detail">
+      Works on facebook.com, www.facebook.com, m.facebook.com, and web.facebook.com (groups, pages, posts, photos).
+    </p>
+    <button id="btn-inject-helper" class="aps-btn-secondary hidden">
+      Inject / Reload Extension Helper
+    </button>
   </div>
 
   <!-- Save-warning dialog (Phase 4 — quality below threshold) -->

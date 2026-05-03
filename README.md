@@ -85,6 +85,34 @@ Phase 4 layers a templates system and a quality-scoring engine on top of the exi
 
 ---
 
+## What's New in 1.4.1 (Facebook Detection + Options Runtime Fix)
+
+A targeted runtime patch that addresses three regressions reported on real Facebook tabs:
+
+- **Broader Facebook coverage.** `manifest.json` now declares `web.facebook.com` alongside `facebook.com`, `www.facebook.com`, and `m.facebook.com` in `host_permissions`, `content_scripts.matches`, and `web_accessible_resources.matches`. The popup detection logic was rewritten to use `URL(...).hostname` and accept `facebook.com` or any `*.facebook.com` subdomain (so users who default to `web.facebook.com` are no longer told to "navigate to a Facebook page").
+- **Options button works from every state.** The Options-button click handler is now bound in a new `bindAlwaysOnEvents()` block that runs *before* the Facebook detection check, so clicking Options now opens the page even when the popup is showing the empty/diagnostic state. The handler uses `chrome.runtime.openOptionsPage()` with a `chrome.tabs.create({ url: chrome.runtime.getURL('options.html') })` fallback.
+- **Content-script injection fallback.** `manifest.json` adds the `scripting` permission. When the popup detects a Facebook tab but the content script isn't responding to a `ping` (e.g., extension was just reloaded and the tab wasn't refreshed), the popup shows a "Facebook detected, but content script is not active" notice with an **Inject / Reload Extension Helper** button that calls `chrome.scripting.insertCSS` + `chrome.scripting.executeScript` to register `content.css`/`content.js` on the live tab.
+- **Hover button is reliable and on by default.** `hoverButtonsEnabled` now defaults to `true` for new installs, the wrapper element gets a `data-afpin-host` marker so the show-on-hover CSS selector no longer relies on direct-child relationships, and the button's `z-index` was raised to `2147483600` so it sits above Facebook's overlays.
+- **Manifest bumped to 1.4.1.**
+
+### How to test 1.4.1
+
+1. Load this branch as an unpacked extension (`chrome://extensions` → Developer mode → Load unpacked).
+2. Open `https://www.facebook.com/`, a public page, a group, and a post.
+3. Hover a large product image — the **Pin Affiliate** button should appear in the top-left corner.
+4. Click the extension icon: the popup should scan the page (no "navigate to Facebook" message).
+5. Repeat on `web.facebook.com` and `m.facebook.com` — same behaviour.
+6. From the popup header, click **Options** — the Options page should open in a new tab.
+7. Force the diagnostic flow: open Facebook, then go to `chrome://extensions` and click **Reload** on Affiliate Pin Saver. Without refreshing the Facebook tab, click the extension icon. The popup should now show "Facebook detected, but content script is not active." Click **Inject / Reload Extension Helper** and the popup should re-init and scan the page.
+
+### Known limitations
+
+- Bare `facebook.com` (no subdomain) is supported, but Facebook redirects to `www.facebook.com` in practice; users will rarely land on the bare host.
+- The injection fallback requires the tab to already be a Facebook page (the `scripting` permission is gated by `host_permissions`).
+- The hover button still requires the post container to expose an actual `<img>` element. Background-image-only renderings on Facebook are not eligible (this matches existing behaviour).
+
+---
+
 ## What's New in Phase 3 (Batch Queue + Posting Workflow)
 
 Phase 3 turns one-post-at-a-time into a batch queue so you can capture many posts first, then publish them to Pinterest manually one by one:

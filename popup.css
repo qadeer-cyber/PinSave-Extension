@@ -334,6 +334,8 @@ h2 {
 /* ── Empty / Not Facebook ───────────────────────────────────── */
 .aps-empty {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
@@ -343,6 +345,19 @@ h2 {
   line-height: 1.6;
 }
 .aps-empty strong { color: var(--gray-700); }
+.aps-empty-detail {
+  margin: 0;
+  font-size: 12px;
+  color: var(--gray-500);
+  max-width: 360px;
+}
+.aps-empty .aps-btn-secondary {
+  margin-top: 6px;
+}
+.aps-empty .aps-btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
 
 /* ── Capture Status (Phase 2.1) ─────────────────────────────── */
 .aps-capture-status { background: var(--gray-50); }
