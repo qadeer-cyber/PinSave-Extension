@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Affiliate Pin Saver</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header class="aps-header">
+    <div class="aps-logo">
+      <svg viewBox="0 0 24 24" class="aps-logo-icon" aria-hidden="true">
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+      </svg>
+      <span>Affiliate Pin Saver</span>
+    </div>
+    <button id="btn-options" class="aps-icon-btn" title="Settings">Options</button>
+  </header>
+
+  <!-- ── Status Banner ──────────────────────────────────────── -->
+  <div id="status-bar" class="aps-status hidden" role="alert" aria-live="polite"></div>
+
+  <!-- ── Loading ────────────────────────────────────────────── -->
+  <div id="loading" class="aps-loading">
+    <div class="aps-spinner"></div>
+    <p>Scanning page…</p>
+  </div>
+
+  <!-- ── Main Content ───────────────────────────────────────── -->
+  <main id="main-content" class="hidden">
+
+    <!-- Step 1: Image Grid -->
+    <section class="aps-section">
+      <div class="aps-section-header">
+        <h2>Choose Product Image</h2>
+        <button id="btn-refresh" class="aps-small-btn" title="Re-scan page">↻ Refresh</button>
+      </div>
+      <div id="image-grid" class="aps-image-grid" role="listbox" aria-label="Select a product image"></div>
+      <p id="no-images-msg" class="aps-hint hidden">No product images found. Scroll to the post and try Refresh.</p>
+    </section>
+
+    <!-- Selected Image Preview -->
+    <section id="preview-section" class="aps-section hidden">
+      <h2>Selected Image</h2>
+      <div class="aps-preview-wrap">
+        <img id="selected-preview" src="" alt="Selected product image" class="aps-preview-img">
+        <a id="selected-preview-link" href="#" target="_blank" class="aps-preview-link">Open image ↗</a>
+      </div>
+    </section>
+
+    <!-- Step 2: Amazon Links -->
+    <section class="aps-section">
+      <h2>Amazon Link</h2>
+      <div id="amazon-links-area">
+        <!-- Populated dynamically -->
+        <p id="no-amazon-msg" class="aps-hint hidden">No Amazon link detected. Paste it below.</p>
+      </div>
+
+      <div class="aps-field-row">
+        <label for="manual-amazon-url" class="aps-label">Manual Amazon URL (optional)</label>
+        <input id="manual-amazon-url" type="url" placeholder="https://www.amazon.com/dp/..." class="aps-input">
+      </div>
+
+      <div class="aps-field-row">
+        <label class="aps-label">Affiliate Link (your tag applied)</label>
+        <div class="aps-input-with-btn">
+          <input id="affiliate-url" type="url" readonly class="aps-input aps-readonly" placeholder="Will be generated…">
+          <button id="btn-copy-affiliate" class="aps-small-btn" title="Copy affiliate link">Copy</button>
+        </div>
+        <p id="affiliate-warning" class="aps-warning hidden"></p>
+      </div>
+    </section>
+
+    <!-- Step 3: Pinterest Content -->
+    <section class="aps-section">
+      <h2>Pinterest Content</h2>
+
+      <div class="aps-field-row">
+        <label for="pin-title" class="aps-label">Title</label>
+        <input id="pin-title" type="text" maxlength="100" class="aps-input" placeholder="Generated title…">
+        <span id="title-chars" class="aps-char-count">0/100</span>
+      </div>
+
+      <div class="aps-field-row">
+        <label for="pin-description" class="aps-label">Description</label>
+        <textarea id="pin-description" rows="7" maxlength="500" class="aps-textarea" placeholder="Generated description…"></textarea>
+        <span id="desc-chars" class="aps-char-count">0/500</span>
+      </div>
+
+      <div class="aps-field-row">
+        <label for="pin-hashtags" class="aps-label">Hashtags</label>
+        <input id="pin-hashtags" type="text" class="aps-input" placeholder="#AmazonFinds #AmazonDeals…">
+      </div>
+
+      <div class="aps-field-row">
+        <label for="pin-alt" class="aps-label">Alt Text</label>
+        <input id="pin-alt" type="text" maxlength="500" class="aps-input" placeholder="Descriptive alt text…">
+      </div>
+
+      <div class="aps-field-row">
+        <label for="coupon-code" class="aps-label">Coupon / Code (if detected)</label>
+        <div class="aps-input-with-btn">
+          <input id="coupon-code" type="text" class="aps-input" placeholder="e.g. 7AQ7TNHY">
+          <button id="btn-copy-caption" class="aps-small-btn" title="Copy description + hashtags">Copy Caption</button>
+        </div>
+      </div>
+
+      <div class="aps-field-row">
+        <label class="aps-label">Suggested Board</label>
+        <div class="aps-input-with-btn">
+          <input id="suggested-board" type="text" readonly class="aps-input aps-readonly">
+          <button id="btn-copy-board" class="aps-small-btn">Copy</button>
+        </div>
+      </div>
+
+      <div class="aps-field-row">
+        <label class="aps-label">Tagged Topics (paste into Pinterest)</label>
+        <input id="tagged-topics" type="text" readonly class="aps-input aps-readonly" placeholder="Topics will appear here…">
+      </div>
+    </section>
+
+    <!-- Step 4: Caption Preview -->
+    <section class="aps-section">
+      <h2>Extracted Caption</h2>
+      <textarea id="caption-preview" rows="5" readonly class="aps-textarea aps-readonly" placeholder="Caption extracted from Facebook post…"></textarea>
+    </section>
+
+    <!-- Actions -->
+    <section class="aps-section aps-actions">
+      <button id="btn-open-pinterest" class="aps-btn-primary">
+        Open Pinterest Create
+      </button>
+      <p class="aps-disclaimer">
+        You must manually select your board and publish on Pinterest. This extension never auto-publishes.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- ── No Facebook Warning ────────────────────────────────── -->
+  <div id="not-facebook" class="aps-empty hidden">
+    <p>Please navigate to a<br><strong>Facebook group or post</strong><br>to use this extension.</p>
+  </div>
+
+  <script src="utils/amazon.js"></script>
+  <script src="utils/textParser.js"></script>
+  <script src="utils/pinterest.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
