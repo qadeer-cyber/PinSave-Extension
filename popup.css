@@ -435,5 +435,30 @@ h2 {
   flex-wrap: wrap;
 }
 
+/* ── Phase 4: Pin Quality ───────────────────────────────────── */
+.aps-quality { background: var(--gray-50); }
+.aps-quality-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 56px; padding: 4px 10px; border-radius: 999px;
+  font-weight: 700; font-size: 12px;
+  background: var(--gray-100); color: var(--gray-700);
+  border: 1px solid var(--gray-300);
+}
+.aps-quality-badge.good { background: #e6f4ea; color: #1e7a36; border-color: #c6e6cf; }
+.aps-quality-badge.warn { background: #fff4e0; color: #b45309; border-color: #f3d8a8; }
+.aps-quality-badge.bad  { background: #fde8e8; color: #b3261e; border-color: #f3c4c4; }
+.aps-quality-warnings {
+  list-style: none; margin: 8px 0 0; padding: 0;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.aps-quality-warnings:empty { display: none; }
+.aps-quality-warnings li {
+  font-size: 12px; line-height: 1.4; color: #b45309;
+  padding-left: 14px; position: relative;
+}
+.aps-quality-warnings li::before {
+  content: "•"; position: absolute; left: 4px; color: #b45309;
+}
+
 /* ── Utilities ──────────────────────────────────────────────── */
 .hidden { display: none !important; }

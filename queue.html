@@ -14,6 +14,7 @@
       <h1>Affiliate Pin Queue</h1>
     </div>
     <div class="aps-q-header-actions">
+      <button id="btn-autofix-all"    class="aps-q-btn aps-q-btn-secondary" title="Auto-fix every draft pin in your queue">Auto-Fix All Drafts</button>
       <button id="btn-export-csv"     class="aps-q-btn aps-q-btn-secondary">Export CSV</button>
       <button id="btn-clear-posted"   class="aps-q-btn aps-q-btn-secondary">Clear Posted</button>
       <button id="btn-clear-all"      class="aps-q-btn aps-q-btn-danger">Clear All</button>
@@ -51,6 +52,13 @@
       <option value="oldest">Oldest first</option>
       <option value="board">Board (A→Z)</option>
       <option value="status">Status</option>
+    </select>
+    <select id="filter-quality" class="aps-q-select" aria-label="Quality filter">
+      <option value="all">All quality</option>
+      <option value="ready">Ready (80+)</option>
+      <option value="needs-review">Needs Review (&lt;80)</option>
+      <option value="missing-affiliate">Missing Affiliate</option>
+      <option value="missing-disclosure">Missing Disclosure</option>
     </select>
   </section>
 
@@ -132,6 +140,8 @@
   <script src="utils/textParser.js"></script>
   <script src="utils/pinterest.js"></script>
   <script src="utils/queue.js"></script>
+  <script src="utils/templates.js"></script>
+  <script src="utils/quality.js"></script>
   <script src="queue.js"></script>
 </body>
 </html>

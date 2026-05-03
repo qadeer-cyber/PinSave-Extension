@@ -102,6 +102,60 @@
           <span class="opts-switch"></span>
         </label>
       </div>
+
+      <div class="opts-field opts-toggle">
+        <label for="quality-warnings">
+          <span>Enable Pin Quality warnings (Phase 4)</span>
+          <input id="quality-warnings" type="checkbox" checked>
+          <span class="opts-switch"></span>
+        </label>
+        <p class="opts-hint">Shows the Pin Quality score and warning list in the popup, and warns before saving low-quality pins to the queue.</p>
+      </div>
+    </section>
+
+    <!-- Phase 4: Pin Templates -->
+    <section class="opts-section">
+      <h2>Pin Templates (Phase 4)</h2>
+      <p class="opts-hint">
+        Customise the per-category Pinterest pin defaults the popup uses. The
+        Auto-Fix button in the popup and the queue dashboard will pull from
+        these templates when filling missing fields.
+      </p>
+
+      <div class="opts-templates-tabs" id="templates-tabs" role="tablist"></div>
+      <div class="opts-templates-editor" id="templates-editor">
+        <input type="hidden" id="tpl-active-category" value="default">
+
+        <div class="opts-field">
+          <label for="tpl-suggested-board">Suggested Board</label>
+          <input id="tpl-suggested-board" type="text">
+        </div>
+
+        <div class="opts-field">
+          <label for="tpl-tagged-topics">Tagged Topics (comma-separated)</label>
+          <input id="tpl-tagged-topics" type="text">
+        </div>
+
+        <div class="opts-field">
+          <label for="tpl-hashtags">Hashtags (space- or comma-separated)</label>
+          <input id="tpl-hashtags" type="text">
+        </div>
+
+        <div class="opts-field">
+          <label for="tpl-disclosure">Affiliate Disclosure</label>
+          <textarea id="tpl-disclosure" rows="2"></textarea>
+        </div>
+
+        <div class="opts-field">
+          <label for="tpl-deal-disclaimer">Deal Disclaimer</label>
+          <textarea id="tpl-deal-disclaimer" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="opts-actions opts-actions-inline">
+        <button type="button" id="btn-templates-save"  class="opts-btn-primary">Save Templates</button>
+        <button type="button" id="btn-templates-reset" class="opts-btn-secondary">Reset Templates</button>
+      </div>
     </section>
 
     <!-- Privacy note -->
@@ -120,6 +174,7 @@
 
 </div>
 
+<script src="utils/templates.js"></script>
 <script src="options.js"></script>
 </body>
 </html>

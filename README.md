@@ -52,6 +52,39 @@ Phase 2.1 doesn't add new features — it makes the existing Quick Capture flow 
 
 ---
 
+## What's New in Phase 4 (Pin Templates + Pin Quality Score)
+
+Phase 4 layers a templates system and a quality-scoring engine on top of the existing pin generator and queue, so every pin is checked, fixable, and consistent before it ever reaches Pinterest:
+
+- **Pin Templates** (`utils/templates.js`) — nine category templates (Tech, Home Organization, Kitchen, Beauty / Self-Care, Fashion, Office, Art, Eco, Default). Each template carries a category key, title format, suggested board, tagged topics, hashtags, description intro style, use cases, affiliate disclosure text, and deal disclaimer. Templates are stored locally under `pinTemplates` in `chrome.storage.local`.
+- **Templates editor in Options** — switch between category tabs and edit the suggested board, tagged topics, hashtags, disclosure, and deal disclaimer per category. Save Templates / Reset Templates buttons.
+- **Pin Quality Score** (`utils/quality.js`) — every pin gets a 0–100 score using the Phase 4 rubric (title exists, title under 100 chars, description, affiliate URL, affiliate URL with `tag=`, disclosure, suggested board, alt text, hashtag count between 5 and 12).
+- **Quality warnings** — human-readable list (missing title, title too long, missing description, missing affiliate link, missing `tag=`, missing disclosure, missing board, missing alt text, too few/many hashtags, duplicate hashtags, possibly broken image URL).
+- **Auto-Fix** — non-destructive auto-fix that adds the disclosure + deal disclaimer if missing, de-dupes hashtags, caps them at 12, fills the suggested board / tagged topics from the active category template, generates alt text via the existing `generateAltText` helper when one is missing, and collapses duplicate blank lines. Auto-Fix never invents an Amazon link.
+- **Popup integration** — new Pin Quality section with a coloured score badge, the warning list, and an Auto-Fix Pin Copy button. Saving to the queue with a score below 70 opens a "This pin has quality warnings. Save anyway?" dialog with Cancel / Auto-Fix / Save Anyway.
+- **Queue dashboard integration** — every queue item shows a quality badge on its thumbnail and an inline warning list. New Quality filter (All / Ready 80+ / Needs Review &lt;80 / Missing Affiliate / Missing Disclosure), per-item Auto-Fix button, and an Auto-Fix All Drafts button. Bulk auto-fix only touches `draft` items — posted and skipped items are left alone.
+- **Quality warnings toggle** — Options gains an "Enable Pin Quality warnings" switch (default on). When off, the popup hides the quality section and skips the save-warning dialog.
+- **No external API calls, no analytics, no auto-publishing.** Templates, scores, and warnings are computed entirely on-device. Final publishing on Pinterest stays manual.
+
+### How to test Phase 4
+
+1. Load this branch as an unpacked extension in Chrome (`chrome://extensions` → Developer mode → Load unpacked).
+2. Open Options. Verify the new **Pin Templates** section with tabs for all nine categories, and the **Enable Pin Quality warnings** toggle in Behaviour. Edit a template, click **Save Templates**, reload the page, confirm edits persisted. Click **Reset Templates** to restore defaults.
+3. Capture a Facebook product post into the popup. The new **Pin Quality** section should show a score badge (good ≥ 80, warn ≥ 70, bad otherwise) and a warning list. Edit a field — score updates live.
+4. Click **Auto-Fix Pin Copy** — disclosure, deal disclaimer, board, topics, alt text, and de-duped hashtags should fill in. Score should rise.
+5. With a deliberately weak pin (e.g. clear the description), click **Save to Queue**. The "This pin has quality warnings" dialog should appear with Cancel / Auto-Fix / Save Anyway buttons. Verify Save Anyway saves and Auto-Fix populates the form.
+6. Open the queue dashboard. Confirm each card shows a quality badge in the top-right of the thumbnail and inline warnings (when present). Try the Quality filter (Ready 80+, Needs Review &lt;80, Missing Affiliate, Missing Disclosure).
+7. Click a per-item **Auto-Fix** button — the item updates in place. Click **Auto-Fix All Drafts** in the header — confirm only `draft` items change; posted / skipped items must stay untouched.
+
+### Known limitations
+
+- Quality scoring is heuristic-only — it cannot guarantee that an affiliate link actually contains *your* Associate tag, only that *some* `tag=` parameter is present.
+- Auto-Fix never invents an Amazon URL; if a captured pin has no Amazon link, the affiliate field stays empty and the score reflects that.
+- Templates are local-only. There is no template sync across devices.
+- The Phase 4 disclosure / deal-disclaimer auto-append uses the active category template's text first, then falls back to the global defaults. If you customise both, the category template wins.
+
+---
+
 ## What's New in Phase 3 (Batch Queue + Posting Workflow)
 
 Phase 3 turns one-post-at-a-time into a batch queue so you can capture many posts first, then publish them to Pinterest manually one by one:
