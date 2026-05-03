@@ -627,8 +627,14 @@ async function applyQuickCapture(quickCap) {
 }
 
 async function maybeAutoLaunchOneClick() {
-  // Manual affiliate mode: never auto-launch Pinterest.
-  return;
+  if (state.source !== 'quick-capture') return;
+  const hasImage = !!state.selectedSrc;
+  const hasCaption = !!(state.caption || '').trim();
+  const hasAmazon = !!state.selectedAmazon;
+  const hasTag = !!(state.associateTag || '').trim();
+  const hasAffiliate = !!(state.affiliateUrl || '').trim();
+  if (!(hasImage && hasCaption && hasAmazon && hasTag && hasAffiliate)) return;
+  openPinterest();
 }
 
 // ─── Page Scan ─────────────────────────────────────────────────────────────
