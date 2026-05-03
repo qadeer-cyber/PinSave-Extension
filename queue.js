@@ -24,13 +24,32 @@ const $ = id => document.getElementById(id);
 const els = {
   statusBar:        $('status-bar'),
 
-  // Summary
+  // Sidebar nav + view containers
+  navQueue:         $('nav-queue'),
+  navAnalytics:     $('nav-analytics'),
+  navTemplates:     $('nav-templates'),
+  navSettings:      $('nav-settings'),
+  viewQueue:        $('view-queue'),
+  viewAnalytics:    $('view-analytics'),
+  viewTitle:        $('view-title'),
+  viewSub:          $('view-sub'),
+  toolbarActions:   $('toolbar-actions-queue'),
+
+  // Summary (Queue)
   sumTotal:         $('sum-total'),
   sumDraft:         $('sum-draft'),
   sumOpened:        $('sum-opened'),
   sumPosted:        $('sum-posted'),
   sumSkipped:       $('sum-skipped'),
   sumToday:         $('sum-today'),
+  sumReady:         $('sum-ready'),
+  sumMissingAffil:  $('sum-missing-affiliate'),
+  sumOldDrafts:     $('sum-old-drafts'),
+
+  // Old-drafts banner
+  bannerOldDrafts:        $('banner-old-drafts'),
+  bannerOldDraftsText:    $('banner-old-drafts-text'),
+  bannerOldDraftsFilter:  $('banner-old-drafts-filter'),
 
   // Filters
   filterSearch:     $('filter-search'),
@@ -48,6 +67,20 @@ const els = {
   btnClearPosted:   $('btn-clear-posted'),
   btnClearAll:      $('btn-clear-all'),
   btnAutofixAll:    $('btn-autofix-all'),
+
+  // Analytics targets
+  anTotal:          $('an-total'),
+  anPosted:         $('an-posted'),
+  anConversion:     $('an-conversion'),
+  anAvgQuality:     $('an-avg-quality'),
+  anWeek:           $('an-week'),
+  chartDaily:       $('chart-daily'),
+  chartStatus:      $('chart-status'),
+  chartStatusValue: $('chart-status-value'),
+  chartStatusLegend:$('chart-status-legend'),
+  chartBoards:      $('chart-boards'),
+  chartDeals:       $('chart-deals'),
+  chartQuality:     $('chart-quality'),
 
   // Edit modal
   editModal:        $('edit-modal'),
@@ -74,11 +107,35 @@ const els = {
 
 function showStatus(msg, type = 'info', timeoutMs = 3500) {
   els.statusBar.textContent = msg;
-  els.statusBar.className = `aps-q-status ${type}`;
+  els.statusBar.className = `aps-status ${type}`;
   els.statusBar.classList.remove('hidden');
   if (timeoutMs > 0) {
     setTimeout(() => els.statusBar.classList.add('hidden'), timeoutMs);
   }
+}
+
+// ─── Phase 5 — analytics helpers ───────────────────────────────────────────
+
+const OLD_DRAFT_AGE_DAYS = 7;
+
+function isOldDraft(item) {
+  if (!item || item.status !== 'draft') return false;
+  const t = item.createdAt ? Date.parse(item.createdAt) : NaN;
+  if (Number.isNaN(t)) return false;
+  return (Date.now() - t) > OLD_DRAFT_AGE_DAYS * 24 * 60 * 60 * 1000;
+}
+
+function isMissingAffiliate(item) {
+  if (!item) return false;
+  const url = item.affiliateUrl || '';
+  if (!url) return true;
+  return !/[?&]tag=[^&]+/i.test(url);
+}
+
+function startOfDay(d) {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
 }
 
 function fmtDate(iso) {
@@ -121,11 +178,11 @@ function buildFullPinPackageFromItem(it) {
 
 // ─── Confirm modal ─────────────────────────────────────────────────────────
 
-function openConfirm({ title, message, okLabel = 'Confirm', okClass = 'aps-q-btn-danger' }, onOk) {
+function openConfirm({ title, message, okLabel = 'Confirm', okClass = 'aps-btn-danger' }, onOk) {
   els.confirmTitle.textContent   = title;
   els.confirmMessage.textContent = message;
   els.btnConfirmOk.textContent   = okLabel;
-  els.btnConfirmOk.className     = `aps-q-btn ${okClass}`;
+  els.btnConfirmOk.className     = `aps-btn ${okClass}`;
   confirmCb = onOk;
   els.confirmModal.classList.remove('hidden');
 }
@@ -241,12 +298,32 @@ function renderSummary(items) {
   els.sumPosted.textContent  = s.posted;
   els.sumSkipped.textContent = s.skipped;
   els.sumToday.textContent   = s.capturedToday;
+
+  // Phase 5 — derived metrics.
+  const ready          = items.filter(it => it.status !== 'skipped' && scorePinPackage(it) >= QUALITY_GOOD_THRESHOLD).length;
+  const missingAffil   = items.filter(isMissingAffiliate).length;
+  const oldDrafts      = items.filter(isOldDraft).length;
+
+  if (els.sumReady)        els.sumReady.textContent        = ready;
+  if (els.sumMissingAffil) els.sumMissingAffil.textContent = missingAffil;
+  if (els.sumOldDrafts)    els.sumOldDrafts.textContent    = oldDrafts;
+
+  // Old drafts banner.
+  if (els.bannerOldDrafts) {
+    if (oldDrafts > 0) {
+      els.bannerOldDraftsText.textContent =
+        `${oldDrafts} draft${oldDrafts === 1 ? '' : 's'} sitting for more than ${OLD_DRAFT_AGE_DAYS} days. Review or skip them to keep the queue tidy.`;
+      els.bannerOldDrafts.classList.remove('hidden');
+    } else {
+      els.bannerOldDrafts.classList.add('hidden');
+    }
+  }
 }
 
 function renderBoardFilter(items) {
   const boards = Array.from(new Set(items.map(it => it.suggestedBoard).filter(Boolean))).sort();
   const current = els.filterBoard.value;
-  els.filterBoard.innerHTML = '<option value="all">All boards</option>';
+  els.filterBoard.innerHTML = '<option value="all">All</option>';
   for (const b of boards) {
     const opt = document.createElement('option');
     opt.value       = b;
@@ -258,70 +335,74 @@ function renderBoardFilter(items) {
 
 function renderItem(item) {
   const card = document.createElement('article');
-  card.className   = 'aps-q-item';
+  card.className   = 'aps-item';
   card.dataset.id  = item.id;
 
   // ── thumbnail ──
   const thumbWrap = document.createElement('div');
-  thumbWrap.className = 'aps-q-item-thumb-wrap';
-
-  const badge = document.createElement('span');
-  badge.className   = `aps-q-status-badge ${item.status}`;
-  badge.textContent = item.status;
-  thumbWrap.appendChild(badge);
+  thumbWrap.className = 'aps-thumb';
 
   if (item.selectedImageUrl) {
     const img = document.createElement('img');
-    img.className = 'aps-q-item-thumb';
     img.alt       = item.pinterestTitle || 'Pin image';
     img.loading   = 'lazy';
     img.src       = item.selectedImageUrl;
     img.addEventListener('error', () => {
       img.remove();
       const ph = document.createElement('div');
-      ph.className   = 'aps-q-item-thumb-missing';
+      ph.className   = 'aps-thumb-empty';
       ph.textContent = 'Image failed to load';
       thumbWrap.appendChild(ph);
     });
     thumbWrap.appendChild(img);
   } else {
     const ph = document.createElement('div');
-    ph.className   = 'aps-q-item-thumb-missing';
+    ph.className   = 'aps-thumb-empty';
     ph.textContent = 'No image';
     thumbWrap.appendChild(ph);
   }
 
-  // Phase 4 — Quality badge overlay (top-right corner of the thumb).
-  const score   = scorePinPackage(item);
-  const qBadge  = document.createElement('span');
-  qBadge.className   = 'aps-q-quality-badge ' + (
+  // Phase 5 — Floating badge layer (top-left status, top-right quality).
+  const score    = scorePinPackage(item);
+  const badges   = document.createElement('div');
+  badges.className = 'aps-thumb-badges';
+
+  const sBadge = document.createElement('span');
+  sBadge.className   = `aps-status-badge ${item.status}`;
+  sBadge.textContent = item.status;
+  badges.appendChild(sBadge);
+
+  const qBadge = document.createElement('span');
+  qBadge.className   = 'aps-quality-chip ' + (
     score >= QUALITY_GOOD_THRESHOLD ? 'good' :
     score >= QUALITY_NEEDS_REVIEW_THRESHOLD ? 'warn' : 'bad'
   );
-  qBadge.textContent = `${score}/100`;
+  qBadge.textContent = String(score);
   qBadge.title       = `Pin Quality Score: ${score}/100`;
-  thumbWrap.appendChild(qBadge);
+  badges.appendChild(qBadge);
+
+  thumbWrap.appendChild(badges);
 
   card.appendChild(thumbWrap);
 
   // ── body ──
   const body = document.createElement('div');
-  body.className = 'aps-q-item-body';
+  body.className = 'aps-item-body';
 
   const title = document.createElement('div');
-  title.className   = 'aps-q-item-title';
+  title.className   = 'aps-item-title';
   title.textContent = item.pinterestTitle || item.productTitle || '(untitled)';
   body.appendChild(title);
 
   if (item.suggestedBoard) {
     const board = document.createElement('div');
-    board.className   = 'aps-q-item-board';
+    board.className   = 'aps-item-board';
     board.textContent = item.suggestedBoard;
     body.appendChild(board);
   }
 
   const meta = document.createElement('div');
-  meta.className = 'aps-q-item-meta';
+  meta.className = 'aps-item-meta';
   const metaParts = [];
   metaParts.push(`Saved ${escapeHtml(fmtDate(item.createdAt))}`);
   if (item.couponCode)        metaParts.push(`Coupon: <strong>${escapeHtml(item.couponCode)}</strong>`);
@@ -336,7 +417,7 @@ function renderItem(item) {
   const warnings = getQualityWarnings(item);
   if (warnings.length) {
     const ul = document.createElement('ul');
-    ul.className = 'aps-q-item-warnings';
+    ul.className = 'aps-item-warnings';
     for (const w of warnings) {
       const li = document.createElement('li');
       li.textContent = w;
@@ -349,28 +430,28 @@ function renderItem(item) {
 
   // ── actions ──
   const actions = document.createElement('div');
-  actions.className = 'aps-q-item-actions';
+  actions.className = 'aps-item-actions';
 
   const btn = (label, cls, onClick, opts = {}) => {
     const b = document.createElement('button');
-    b.className   = `aps-q-btn ${cls}` + (opts.wide ? ' aps-q-item-actions-wide' : '');
+    b.className   = `aps-btn ${cls}` + (opts.wide ? ' aps-item-actions-wide' : '');
     b.textContent = label;
     b.addEventListener('click', onClick);
     return b;
   };
 
-  actions.appendChild(btn('Open Pinterest',    'aps-q-btn-primary',   () => openPinterestForItem(item),       { wide: true }));
-  actions.appendChild(btn('Copy Full Package', 'aps-q-btn-secondary', () => copyToClipboard(buildFullPinPackageFromItem(item), 'Full Pin Package')));
-  actions.appendChild(btn('Copy Affiliate',    'aps-q-btn-secondary', () => copyToClipboard(item.affiliateUrl || '', 'Affiliate link')));
-  actions.appendChild(btn('Auto-Fix',          'aps-q-btn-secondary', () => autoFixItem(item.id)));
-  actions.appendChild(btn('Edit',              'aps-q-btn-secondary', () => openEditModal(item)));
-  actions.appendChild(btn('Mark Posted',       'aps-q-btn-secondary', () => markStatus(item.id, 'posted')));
+  actions.appendChild(btn('Open Pinterest',    'aps-btn-primary',   () => openPinterestForItem(item),       { wide: true }));
+  actions.appendChild(btn('Copy Full Package', 'aps-btn-secondary', () => copyToClipboard(buildFullPinPackageFromItem(item), 'Full Pin Package')));
+  actions.appendChild(btn('Copy Affiliate',    'aps-btn-secondary', () => copyToClipboard(item.affiliateUrl || '', 'Affiliate link')));
+  actions.appendChild(btn('Auto-Fix',          'aps-btn-secondary', () => autoFixItem(item.id)));
+  actions.appendChild(btn('Edit',              'aps-btn-secondary', () => openEditModal(item)));
+  actions.appendChild(btn('Mark Posted',       'aps-btn-secondary', () => markStatus(item.id, 'posted')));
   if (item.status !== 'skipped') {
-    actions.appendChild(btn('Skip',            'aps-q-btn-secondary', () => markStatus(item.id, 'skipped')));
+    actions.appendChild(btn('Skip',            'aps-btn-secondary', () => markStatus(item.id, 'skipped')));
   } else {
-    actions.appendChild(btn('Reopen',          'aps-q-btn-secondary', () => markStatus(item.id, 'draft')));
+    actions.appendChild(btn('Reopen',          'aps-btn-secondary', () => markStatus(item.id, 'draft')));
   }
-  actions.appendChild(btn('Delete',            'aps-q-btn-danger',    () => confirmDelete(item), { wide: true }));
+  actions.appendChild(btn('Delete',            'aps-btn-danger',    () => confirmDelete(item), { wide: true }));
 
   card.appendChild(actions);
   return card;
@@ -393,7 +474,7 @@ async function render() {
 
   if (filtered.length === 0) {
     const note = document.createElement('p');
-    note.className   = 'aps-q-empty';
+    note.className   = 'aps-empty';
     note.textContent = 'No items match your filters.';
     els.grid.appendChild(note);
     return;
@@ -485,7 +566,7 @@ async function autoFixAllDrafts() {
     title:   'Auto-Fix all drafts?',
     message: `Apply auto-fix to ${drafts.length} draft pin${drafts.length === 1 ? '' : 's'}? Posted and skipped pins will not be touched.`,
     okLabel: 'Auto-Fix Drafts',
-    okClass: 'aps-q-btn-primary',
+    okClass: 'aps-btn-primary',
   }, async () => {
     const templates = await ensureTemplatesLoaded();
     let fixedCount = 0;
@@ -530,7 +611,7 @@ function confirmDelete(item) {
     title:    'Delete pin?',
     message:  `Delete "${item.pinterestTitle || item.productTitle || 'this pin'}" from your queue? This cannot be undone.`,
     okLabel:  'Delete',
-    okClass:  'aps-q-btn-danger',
+    okClass:  'aps-btn-danger',
   }, async () => {
     await deleteQueueItem(item.id);
     closeConfirm();
@@ -614,7 +695,7 @@ function clearPosted() {
     title:   'Clear posted pins?',
     message: 'Remove every pin marked Posted from your queue? This cannot be undone.',
     okLabel: 'Clear Posted',
-    okClass: 'aps-q-btn-danger',
+    okClass: 'aps-btn-danger',
   }, async () => {
     const removed = await clearQueueByStatus('posted');
     closeConfirm();
@@ -628,7 +709,7 @@ function clearAll() {
     title:   'Clear ENTIRE queue?',
     message: 'This will permanently delete every pin in your queue, including drafts and opened items. This cannot be undone.',
     okLabel: 'Delete All',
-    okClass: 'aps-q-btn-danger',
+    okClass: 'aps-btn-danger',
   }, async () => {
     await clearQueue();
     closeConfirm();
