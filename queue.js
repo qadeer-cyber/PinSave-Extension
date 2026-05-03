@@ -24,13 +24,32 @@ const $ = id => document.getElementById(id);
 const els = {
   statusBar:        $('status-bar'),
 
-  // Summary
+  // Sidebar nav + view containers
+  navQueue:         $('nav-queue'),
+  navAnalytics:     $('nav-analytics'),
+  navTemplates:     $('nav-templates'),
+  navSettings:      $('nav-settings'),
+  viewQueue:        $('view-queue'),
+  viewAnalytics:    $('view-analytics'),
+  viewTitle:        $('view-title'),
+  viewSub:          $('view-sub'),
+  toolbarActions:   $('toolbar-actions-queue'),
+
+  // Summary (Queue)
   sumTotal:         $('sum-total'),
   sumDraft:         $('sum-draft'),
   sumOpened:        $('sum-opened'),
   sumPosted:        $('sum-posted'),
   sumSkipped:       $('sum-skipped'),
   sumToday:         $('sum-today'),
+  sumReady:         $('sum-ready'),
+  sumMissingAffil:  $('sum-missing-affiliate'),
+  sumOldDrafts:     $('sum-old-drafts'),
+
+  // Old-drafts banner
+  bannerOldDrafts:        $('banner-old-drafts'),
+  bannerOldDraftsText:    $('banner-old-drafts-text'),
+  bannerOldDraftsFilter:  $('banner-old-drafts-filter'),
 
   // Filters
   filterSearch:     $('filter-search'),
@@ -48,6 +67,20 @@ const els = {
   btnClearPosted:   $('btn-clear-posted'),
   btnClearAll:      $('btn-clear-all'),
   btnAutofixAll:    $('btn-autofix-all'),
+
+  // Analytics targets
+  anTotal:          $('an-total'),
+  anPosted:         $('an-posted'),
+  anConversion:     $('an-conversion'),
+  anAvgQuality:     $('an-avg-quality'),
+  anWeek:           $('an-week'),
+  chartDaily:       $('chart-daily'),
+  chartStatus:      $('chart-status'),
+  chartStatusValue: $('chart-status-value'),
+  chartStatusLegend:$('chart-status-legend'),
+  chartBoards:      $('chart-boards'),
+  chartDeals:       $('chart-deals'),
+  chartQuality:     $('chart-quality'),
 
   // Edit modal
   editModal:        $('edit-modal'),
@@ -74,11 +107,35 @@ const els = {
 
 function showStatus(msg, type = 'info', timeoutMs = 3500) {
   els.statusBar.textContent = msg;
-  els.statusBar.className = `aps-q-status ${type}`;
+  els.statusBar.className = `aps-status ${type}`;
   els.statusBar.classList.remove('hidden');
   if (timeoutMs > 0) {
     setTimeout(() => els.statusBar.classList.add('hidden'), timeoutMs);
   }
+}
+
+// ─── Phase 5 — analytics helpers ───────────────────────────────────────────
+
+const OLD_DRAFT_AGE_DAYS = 7;
+
+function isOldDraft(item) {
+  if (!item || item.status !== 'draft') return false;
+  const t = item.createdAt ? Date.parse(item.createdAt) : NaN;
+  if (Number.isNaN(t)) return false;
+  return (Date.now() - t) > OLD_DRAFT_AGE_DAYS * 24 * 60 * 60 * 1000;
+}
+
+function isMissingAffiliate(item) {
+  if (!item) return false;
+  const url = item.affiliateUrl || '';
+  if (!url) return true;
+  return !/[?&]tag=[^&]+/i.test(url);
+}
+
+function startOfDay(d) {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
 }
 
 function fmtDate(iso) {
@@ -121,11 +178,11 @@ function buildFullPinPackageFromItem(it) {
 
 // ─── Confirm modal ─────────────────────────────────────────────────────────
 
-function openConfirm({ title, message, okLabel = 'Confirm', okClass = 'aps-q-btn-danger' }, onOk) {
+function openConfirm({ title, message, okLabel = 'Confirm', okClass = 'aps-btn-danger' }, onOk) {
   els.confirmTitle.textContent   = title;
   els.confirmMessage.textContent = message;
   els.btnConfirmOk.textContent   = okLabel;
-  els.btnConfirmOk.className     = `aps-q-btn ${okClass}`;
+  els.btnConfirmOk.className     = `aps-btn ${okClass}`;
   confirmCb = onOk;
   els.confirmModal.classList.remove('hidden');
 }
@@ -241,12 +298,32 @@ function renderSummary(items) {
   els.sumPosted.textContent  = s.posted;
   els.sumSkipped.textContent = s.skipped;
   els.sumToday.textContent   = s.capturedToday;
+
+  // Phase 5 — derived metrics.
+  const ready          = items.filter(it => it.status !== 'skipped' && scorePinPackage(it) >= QUALITY_GOOD_THRESHOLD).length;
+  const missingAffil   = items.filter(isMissingAffiliate).length;
+  const oldDrafts      = items.filter(isOldDraft).length;
+
+  if (els.sumReady)        els.sumReady.textContent        = ready;
+  if (els.sumMissingAffil) els.sumMissingAffil.textContent = missingAffil;
+  if (els.sumOldDrafts)    els.sumOldDrafts.textContent    = oldDrafts;
+
+  // Old drafts banner.
+  if (els.bannerOldDrafts) {
+    if (oldDrafts > 0) {
+      els.bannerOldDraftsText.textContent =
+        `${oldDrafts} draft${oldDrafts === 1 ? '' : 's'} sitting for more than ${OLD_DRAFT_AGE_DAYS} days. Review or skip them to keep the queue tidy.`;
+      els.bannerOldDrafts.classList.remove('hidden');
+    } else {
+      els.bannerOldDrafts.classList.add('hidden');
+    }
+  }
 }
 
 function renderBoardFilter(items) {
   const boards = Array.from(new Set(items.map(it => it.suggestedBoard).filter(Boolean))).sort();
   const current = els.filterBoard.value;
-  els.filterBoard.innerHTML = '<option value="all">All boards</option>';
+  els.filterBoard.innerHTML = '<option value="all">All</option>';
   for (const b of boards) {
     const opt = document.createElement('option');
     opt.value       = b;
@@ -258,70 +335,74 @@ function renderBoardFilter(items) {
 
 function renderItem(item) {
   const card = document.createElement('article');
-  card.className   = 'aps-q-item';
+  card.className   = 'aps-item';
   card.dataset.id  = item.id;
 
   // ── thumbnail ──
   const thumbWrap = document.createElement('div');
-  thumbWrap.className = 'aps-q-item-thumb-wrap';
-
-  const badge = document.createElement('span');
-  badge.className   = `aps-q-status-badge ${item.status}`;
-  badge.textContent = item.status;
-  thumbWrap.appendChild(badge);
+  thumbWrap.className = 'aps-thumb';
 
   if (item.selectedImageUrl) {
     const img = document.createElement('img');
-    img.className = 'aps-q-item-thumb';
     img.alt       = item.pinterestTitle || 'Pin image';
     img.loading   = 'lazy';
     img.src       = item.selectedImageUrl;
     img.addEventListener('error', () => {
       img.remove();
       const ph = document.createElement('div');
-      ph.className   = 'aps-q-item-thumb-missing';
+      ph.className   = 'aps-thumb-empty';
       ph.textContent = 'Image failed to load';
       thumbWrap.appendChild(ph);
     });
     thumbWrap.appendChild(img);
   } else {
     const ph = document.createElement('div');
-    ph.className   = 'aps-q-item-thumb-missing';
+    ph.className   = 'aps-thumb-empty';
     ph.textContent = 'No image';
     thumbWrap.appendChild(ph);
   }
 
-  // Phase 4 — Quality badge overlay (top-right corner of the thumb).
-  const score   = scorePinPackage(item);
-  const qBadge  = document.createElement('span');
-  qBadge.className   = 'aps-q-quality-badge ' + (
+  // Phase 5 — Floating badge layer (top-left status, top-right quality).
+  const score    = scorePinPackage(item);
+  const badges   = document.createElement('div');
+  badges.className = 'aps-thumb-badges';
+
+  const sBadge = document.createElement('span');
+  sBadge.className   = `aps-status-badge ${item.status}`;
+  sBadge.textContent = item.status;
+  badges.appendChild(sBadge);
+
+  const qBadge = document.createElement('span');
+  qBadge.className   = 'aps-quality-chip ' + (
     score >= QUALITY_GOOD_THRESHOLD ? 'good' :
     score >= QUALITY_NEEDS_REVIEW_THRESHOLD ? 'warn' : 'bad'
   );
-  qBadge.textContent = `${score}/100`;
+  qBadge.textContent = String(score);
   qBadge.title       = `Pin Quality Score: ${score}/100`;
-  thumbWrap.appendChild(qBadge);
+  badges.appendChild(qBadge);
+
+  thumbWrap.appendChild(badges);
 
   card.appendChild(thumbWrap);
 
   // ── body ──
   const body = document.createElement('div');
-  body.className = 'aps-q-item-body';
+  body.className = 'aps-item-body';
 
   const title = document.createElement('div');
-  title.className   = 'aps-q-item-title';
+  title.className   = 'aps-item-title';
   title.textContent = item.pinterestTitle || item.productTitle || '(untitled)';
   body.appendChild(title);
 
   if (item.suggestedBoard) {
     const board = document.createElement('div');
-    board.className   = 'aps-q-item-board';
+    board.className   = 'aps-item-board';
     board.textContent = item.suggestedBoard;
     body.appendChild(board);
   }
 
   const meta = document.createElement('div');
-  meta.className = 'aps-q-item-meta';
+  meta.className = 'aps-item-meta';
   const metaParts = [];
   metaParts.push(`Saved ${escapeHtml(fmtDate(item.createdAt))}`);
   if (item.couponCode)        metaParts.push(`Coupon: <strong>${escapeHtml(item.couponCode)}</strong>`);
@@ -336,7 +417,7 @@ function renderItem(item) {
   const warnings = getQualityWarnings(item);
   if (warnings.length) {
     const ul = document.createElement('ul');
-    ul.className = 'aps-q-item-warnings';
+    ul.className = 'aps-item-warnings';
     for (const w of warnings) {
       const li = document.createElement('li');
       li.textContent = w;
@@ -349,28 +430,28 @@ function renderItem(item) {
 
   // ── actions ──
   const actions = document.createElement('div');
-  actions.className = 'aps-q-item-actions';
+  actions.className = 'aps-item-actions';
 
   const btn = (label, cls, onClick, opts = {}) => {
     const b = document.createElement('button');
-    b.className   = `aps-q-btn ${cls}` + (opts.wide ? ' aps-q-item-actions-wide' : '');
+    b.className   = `aps-btn ${cls}` + (opts.wide ? ' aps-item-actions-wide' : '');
     b.textContent = label;
     b.addEventListener('click', onClick);
     return b;
   };
 
-  actions.appendChild(btn('Open Pinterest',    'aps-q-btn-primary',   () => openPinterestForItem(item),       { wide: true }));
-  actions.appendChild(btn('Copy Full Package', 'aps-q-btn-secondary', () => copyToClipboard(buildFullPinPackageFromItem(item), 'Full Pin Package')));
-  actions.appendChild(btn('Copy Affiliate',    'aps-q-btn-secondary', () => copyToClipboard(item.affiliateUrl || '', 'Affiliate link')));
-  actions.appendChild(btn('Auto-Fix',          'aps-q-btn-secondary', () => autoFixItem(item.id)));
-  actions.appendChild(btn('Edit',              'aps-q-btn-secondary', () => openEditModal(item)));
-  actions.appendChild(btn('Mark Posted',       'aps-q-btn-secondary', () => markStatus(item.id, 'posted')));
+  actions.appendChild(btn('Open Pinterest',    'aps-btn-primary',   () => openPinterestForItem(item),       { wide: true }));
+  actions.appendChild(btn('Copy Full Package', 'aps-btn-secondary', () => copyToClipboard(buildFullPinPackageFromItem(item), 'Full Pin Package')));
+  actions.appendChild(btn('Copy Affiliate',    'aps-btn-secondary', () => copyToClipboard(item.affiliateUrl || '', 'Affiliate link')));
+  actions.appendChild(btn('Auto-Fix',          'aps-btn-secondary', () => autoFixItem(item.id)));
+  actions.appendChild(btn('Edit',              'aps-btn-secondary', () => openEditModal(item)));
+  actions.appendChild(btn('Mark Posted',       'aps-btn-secondary', () => markStatus(item.id, 'posted')));
   if (item.status !== 'skipped') {
-    actions.appendChild(btn('Skip',            'aps-q-btn-secondary', () => markStatus(item.id, 'skipped')));
+    actions.appendChild(btn('Skip',            'aps-btn-secondary', () => markStatus(item.id, 'skipped')));
   } else {
-    actions.appendChild(btn('Reopen',          'aps-q-btn-secondary', () => markStatus(item.id, 'draft')));
+    actions.appendChild(btn('Reopen',          'aps-btn-secondary', () => markStatus(item.id, 'draft')));
   }
-  actions.appendChild(btn('Delete',            'aps-q-btn-danger',    () => confirmDelete(item), { wide: true }));
+  actions.appendChild(btn('Delete',            'aps-btn-danger',    () => confirmDelete(item), { wide: true }));
 
   card.appendChild(actions);
   return card;
@@ -381,6 +462,7 @@ async function render() {
 
   renderSummary(allItems);
   renderBoardFilter(allItems);
+  renderAnalytics(allItems);
 
   const filtered = applyFiltersAndSort(allItems);
 
@@ -393,7 +475,7 @@ async function render() {
 
   if (filtered.length === 0) {
     const note = document.createElement('p');
-    note.className   = 'aps-q-empty';
+    note.className   = 'aps-empty';
     note.textContent = 'No items match your filters.';
     els.grid.appendChild(note);
     return;
@@ -402,6 +484,327 @@ async function render() {
   const frag = document.createDocumentFragment();
   for (const item of filtered) frag.appendChild(renderItem(item));
   els.grid.appendChild(frag);
+}
+
+// ─── Phase 5: Analytics ────────────────────────────────────────────────────
+
+const ANALYTICS_DAYS = 14;
+
+function renderAnalytics(items) {
+  // Summary cards
+  const total      = items.length;
+  const posted     = items.filter(it => it.status === 'posted').length;
+  const conversion = total ? Math.round((posted / total) * 100) : 0;
+
+  const scores  = items.map(it => scorePinPackage(it));
+  const avgScore = scores.length
+    ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+    : 0;
+
+  const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const week = items.filter(it => {
+    const t = it.createdAt ? Date.parse(it.createdAt) : NaN;
+    return !Number.isNaN(t) && t >= oneWeekAgo;
+  }).length;
+
+  if (els.anTotal)      els.anTotal.textContent      = String(total);
+  if (els.anPosted)     els.anPosted.textContent     = String(posted);
+  if (els.anConversion) els.anConversion.textContent = `${conversion}%`;
+  if (els.anAvgQuality) els.anAvgQuality.textContent = String(avgScore);
+  if (els.anWeek)       els.anWeek.textContent       = String(week);
+
+  renderDailyBars(items);
+  renderStatusDonut(items);
+  renderBoardProgress(items);
+  renderDealProgress(items);
+  renderQualityProgress(items);
+}
+
+function renderDailyBars(items) {
+  const host = els.chartDaily;
+  if (!host) return;
+  host.innerHTML = '';
+
+  // Build a `Date -> count` map for the last ANALYTICS_DAYS days.
+  const today = startOfDay(new Date());
+  const days  = [];
+  for (let i = ANALYTICS_DAYS - 1; i >= 0; i--) {
+    const d = new Date(today.getTime() - i * 24 * 60 * 60 * 1000);
+    days.push({ date: d, count: 0 });
+  }
+
+  for (const it of items) {
+    if (!it.createdAt) continue;
+    const t = Date.parse(it.createdAt);
+    if (Number.isNaN(t)) continue;
+    const ds = startOfDay(new Date(t)).getTime();
+    const idx = days.findIndex(d => d.date.getTime() === ds);
+    if (idx !== -1) days[idx].count += 1;
+  }
+
+  const max = Math.max(1, ...days.map(d => d.count));
+  const dayLabel = d => d.toLocaleDateString(undefined, { weekday: 'short' }).slice(0, 2);
+
+  for (const d of days) {
+    const col   = document.createElement('div');
+    col.className = 'aps-bar' + (d.count === 0 ? ' zero' : '');
+    col.title   = `${d.date.toLocaleDateString()} — ${d.count} pin${d.count === 1 ? '' : 's'}`;
+
+    const value = document.createElement('div');
+    value.className = 'aps-bar-value';
+    value.textContent = String(d.count);
+    col.appendChild(value);
+
+    const fill  = document.createElement('div');
+    fill.className = 'aps-bar-fill';
+    const pct = Math.max(2, Math.round((d.count / max) * 100));
+    fill.style.height = `${pct}%`;
+    col.appendChild(fill);
+
+    const label = document.createElement('div');
+    label.className = 'aps-bar-label';
+    label.textContent = dayLabel(d.date);
+    col.appendChild(label);
+
+    host.appendChild(col);
+  }
+}
+
+const STATUS_COLORS = {
+  draft:   '#5e5ce6',
+  opened:  '#0a84ff',
+  posted:  '#30d158',
+  skipped: '#8e8e93',
+};
+
+function renderStatusDonut(items) {
+  const canvas = els.chartStatus;
+  if (!canvas) return;
+
+  const counts = { draft: 0, opened: 0, posted: 0, skipped: 0 };
+  for (const it of items) {
+    if (counts[it.status] !== undefined) counts[it.status] += 1;
+  }
+  const total = counts.draft + counts.opened + counts.posted + counts.skipped;
+
+  if (els.chartStatusValue) els.chartStatusValue.textContent = String(total);
+
+  // Render donut on canvas (HiDPI-aware).
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.clientWidth || 140;
+  const cssH = canvas.clientHeight || 140;
+  if (canvas.width !== cssW * dpr) canvas.width = cssW * dpr;
+  if (canvas.height !== cssH * dpr) canvas.height = cssH * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  const cx = cssW / 2;
+  const cy = cssH / 2;
+  const radius = Math.min(cssW, cssH) / 2 - 4;
+  const innerR = radius - 14;
+
+  // Track ring (when no data).
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.arc(cx, cy, innerR, 0, Math.PI * 2, true);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.fill();
+
+  if (total > 0) {
+    let start = -Math.PI / 2;
+    for (const key of ['draft', 'opened', 'posted', 'skipped']) {
+      const v = counts[key];
+      if (v === 0) continue;
+      const sweep = (v / total) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, start, start + sweep, false);
+      ctx.arc(cx, cy, innerR, start + sweep, start, true);
+      ctx.closePath();
+      ctx.fillStyle = STATUS_COLORS[key];
+      ctx.fill();
+      start += sweep;
+    }
+  }
+
+  // Legend
+  const legend = els.chartStatusLegend;
+  if (!legend) return;
+  legend.innerHTML = '';
+  const labelMap = { draft: 'Draft', opened: 'Opened', posted: 'Posted', skipped: 'Skipped' };
+  for (const key of ['draft', 'opened', 'posted', 'skipped']) {
+    const li = document.createElement('li');
+    const sw = document.createElement('span');
+    sw.className = 'aps-legend-swatch';
+    sw.style.background = STATUS_COLORS[key];
+    const name = document.createElement('span');
+    name.className = 'aps-legend-name';
+    name.textContent = labelMap[key];
+    const val = document.createElement('span');
+    val.className = 'aps-legend-value';
+    val.textContent = String(counts[key]);
+    li.appendChild(sw);
+    li.appendChild(name);
+    li.appendChild(val);
+    legend.appendChild(li);
+  }
+}
+
+function renderProgressList(host, rows, options) {
+  if (!host) return;
+  const opts = options || {};
+  host.innerHTML = '';
+  if (!rows.length) return; // CSS :empty rule shows "No data yet."
+
+  const max = Math.max(1, ...rows.map(r => r.value));
+
+  for (const row of rows) {
+    const li = document.createElement('li');
+    li.className = 'aps-progress-row';
+
+    const meta = document.createElement('div');
+    meta.className = 'aps-progress-meta';
+
+    const label = document.createElement('div');
+    label.className = 'aps-progress-label';
+
+    const labelName = document.createElement('span');
+    labelName.className = 'aps-progress-label-name';
+    labelName.textContent = row.label;
+
+    const labelSub = document.createElement('span');
+    labelSub.className = 'aps-progress-label-sub';
+    labelSub.textContent = row.sub || '';
+
+    label.appendChild(labelName);
+    if (row.sub) label.appendChild(labelSub);
+    meta.appendChild(label);
+
+    const track = document.createElement('div');
+    track.className = 'aps-progress-track';
+    const bar = document.createElement('div');
+    bar.className = 'aps-progress-bar' + (row.tone ? ' ' + row.tone : '');
+    const pct = Math.max(2, Math.round((row.value / max) * 100));
+    bar.style.width = `${pct}%`;
+    track.appendChild(bar);
+    meta.appendChild(track);
+
+    const value = document.createElement('div');
+    value.className = 'aps-progress-value';
+    value.textContent = opts.formatValue ? opts.formatValue(row.value) : String(row.value);
+
+    li.appendChild(meta);
+    li.appendChild(value);
+    host.appendChild(li);
+  }
+}
+
+function renderBoardProgress(items) {
+  const buckets = new Map();
+  for (const it of items) {
+    const key = (it.suggestedBoard || '').trim() || '— No board —';
+    buckets.set(key, (buckets.get(key) || 0) + 1);
+  }
+  const rows = Array.from(buckets.entries())
+    .map(([label, value]) => ({ label, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 8);
+  renderProgressList(els.chartBoards, rows);
+}
+
+const DEAL_LABELS = {
+  coupon:     'Coupon code',
+  percent:    'Percent off',
+  lightning:  'Lightning deal',
+  prime:      'Prime exclusive',
+  discount:   'Discount / sale',
+  none:       'No deal signal',
+};
+
+function classifyDeal(item) {
+  // An explicit coupon code on the item beats any text-pattern guess.
+  if (item.couponCode && String(item.couponCode).trim()) return 'coupon';
+
+  const hay = [
+    item.facebookCaption, item.pinterestDescription, item.dealType,
+  ].filter(Boolean).join(' ').toLowerCase();
+  if (!hay) return 'none';
+
+  if (/\bcoupon\b|\bpromo\b|use code|code[: ]+\S{3,}/i.test(hay)) return 'coupon';
+  if (/\b\d{1,3}\s?%\s?off\b|\bpercent off\b/i.test(hay))         return 'percent';
+  if (/lightning|flash sale/i.test(hay))                          return 'lightning';
+  if (/prime\s+(deal|exclusive|early)/i.test(hay))                return 'prime';
+  if (/\bdeal\b|\bsale\b|\bdiscount\b|price drop/i.test(hay))     return 'discount';
+  return 'none';
+}
+
+function renderDealProgress(items) {
+  const buckets = new Map();
+  for (const it of items) {
+    const key = classifyDeal(it);
+    buckets.set(key, (buckets.get(key) || 0) + 1);
+  }
+  const order = ['coupon', 'percent', 'lightning', 'prime', 'discount', 'none'];
+  const rows = order
+    .filter(k => buckets.has(k))
+    .map(k => ({ label: DEAL_LABELS[k], value: buckets.get(k), tone: k === 'none' ? 'info' : 'success' }));
+  renderProgressList(els.chartDeals, rows);
+}
+
+function renderQualityProgress(items) {
+  const buckets = [
+    { label: 'Excellent (80–100)', min: 80, max: 100, tone: 'success' },
+    { label: 'Good (70–79)',       min: 70, max: 79,  tone: 'info'    },
+    { label: 'Needs review (50–69)', min: 50, max: 69, tone: 'warning' },
+    { label: 'Weak (0–49)',        min: 0,  max: 49,  tone: 'danger'  },
+  ];
+  const counts = buckets.map(b => 0);
+  for (const it of items) {
+    const s = scorePinPackage(it);
+    const idx = buckets.findIndex(b => s >= b.min && s <= b.max);
+    if (idx !== -1) counts[idx] += 1;
+  }
+  const rows = buckets.map((b, i) => ({
+    label: b.label,
+    value: counts[i],
+    tone:  b.tone,
+  }));
+  renderProgressList(els.chartQuality, rows);
+}
+
+// ─── Phase 5: View switching ───────────────────────────────────────────────
+
+function setView(view) {
+  const isQueue = view !== 'analytics';
+  els.viewQueue.classList.toggle('hidden', !isQueue);
+  els.viewAnalytics.classList.toggle('hidden', isQueue);
+
+  for (const btn of [els.navQueue, els.navAnalytics]) {
+    if (!btn) continue;
+    const active = btn.dataset.view === view;
+    btn.classList.toggle('active', active);
+    if (active) btn.setAttribute('aria-current', 'page');
+    else        btn.removeAttribute('aria-current');
+  }
+
+  // Toolbar context.
+  if (els.viewTitle) els.viewTitle.textContent = isQueue ? 'Queue' : 'Analytics';
+  if (els.viewSub)   els.viewSub.textContent   = isQueue
+    ? 'All affiliate pins captured for review.'
+    : 'On-device analytics for your captured pins.';
+  if (els.toolbarActions) els.toolbarActions.classList.toggle('hidden', !isQueue);
+}
+
+function openOptionsAnchor(anchor) {
+  // Best-effort: open options.html and append a hash for the requested anchor.
+  if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL && chrome.tabs && chrome.tabs.create) {
+    const url = chrome.runtime.getURL('options.html') + (anchor ? `#${anchor}` : '');
+    chrome.tabs.create({ url });
+    return;
+  }
+  if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.openOptionsPage) {
+    chrome.runtime.openOptionsPage();
+  }
 }
 
 // ─── Phase 4: Auto-Fix helpers ─────────────────────────────────────────────
@@ -485,7 +888,7 @@ async function autoFixAllDrafts() {
     title:   'Auto-Fix all drafts?',
     message: `Apply auto-fix to ${drafts.length} draft pin${drafts.length === 1 ? '' : 's'}? Posted and skipped pins will not be touched.`,
     okLabel: 'Auto-Fix Drafts',
-    okClass: 'aps-q-btn-primary',
+    okClass: 'aps-btn-primary',
   }, async () => {
     const templates = await ensureTemplatesLoaded();
     let fixedCount = 0;
@@ -530,7 +933,7 @@ function confirmDelete(item) {
     title:    'Delete pin?',
     message:  `Delete "${item.pinterestTitle || item.productTitle || 'this pin'}" from your queue? This cannot be undone.`,
     okLabel:  'Delete',
-    okClass:  'aps-q-btn-danger',
+    okClass:  'aps-btn-danger',
   }, async () => {
     await deleteQueueItem(item.id);
     closeConfirm();
@@ -614,7 +1017,7 @@ function clearPosted() {
     title:   'Clear posted pins?',
     message: 'Remove every pin marked Posted from your queue? This cannot be undone.',
     okLabel: 'Clear Posted',
-    okClass: 'aps-q-btn-danger',
+    okClass: 'aps-btn-danger',
   }, async () => {
     const removed = await clearQueueByStatus('posted');
     closeConfirm();
@@ -628,7 +1031,7 @@ function clearAll() {
     title:   'Clear ENTIRE queue?',
     message: 'This will permanently delete every pin in your queue, including drafts and opened items. This cannot be undone.',
     okLabel: 'Delete All',
-    okClass: 'aps-q-btn-danger',
+    okClass: 'aps-btn-danger',
   }, async () => {
     await clearQueue();
     closeConfirm();
@@ -679,6 +1082,24 @@ function bindEvents() {
     if (!els.editModal.classList.contains('hidden'))    closeEditModal();
     if (!els.confirmModal.classList.contains('hidden')) closeConfirm();
   });
+
+  // ── Phase 5: Sidebar nav ──
+  if (els.navQueue)     els.navQueue    .addEventListener('click', () => setView('queue'));
+  if (els.navAnalytics) els.navAnalytics.addEventListener('click', () => setView('analytics'));
+  if (els.navTemplates) els.navTemplates.addEventListener('click', () => openOptionsAnchor('templates'));
+  if (els.navSettings)  els.navSettings .addEventListener('click', () => openOptionsAnchor(''));
+
+  // Old-drafts banner: jump to drafts via the status filter.
+  if (els.bannerOldDraftsFilter) {
+    els.bannerOldDraftsFilter.addEventListener('click', () => {
+      els.filterStatus.value  = 'draft';
+      els.filterSort.value    = 'oldest';
+      els.filterQuality.value = 'all';
+      els.filterSearch.value  = '';
+      setView('queue');
+      render();
+    });
+  }
 }
 
 // ─── Boot ──────────────────────────────────────────────────────────────────
