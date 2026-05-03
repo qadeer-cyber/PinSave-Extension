@@ -579,7 +579,7 @@ async function init() {
 
   setLoading(false);
 
-  if (quickCap && quickCap.src) {
+  if (quickCap && quickCap.singleImage && (quickCap.selectedImageUrl || quickCap.src)) {
     // Single-image quick capture flow — use ONLY the clicked image, do not
     // run a full page image scan, do not populate the picker gallery.
     await applyQuickCapture(quickCap);
@@ -600,6 +600,7 @@ async function init() {
  * they clicked on (no gallery, no random page images).
  */
 async function applyQuickCapture(quickCap) {
+  const quickSrc = quickCap.selectedImageUrl || quickCap.src || '';
   state.quickCapture  = quickCap;
   state.caption       = quickCap.caption || '';
   state.amazonUrls    = Array.isArray(quickCap.amazonUrls) ? quickCap.amazonUrls : [];
@@ -615,7 +616,7 @@ async function applyQuickCapture(quickCap) {
 
   // Render the single selected image in the preview without touching the
   // picker gallery.
-  selectImage({ src: quickCap.src }, { reextractCaption: false });
+  selectImage({ src: quickSrc }, { reextractCaption: false });
   renderCaptionPreview();
   renderAmazonLinks();
 
@@ -624,6 +625,18 @@ async function applyQuickCapture(quickCap) {
   } else {
     regeneratePinterestContent();
   }
+  await maybeAutoLaunchOneClick();
+}
+
+async function maybeAutoLaunchOneClick() {
+  if (state.source !== 'quick-capture') return;
+  const hasImage = !!state.selectedSrc;
+  const hasCaption = !!(state.caption || '').trim();
+  const hasAmazon = !!state.selectedAmazon;
+  const hasTag = !!(state.associateTag || '').trim();
+  const hasAffiliate = !!(state.affiliateUrl || '').trim();
+  if (!(hasImage && hasCaption && hasAmazon && hasTag && hasAffiliate)) return;
+  openPinterest();
 }
 
 // ─── Page Scan ─────────────────────────────────────────────────────────────
