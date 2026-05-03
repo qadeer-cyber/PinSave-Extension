@@ -52,6 +52,25 @@ Phase 2.1 doesn't add new features — it makes the existing Quick Capture flow 
 
 ---
 
+## What's New in Phase 3 (Batch Queue + Posting Workflow)
+
+Phase 3 turns one-post-at-a-time into a batch queue so you can capture many posts first, then publish them to Pinterest manually one by one:
+
+- **Save to Queue** button in the popup writes the current pin package (image, caption, Amazon + affiliate URLs, ASIN, Pinterest title/description/hashtags/board/topics/alt text, coupon, deal type, source Facebook URL, timestamp) into `chrome.storage.local`.
+- **Duplicate detection** (ASIN → affiliate URL → Amazon URL → product title + image URL) prevents accidentally re-saving the same product. A modal shows the existing match and offers **View Existing**, **Save Anyway**, or **Cancel**.
+- **Open Queue** button (and the new dedicated `queue.html` dashboard) shows every saved pin in a card grid: image preview, status badge, board, affiliate URL, coupon/deal/ASIN, source link, created date.
+- **Per-item actions**: Open Pinterest (also auto-copies the Full Pin Package and marks the item `opened`), Copy Full Package, Copy Affiliate, Edit, Mark Posted, Skip / Reopen, Delete.
+- **Edit modal** lets you fix the Pinterest title / description / hashtags / board / topics / alt text / affiliate URL / Facebook caption directly from the dashboard. Edits persist back to `chrome.storage.local`.
+- **Status lifecycle**: Draft → Opened → Posted (or Skipped). Status drives the daily counters.
+- **Summary cards**: Total / Draft / Opened / Posted / Skipped / Captured Today.
+- **Search + filters**: full-text search across title / board / topics / ASIN / Amazon URL / caption, plus status filter, board filter, and Newest / Oldest / Board / Status sort.
+- **Export CSV**: downloads `affiliate-pin-queue-YYYY-MM-DD.csv` with `createdAt`, `status`, `productTitle`, `pinterestTitle`, `suggestedBoard`, `affiliateUrl`, `amazonUrl`, `asin`, `couponCode`, `dealType`, `sourceFacebookUrl` columns.
+- **Clear Posted** removes only items marked Posted; **Clear All** wipes the queue (both gated behind a confirm modal).
+
+Storage stays local — no servers, no analytics, no telemetry. The queue lives entirely in `chrome.storage.local`.
+
+---
+
 ## Quick Install
 
 1. Clone this repository.
@@ -280,3 +299,4 @@ Expected: extracts ASIN `B09XYZ1234`, builds clean affiliate URL, extracts coupo
 | 1.0.0 | Initial release. |
 | 1.1.0 | **Phase 2.** Pinterest Pin Copy Generator: title/description/hashtags/alt-text generators, 9-category detection, coupon & deal detection with normalisation, caption cleanup engine, full popup UI overhaul with per-field copy buttons + Copy Full Pin Package. Hover-click Quick Capture: clicking the "Pin Affiliate" hover button now grabs the exact image + same-post caption + Amazon link in one click; popup opens pre-filled with a Change Image fallback. Manual publishing on Pinterest is still required — the extension never auto-publishes. |
 | 1.2.0 | **Phase 2.1 — Runtime Hardening.** Robust same-post detection (parent climb + scored candidate selection, excludes comments / sidebar / nav / suggested rails / sponsored / dialog). New Capture Status diagnostics panel showing Source / Image / Caption / Amazon links / Affiliate state. Multi-link dropdown selector when a post has 2+ Amazon URLs. Editable caption box + manual Amazon URL field + "Re-generate Pin Package" button so the workflow keeps working when Facebook extraction fails. Auto-copy of the Full Pin Package when Open Pinterest Create is clicked. Image-URL warnings for blob:/data:/short/expiring CDN URLs plus a Copy Image URL button. No new features — all hardening of the Phase 2 flow. |
+| 1.3.0 | **Phase 3 — Batch Queue + Posting Workflow.** New `queue.html` dashboard backed by `chrome.storage.local`. Popup gains **Save to Queue** + **Open Queue** buttons. Duplicate detection by ASIN / affiliate URL / Amazon URL / title+image with a View Existing / Save Anyway / Cancel modal. Per-item actions: Open Pinterest (auto-copies the Full Pin Package and marks Opened), Copy Full Package, Copy Affiliate, Edit, Mark Posted, Skip / Reopen, Delete. Edit modal for Pinterest title/description/hashtags/board/topics/alt/affiliate/caption. Search + status + board filters, Newest/Oldest/Board/Status sort. Summary cards: Total / Draft / Opened / Posted / Skipped / Captured Today. CSV export. Clear Posted + Clear All (confirmed). Local-only — no servers, no analytics. |
