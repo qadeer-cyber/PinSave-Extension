@@ -1,0 +1,498 @@
+{
+  "extensionName": {
+    "message": "Auf Pinterest merken",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Merke dir Ideen auf Pinterest.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "Auf Pinterest merken",
+    "description": "Title of the Pinterest action button."
+  },
+  "contextMenuSaveActionText": {
+    "message": "Auf Pinterest merken",
+    "description": "Context menu Save action name."
+  },
+  "saveButtonText": {
+    "message": "Merken",
+    "description": "Save button text."
+  },
+  "imagePickerPageheading": {
+    "message": "Merke dir eine Idee auf Pinterest",
+    "description": "Heading on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageinfoPrompt": {
+    "message": "Wähle bis zu 20 Bilder aus",
+    "description": "Additional info text on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageemptyStateheading": {
+    "message": "Keine pinnbaren Bilder auf der Seite gefunden",
+    "description": "Text displayed in empty state when no images are present"
+  },
+  "imagePickerPagereportBugButtontext": {
+    "message": "Ein Problem melden",
+    "description": "Button text that goes to the report bug page"
+  },
+  "imagePickerPagenextButtontext": {
+    "message": "Weiter",
+    "description": "Button text that goes from image selection to picking a board"
+  },
+  "imagePickerPagesignIntext": {
+    "message": "Anmelden",
+    "description": "Button text that goes to the Sign In page"
+  },
+  "imagePickerPagesettingsEduaccessibilityLabel": {
+    "message": "Informations-Popover zu Einstellungen",
+    "description": "Accessibility for settings education popover"
+  },
+  "imagePickerPagesettingsEducontent": {
+    "message": "Deaktiviere den Bild-Mouseover oder melde ein Problem in den Einstellungen",
+    "description": "Settings education popover message content"
+  },
+  "boardPickerPageheading": {
+    "message": "Pinnwand auswählen",
+    "description": "Heading on the page that shows the board picker interface"
+  },
+  "boardPickerPageheadingloading": {
+    "message": "Pinnwände werden geladen …",
+    "description": "Heading on the page that shows that boards are loading"
+  },
+  "boardPickerPagebackButtontootlipText": {
+    "message": "Zurück zur Bildauswahl",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardPickerPagecreateBoardtopChoiceHeading": {
+    "message": "Beliebte Auswahl",
+    "description": "Heading for a setion listing top choices for user's board selection"
+  },
+  "boardPickerPagecreateBoardallBoardHeading": {
+    "message": "Alle Pinnwände",
+    "description": "Heading for a setion listing all user's boards"
+  },
+  "boardPickerPageemptyStateheading": {
+    "message": "Erstelle eine Pinnwand, um fortzufahren",
+    "description": "Text displayed in empty state when no boards are present"
+  },
+  "boardPickerPagespinneraccessibility": {
+    "message": "Speicher-Spinner",
+    "description": "Accessibility label on a Board loading spinner animation icon"
+  },
+  "boardPickerPagecreateBoardbutton": {
+    "message": "Pinnwand erstellen",
+    "description": "Button text to create new board"
+  },
+  "signInPagespinneraccessibilityLabel": {
+    "message": "Spinner für Fortschritt der Authentifizierung",
+    "description": "Accessibility label on a user authentication progress spinner animation icon"
+  },
+  "signInPageconnectHeadingtext": {
+    "message": "Pinterest-Konto verknüpfen",
+    "description": "Sign in page heading"
+  },
+  "signInPageconnectDescriptiontext": {
+    "message": "Autorisiere die „Merken“-Erweiterung von Pinterest für deinen Browser, damit du dir ganz einfach Ideen von Webseiten merken kannst",
+    "description": "Description of the sign in page"
+  },
+  "signInPageauthorizeButtontext": {
+    "message": "Autorisieren",
+    "description": "Button for user authorization"
+  },
+  "signInPageretryHeadingtext": {
+    "message": "Probleme?",
+    "description": "Heading for authorization retry state"
+  },
+  "signInPageretryButtontext": {
+    "message": "Erneut versuchen",
+    "description": "Button for retrying authorization"
+  },
+  "appHeaderpinterestLogoaccessibilityLabel": {
+    "message": "Pinterest",
+    "description": "Accessibility label for Pinterest logo"
+  },
+  "appHeadersettingsButtonaccessibilityLabel": {
+    "message": "Einstellungen",
+    "description": "Accessibility label for settings button"
+  },
+  "appHeadercloseButtonaccessibilityLabel": {
+    "message": "Erweiterung schließen",
+    "description": "Accessibility label for extension close button"
+  },
+  "boardRepcollaborativeBoardIconaccessibilityLabel": {
+    "message": "Gruppenpinnwand",
+    "description": "Accessibility label on an icon indicating a collaborative board"
+  },
+  "boardRepsecretBoardIconaccessibilityLabel": {
+    "message": "Geheime Pinnwand",
+    "description": "Accessibility label on a lock icon for a secret board"
+  },
+  "boardRepboardSectionsIconaccessibilityLabel": {
+    "message": "Pinnwand-Ordner anzeigen",
+    "description": "Accessibility label on button that shows board sections"
+  },
+  "boardRepsaveButtontext": {
+    "message": "Merken",
+    "description": "Text on a button that saves a new Pin to user's profile"
+  },
+  "buttonIconWithTextaddIconaccessibilityLabel": {
+    "message": "Neu erstellen",
+    "description": "Accessibility label on a plus icon button"
+  },
+  "pageHeadingWithSearchbackButtonaccessibilityLabel": {
+    "message": "Zurück zum vorherigen Schritt",
+    "description": "Accessibility label for back button"
+  },
+  "pageHeadingWithSearchsearchFieldaccessibilityLabel": {
+    "message": "Nach Name suchen",
+    "description": "Accessibility label on a search field"
+  },
+  "pageHeadingWithSearchsearchFieldplaceholder": {
+    "message": "Nach Name suchen",
+    "description": "Placeholder text on a search field"
+  },
+  "savePickerpinCreationSuccessIconaccessibilityLabel": {
+    "message": "Pin erstellt",
+    "description": "Accessibility label for an icon indicating successful Pin creation"
+  },
+  "savePickerpinCreationSuccesshading": {
+    "message": "Gemerkt auf",
+    "description": "Heading tell the user where their Pin has been saved. This is followed by the board name"
+  },
+  "savePickerpinCreationSuccessviewButton": {
+    "message": "Anzeigen",
+    "description": "Button text to view newly created pin"
+  },
+  "savePickerboardDropdownIconheading": {
+    "message": "Auf Pinnwand merken",
+    "description": "Heading on a board picker dropdown"
+  },
+  "savePickerboardDropdownIconaccessibilityLabel": {
+    "message": "Pinnwand auswählen",
+    "description": "Accessibility label on a board picker dropdown arrow"
+  },
+  "savePickerspinneraccessibilityLabel": {
+    "message": "Speicher-Spinner",
+    "description": "Accessibility label on a Pin creation spinner animation icon"
+  },
+  "savePickersaveButtontext": {
+    "message": "Merken",
+    "description": "Text on a button to create a Pin"
+  },
+  "boardCreatePagesaveErrortext": {
+    "message": "Es ist etwas schiefgegangen",
+    "description": "Board save error text"
+  },
+  "boardCreatePagenameFieldmaxLengthError": {
+    "message": "Du kannst maximal 50 Zeichen eingeben",
+    "description": "New board name validation error"
+  },
+  "boardCreatePageheading": {
+    "message": "Pinnwand erstellen",
+    "description": "Heading on the page that shows the board creation interface"
+  },
+  "boardCreatePagebackButtontootlipText": {
+    "message": "Zurück zur Pinnwandauswahl",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardCreatePagenameTextFieldheading": {
+    "message": "Name der Pinnwand",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldlabel": {
+    "message": "Name der Pinnwand",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldplaceholder": {
+    "message": "Pinnwand-Namen eingeben",
+    "description": "Placeholder text for new board name text field"
+  },
+  "boardCreatePagesecretSwitchheading": {
+    "message": "Diese Pinnwand geheim machen",
+    "description": "Label text for a switch to make new board secret"
+  },
+  "boardCreatePagesecretSwitchinfo": {
+    "message": "Nur du und deine Mitwirkenden können diese Pinnwand sehen.",
+    "description": "Info text for a switch to make new board secret"
+  },
+  "boardCreatePagecreateButtontext": {
+    "message": "Erstellen",
+    "description": "Text on a button that creates new board"
+  },
+  "boardSectionCreatePagesaveErrortext": {
+    "message": "Es ist etwas schiefgegangen",
+    "description": "Board section save error text"
+  },
+  "boardSectionCreatePagenameFieldmaxLengthError": {
+    "message": "Du kannst maximal 50 Zeichen eingeben",
+    "description": "Error for when the new board section name is too long"
+  },
+  "boardSectionCreatePageheading": {
+    "message": "Pinnwand-Ordner erstellen",
+    "description": "Heading on the page that shows the board section creation interface"
+  },
+  "boardSectionCreatePagebackButtontootlipText": {
+    "message": "Zurück zur Ordnerauswahl",
+    "description": "Text in tooltip that shows up on Pinterest logo hover"
+  },
+  "boardSectionCreatePagetitleTextFieldheading": {
+    "message": "Name des Ordners",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagetitleTextFieldlabel": {
+    "message": "Name des Ordners",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagenameTextFieldplaceholder": {
+    "message": "Gib einen Ordnernamen ein",
+    "description": "Placeholder text for new board section name text field"
+  },
+  "boardSectionCreatePagecreateButtontext": {
+    "message": "Erstellen",
+    "description": "Text on a button that creates new board section"
+  },
+  "boardSectionPickerPageheading": {
+    "message": "Pinnwand-Ordner auswählen",
+    "description": "Heading on the page that shows the board section picker interface"
+  },
+  "boardSectionPickerPagebackButtontootlipText": {
+    "message": "Zurück zur Pinnwandauswahl",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardSectionPickerPagecreateSectionbutton": {
+    "message": "Ordner hinzufügen",
+    "description": "Create board section button text"
+  },
+  "pinCreatePagesaveErrortext": {
+    "message": "Es ist etwas schiefgegangen",
+    "description": "Pin create error text"
+  },
+  "pinCreatePageheadingInProgresstext": {
+    "message": "Merken auf",
+    "description": "Pin create page heading text when saving is in progress. This text is followed by a board name"
+  },
+  "pinCreatePageheadingDonetext": {
+    "message": "Gemerkt auf",
+    "description": "Pin create page heading text when saving is complete. This text is followed by a board name"
+  },
+  "pinCreatePageviewButtontext": {
+    "message": "Anzeigen",
+    "description": "Text on a button that opens newly created Pin page"
+  },
+  "extName": {
+    "message": "„Merken“-Button von Pinterest",
+    "description": "The extension's title, seen in gallery and extensions page"
+  },
+  "extDescription": {
+    "message": "Merke dir deine Lieblingsideen online, damit du sie später einfach wiederfindest.",
+    "description": "The extension's description, seen in gallery and extensions page"
+  },
+  "noPinDomain": {
+    "message": "Leider kann von dieser Domain nichts gemerkt werden. Bitte kontaktiere den Betreiber der Webseite, falls du weitere Fragen hast.",
+    "description": "The default message we alert when someone tries to use the browser button on a forbidden domain"
+  },
+  "optionTitle": {
+    "message": "Optionen für den „Merken“-Button",
+    "description": "Title for the Options page"
+  },
+  "optionHide": {
+    "message": "Mouseover-„Merken“-Buttons ausblenden",
+    "description": "Text next to the checkbox that turns off hoverbuttons"
+  },
+  "searchAction": {
+    "message": "Suchen",
+    "description": "Appears in the right-click-to-search menu item"
+  },
+  "saveAction": {
+    "message": "Merken",
+    "description": "Appears wherever we show a Save button or menu prompt"
+  },
+  "choosePinMultiSelectHeader": {
+    "message": "Merke dir eine Idee auf Pinterest",
+    "description": "New header message in the image picker overlay"
+  },
+  "choosePinSelectAllSubHeader": {
+    "message": "Wähle bis zu 20 Bilder aus",
+    "description": "Subheader in the image picker overlay"
+  },
+  "nextAction": {
+    "message": "Weiter",
+    "description": "Press this button to go to the Create view when multiple images are selected"
+  },
+  "selectAll": {
+    "message": "Alle auswählen",
+    "description": "Text next to the checkbox that selects all images on the grid"
+  },
+  "boardPickerOpenerLabel": {
+    "message": "Auf Pinnwand merken",
+    "description": "Label in inline board picker"
+  },
+  "boardPickerSuccessLabel": {
+    "message": "Gemerkt auf",
+    "description": "Label in inline board picker after pin creation"
+  },
+  "visitButton": {
+    "message": "Besuchen",
+    "description": "Pin create success button to visit pin"
+  },
+  "help": {
+    "message": "Hilfe",
+    "description": "Get help after a Pin create failure"
+  },
+  "chooseBoard": {
+    "message": "Pinnwand auswählen",
+    "description": "main header in Save form"
+  },
+  "topChoices": {
+    "message": "Beliebte Auswahl",
+    "description": "interstitial header in board list"
+  },
+  "allBoards": {
+    "message": "Alle Pinnwände",
+    "description": "interstitial header in board list"
+  },
+  "createBoard": {
+    "message": "Pinnwand erstellen",
+    "description": "header in Create form"
+  },
+  "addFormSecretLabel": {
+    "message": "Geheim",
+    "description": "label over secret/not-secret switch"
+  },
+  "chooseSection": {
+    "message": "Pinnwand-Ordner wählen",
+    "description": "label for board sections"
+  },
+  "addSection": {
+    "message": "Pinnwand-Ordner hinzufügen",
+    "description": "label to add section"
+  },
+  "optYes": {
+    "message": "Ja",
+    "description": "switch option yes"
+  },
+  "optNo": {
+    "message": "Nein",
+    "description": "switch option no"
+  },
+  "closeAddForm": {
+    "message": "Abbrechen",
+    "description": "cancel create"
+  },
+  "submitAddForm": {
+    "message": "Erstellen",
+    "description": "create new board"
+  },
+  "msgBoardFail": {
+    "message": "Neue Pinnwand konnte nicht erstellt werden",
+    "description": "board create fail"
+  },
+  "msgPinFail": {
+    "message": "Seite konnte nicht gespeichert werden",
+    "description": "pin create fail"
+  },
+  "msgLoginFail": {
+    "message": "Leider ist irgendetwas schiefgegangen. Überprüfe, ob du auf Pinterest angemeldet bist, und versuche es dann noch einmal.",
+    "description": "Message shown when someone's login changes while the board picker is open"
+  },
+  "msgOops": {
+    "message": "Tut uns leid.",
+    "description": "error header"
+  },
+  "msgHelp": {
+    "message": "Hilfe anfordern",
+    "description": "get help button"
+  },
+  "authHelpHead": {
+    "message": "Psst!",
+    "description": "You're not signed in. Let's get your attention with this headline. Might also be Hey! or Oops!"
+  },
+  "authHelpBody": {
+    "message": "Anscheinend bist du nicht auf Pinterest angemeldet. Das sollten wir ändern.",
+    "description": "If you're not signed in, here's what we'll do when you click the button below"
+  },
+  "signIn": {
+    "message": "Anmelden",
+    "description": "Click this button to sign in on Pinterest"
+  },
+  "extensionSetting_hideHoverButtons": {
+    "message": "„Merken“-Button für Bilder ausblenden",
+    "description": "User setting to disable Save hover button on images"
+  },
+  "settingsPageheading": {
+    "message": "Einstellungen",
+    "description": "Heading on the settings page"
+  },
+  "settingsPageback": {
+    "message": "Zurück",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "settingsPagedisableHover": {
+    "message": "Bild-Mouseover deaktivieren",
+    "description": "Settings toggle for disabling image hover mode"
+  },
+  "settingsPagereportBug": {
+    "message": "Ein Problem melden",
+    "description": "Settings link to report bug page"
+  },
+  "settingsPagerevokeAccess": {
+    "message": "Zugriffsrechte widerrufen und abmelden",
+    "description": "Settings link to revoke app access and sign out"
+  },
+  "settingsPagelogOut": {
+    "message": "Abmelden",
+    "description": "Settings link to logout for non-Safari browsers"
+  },
+  "settingsPagedoneButton": {
+    "message": "Fertig",
+    "description": "Button text to leave settings"
+  },
+  "reportBugheading": {
+    "message": "Ein Problem melden",
+    "description": "Heading on the report bug page"
+  },
+  "reportBugback": {
+    "message": "Zurück zu den Einstellungen",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "reportBugwebsiteLabel": {
+    "message": "Webseite",
+    "description": "Label for website input field"
+  },
+  "reportBugdescriptionLabel": {
+    "message": "Beschreibung",
+    "description": "Label for description input field"
+  },
+  "reportBugdescriptionPlaceholder": {
+    "message": "Erkläre kurz, was passiert ist",
+    "description": "Placeholder text for description input field"
+  },
+  "reportBugdescriptionHelpText": {
+    "message": "Pinterest garantiert keine Antwort auf diese Nachricht.",
+    "description": "Help text for description input field explaining that there will be no response"
+  },
+  "reportBugsubmitButton": {
+    "message": "Übermitteln",
+    "description": "Button text to submit bug report"
+  },
+  "reportBugsubmitSuccessheading": {
+    "message": "Problem übermittelt",
+    "description": "Heading on successful report bug toast"
+  },
+  "reportBugsubmitSuccessdetailText": {
+    "message": "Danke für dein Feedback.",
+    "description": "Detail text on successful report bug toast"
+  },
+  "errorPageheadingtext": {
+    "message": "Oh nein …",
+    "description": "Heading text for the error page"
+  },
+  "errorPagebannedDomaintext": {
+    "message": "Leider kann auf dieser Webseite nichts gemerkt werden! Bitte melde ein Problem, falls du der Meinung bist, dass dies ein Fehler ist.",
+    "description": "Error message for when Pinterest prevents pinning on a domain"
+  },
+  "errorPagenoPinDomaintext": {
+    "message": "Leider verbietet diese Webseite das Merken auf Pinterest. Bitte setze dich mit dem Eigentümer in Verbindung, falls du weitere Fragen haben solltest.",
+    "description": "Error message for when domain owner prevents pinning on their domain"
+  }
+}
