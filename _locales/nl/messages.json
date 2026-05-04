@@ -1,0 +1,498 @@
+{
+  "extensionName": {
+    "message": "Bewaren op Pinterest",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Bewaar ideeën op Pinterest.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "Bewaren op Pinterest",
+    "description": "Title of the Pinterest action button."
+  },
+  "contextMenuSaveActionText": {
+    "message": "Bewaren op Pinterest",
+    "description": "Context menu Save action name."
+  },
+  "saveButtonText": {
+    "message": "Bewaren",
+    "description": "Save button text."
+  },
+  "imagePickerPageheading": {
+    "message": "Een idee op Pinterest bewaren",
+    "description": "Heading on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageinfoPrompt": {
+    "message": "Selecteer maximaal 20 afbeeldingen",
+    "description": "Additional info text on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageemptyStateheading": {
+    "message": "Geen pinbare afbeeldingen op pagina gevonden",
+    "description": "Text displayed in empty state when no images are present"
+  },
+  "imagePickerPagereportBugButtontext": {
+    "message": "Een probleem melden",
+    "description": "Button text that goes to the report bug page"
+  },
+  "imagePickerPagenextButtontext": {
+    "message": "Volgende",
+    "description": "Button text that goes from image selection to picking a board"
+  },
+  "imagePickerPagesignIntext": {
+    "message": "Inloggen",
+    "description": "Button text that goes to the Sign In page"
+  },
+  "imagePickerPagesettingsEduaccessibilityLabel": {
+    "message": "Pop-over voor onderwijsinstellingen",
+    "description": "Accessibility for settings education popover"
+  },
+  "imagePickerPagesettingsEducontent": {
+    "message": "Schakel de hoverknop voor afbeeldingen uit of rapporteer een bug via Instellingen",
+    "description": "Settings education popover message content"
+  },
+  "boardPickerPageheading": {
+    "message": "Kies een bord",
+    "description": "Heading on the page that shows the board picker interface"
+  },
+  "boardPickerPageheadingloading": {
+    "message": "Borden laden...",
+    "description": "Heading on the page that shows that boards are loading"
+  },
+  "boardPickerPagebackButtontootlipText": {
+    "message": "Terug naar afbeeldingselectie",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardPickerPagecreateBoardtopChoiceHeading": {
+    "message": "Populairste keuzes",
+    "description": "Heading for a setion listing top choices for user's board selection"
+  },
+  "boardPickerPagecreateBoardallBoardHeading": {
+    "message": "Alle borden",
+    "description": "Heading for a setion listing all user's boards"
+  },
+  "boardPickerPageemptyStateheading": {
+    "message": "Maak een bord om door te gaan",
+    "description": "Text displayed in empty state when no boards are present"
+  },
+  "boardPickerPagespinneraccessibility": {
+    "message": "Voortgangsindicator opslaan",
+    "description": "Accessibility label on a Board loading spinner animation icon"
+  },
+  "boardPickerPagecreateBoardbutton": {
+    "message": "Bord maken",
+    "description": "Button text to create new board"
+  },
+  "signInPagespinneraccessibilityLabel": {
+    "message": "Voortgangsindicator voor verificatie",
+    "description": "Accessibility label on a user authentication progress spinner animation icon"
+  },
+  "signInPageconnectHeadingtext": {
+    "message": "Koppel je Pinterest-account",
+    "description": "Sign in page heading"
+  },
+  "signInPageconnectDescriptiontext": {
+    "message": "Autoriseer de Pinterest-bewaarextensie voor je browser, zodat je gemakkelijk ideeën van websites kunt bewaren",
+    "description": "Description of the sign in page"
+  },
+  "signInPageauthorizeButtontext": {
+    "message": "Autoriseren",
+    "description": "Button for user authorization"
+  },
+  "signInPageretryHeadingtext": {
+    "message": "Problemen? ",
+    "description": "Heading for authorization retry state"
+  },
+  "signInPageretryButtontext": {
+    "message": "Opnieuw proberen",
+    "description": "Button for retrying authorization"
+  },
+  "appHeaderpinterestLogoaccessibilityLabel": {
+    "message": "Pinterest",
+    "description": "Accessibility label for Pinterest logo"
+  },
+  "appHeadersettingsButtonaccessibilityLabel": {
+    "message": "Instellingen",
+    "description": "Accessibility label for settings button"
+  },
+  "appHeadercloseButtonaccessibilityLabel": {
+    "message": "Extensie sluiten",
+    "description": "Accessibility label for extension close button"
+  },
+  "boardRepcollaborativeBoardIconaccessibilityLabel": {
+    "message": "Groepsbord",
+    "description": "Accessibility label on an icon indicating a collaborative board"
+  },
+  "boardRepsecretBoardIconaccessibilityLabel": {
+    "message": "Verborgen bord",
+    "description": "Accessibility label on a lock icon for a secret board"
+  },
+  "boardRepboardSectionsIconaccessibilityLabel": {
+    "message": "Bordsecties bekijken",
+    "description": "Accessibility label on button that shows board sections"
+  },
+  "boardRepsaveButtontext": {
+    "message": "Bewaren",
+    "description": "Text on a button that saves a new Pin to user's profile"
+  },
+  "buttonIconWithTextaddIconaccessibilityLabel": {
+    "message": "Nieuwe maken",
+    "description": "Accessibility label on a plus icon button"
+  },
+  "pageHeadingWithSearchbackButtonaccessibilityLabel": {
+    "message": "Terug naar het vorige scherm",
+    "description": "Accessibility label for back button"
+  },
+  "pageHeadingWithSearchsearchFieldaccessibilityLabel": {
+    "message": "Zoeken op naam",
+    "description": "Accessibility label on a search field"
+  },
+  "pageHeadingWithSearchsearchFieldplaceholder": {
+    "message": "Zoek op naam",
+    "description": "Placeholder text on a search field"
+  },
+  "savePickerpinCreationSuccessIconaccessibilityLabel": {
+    "message": "Pin gemaakt",
+    "description": "Accessibility label for an icon indicating successful Pin creation"
+  },
+  "savePickerpinCreationSuccesshading": {
+    "message": "Bewaard op",
+    "description": "Heading tell the user where their Pin has been saved. This is followed by the board name"
+  },
+  "savePickerpinCreationSuccessviewButton": {
+    "message": "Bekijken",
+    "description": "Button text to view newly created pin"
+  },
+  "savePickerboardDropdownIconheading": {
+    "message": "Bewaren op bord",
+    "description": "Heading on a board picker dropdown"
+  },
+  "savePickerboardDropdownIconaccessibilityLabel": {
+    "message": "Bord kiezen",
+    "description": "Accessibility label on a board picker dropdown arrow"
+  },
+  "savePickerspinneraccessibilityLabel": {
+    "message": "Voortgangsindicator opslaan",
+    "description": "Accessibility label on a Pin creation spinner animation icon"
+  },
+  "savePickersaveButtontext": {
+    "message": "Bewaren",
+    "description": "Text on a button to create a Pin"
+  },
+  "boardCreatePagesaveErrortext": {
+    "message": "Er ging hier iets mis",
+    "description": "Board save error text"
+  },
+  "boardCreatePagenameFieldmaxLengthError": {
+    "message": "Vul niet meer dan 50 tekens in",
+    "description": "New board name validation error"
+  },
+  "boardCreatePageheading": {
+    "message": "Maak een bord",
+    "description": "Heading on the page that shows the board creation interface"
+  },
+  "boardCreatePagebackButtontootlipText": {
+    "message": "Terug naar bordselectie",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardCreatePagenameTextFieldheading": {
+    "message": "Bordnaam",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldlabel": {
+    "message": "Bordnaam",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldplaceholder": {
+    "message": "Vul de naam van het bord in",
+    "description": "Placeholder text for new board name text field"
+  },
+  "boardCreatePagesecretSwitchheading": {
+    "message": "Maak dit bord verborgen",
+    "description": "Label text for a switch to make new board secret"
+  },
+  "boardCreatePagesecretSwitchinfo": {
+    "message": "Alleen jij en bijdragers kunnen dit bord zien",
+    "description": "Info text for a switch to make new board secret"
+  },
+  "boardCreatePagecreateButtontext": {
+    "message": "Maken",
+    "description": "Text on a button that creates new board"
+  },
+  "boardSectionCreatePagesaveErrortext": {
+    "message": "Er ging hier iets mis",
+    "description": "Board section save error text"
+  },
+  "boardSectionCreatePagenameFieldmaxLengthError": {
+    "message": "Vul niet meer dan 50 tekens in",
+    "description": "Error for when the new board section name is too long"
+  },
+  "boardSectionCreatePageheading": {
+    "message": "Een sectie maken",
+    "description": "Heading on the page that shows the board section creation interface"
+  },
+  "boardSectionCreatePagebackButtontootlipText": {
+    "message": "Terug naar bordsectieselectie",
+    "description": "Text in tooltip that shows up on Pinterest logo hover"
+  },
+  "boardSectionCreatePagetitleTextFieldheading": {
+    "message": "Naam sectie",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagetitleTextFieldlabel": {
+    "message": "Naam sectie",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagenameTextFieldplaceholder": {
+    "message": "Vul de naam van de sectie in",
+    "description": "Placeholder text for new board section name text field"
+  },
+  "boardSectionCreatePagecreateButtontext": {
+    "message": "Maken",
+    "description": "Text on a button that creates new board section"
+  },
+  "boardSectionPickerPageheading": {
+    "message": "Een sectie kiezen",
+    "description": "Heading on the page that shows the board section picker interface"
+  },
+  "boardSectionPickerPagebackButtontootlipText": {
+    "message": "Terug naar bordselectie",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardSectionPickerPagecreateSectionbutton": {
+    "message": "Sectie toevoegen",
+    "description": "Create board section button text"
+  },
+  "pinCreatePagesaveErrortext": {
+    "message": "Er ging hier iets mis",
+    "description": "Pin create error text"
+  },
+  "pinCreatePageheadingInProgresstext": {
+    "message": "Bewaren op",
+    "description": "Pin create page heading text when saving is in progress. This text is followed by a board name"
+  },
+  "pinCreatePageheadingDonetext": {
+    "message": "Bewaard op",
+    "description": "Pin create page heading text when saving is complete. This text is followed by a board name"
+  },
+  "pinCreatePageviewButtontext": {
+    "message": "Bekijken",
+    "description": "Text on a button that opens newly created Pin page"
+  },
+  "extName": {
+    "message": "Pinterest-bewaarknop",
+    "description": "The extension's title, seen in gallery and extensions page"
+  },
+  "extDescription": {
+    "message": "Bewaar je favoriete ideeën online zodat je ze later gemakkelijk kunt terugvinden.",
+    "description": "The extension's description, seen in gallery and extensions page"
+  },
+  "noPinDomain": {
+    "message": "Het is niet toegestaan om vanaf dit domein pins te bewaren. Neem contact op met de beheerder van de website als je hierover vragen hebt.",
+    "description": "The default message we alert when someone tries to use the browser button on a forbidden domain"
+  },
+  "optionTitle": {
+    "message": "Opties voor bewaarknop",
+    "description": "Title for the Options page"
+  },
+  "optionHide": {
+    "message": "Bewaarknoppen over afbeeldingen heen verbergen",
+    "description": "Text next to the checkbox that turns off hoverbuttons"
+  },
+  "searchAction": {
+    "message": "Zoeken",
+    "description": "Appears in the right-click-to-search menu item"
+  },
+  "saveAction": {
+    "message": "Bewaren",
+    "description": "Appears wherever we show a Save button or menu prompt"
+  },
+  "choosePinMultiSelectHeader": {
+    "message": "Een idee op Pinterest bewaren",
+    "description": "New header message in the image picker overlay"
+  },
+  "choosePinSelectAllSubHeader": {
+    "message": "Selecteer maximaal 20 afbeeldingen",
+    "description": "Subheader in the image picker overlay"
+  },
+  "nextAction": {
+    "message": "Volgende",
+    "description": "Press this button to go to the Create view when multiple images are selected"
+  },
+  "selectAll": {
+    "message": "Alles selecteren",
+    "description": "Text next to the checkbox that selects all images on the grid"
+  },
+  "boardPickerOpenerLabel": {
+    "message": "Bewaren op bord",
+    "description": "Label in inline board picker"
+  },
+  "boardPickerSuccessLabel": {
+    "message": "Bewaard op",
+    "description": "Label in inline board picker after pin creation"
+  },
+  "visitButton": {
+    "message": "Bezoeken",
+    "description": "Pin create success button to visit pin"
+  },
+  "help": {
+    "message": "Help",
+    "description": "Get help after a Pin create failure"
+  },
+  "chooseBoard": {
+    "message": "Kies een bord",
+    "description": "main header in Save form"
+  },
+  "topChoices": {
+    "message": "Populairste keuzes",
+    "description": "interstitial header in board list"
+  },
+  "allBoards": {
+    "message": "Alle borden",
+    "description": "interstitial header in board list"
+  },
+  "createBoard": {
+    "message": "Bord maken",
+    "description": "header in Create form"
+  },
+  "addFormSecretLabel": {
+    "message": "Verborgen",
+    "description": "label over secret/not-secret switch"
+  },
+  "chooseSection": {
+    "message": "Sectie kiezen",
+    "description": "label for board sections"
+  },
+  "addSection": {
+    "message": "Sectie toevoegen",
+    "description": "label to add section"
+  },
+  "optYes": {
+    "message": "Ja",
+    "description": "switch option yes"
+  },
+  "optNo": {
+    "message": "Nee",
+    "description": "switch option no"
+  },
+  "closeAddForm": {
+    "message": "Annuleren",
+    "description": "cancel create"
+  },
+  "submitAddForm": {
+    "message": "Maken",
+    "description": "create new board"
+  },
+  "msgBoardFail": {
+    "message": "Maken van nieuw bord mislukt",
+    "description": "board create fail"
+  },
+  "msgPinFail": {
+    "message": "Bewaren van pagina mislukt",
+    "description": "pin create fail"
+  },
+  "msgLoginFail": {
+    "message": "Er is iets misgegaan. Controleer of je op Pinterest ingelogd bent en probeer het opnieuw.",
+    "description": "Message shown when someone's login changes while the board picker is open"
+  },
+  "msgOops": {
+    "message": "Oeps!",
+    "description": "error header"
+  },
+  "msgHelp": {
+    "message": "Help",
+    "description": "get help button"
+  },
+  "authHelpHead": {
+    "message": "Psst!",
+    "description": "You're not signed in. Let's get your attention with this headline. Might also be Hey! or Oops!"
+  },
+  "authHelpBody": {
+    "message": "Zo te zien ben je niet ingelogd op Pinterest. Dat is zo opgelost!",
+    "description": "If you're not signed in, here's what we'll do when you click the button below"
+  },
+  "signIn": {
+    "message": "Inloggen",
+    "description": "Click this button to sign in on Pinterest"
+  },
+  "extensionSetting_hideHoverButtons": {
+    "message": "Bewaarknop bij afbeeldingen verbergen",
+    "description": "User setting to disable Save hover button on images"
+  },
+  "settingsPageheading": {
+    "message": "Instellingen",
+    "description": "Heading on the settings page"
+  },
+  "settingsPageback": {
+    "message": "Terug",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "settingsPagedisableHover": {
+    "message": "Hoverknop voor afbeelding uitschakelen",
+    "description": "Settings toggle for disabling image hover mode"
+  },
+  "settingsPagereportBug": {
+    "message": "Een probleem melden",
+    "description": "Settings link to report bug page"
+  },
+  "settingsPagerevokeAccess": {
+    "message": "Toegang intrekken en uitloggen",
+    "description": "Settings link to revoke app access and sign out"
+  },
+  "settingsPagelogOut": {
+    "message": "Uitloggen",
+    "description": "Settings link to logout for non-Safari browsers"
+  },
+  "settingsPagedoneButton": {
+    "message": "Gereed",
+    "description": "Button text to leave settings"
+  },
+  "reportBugheading": {
+    "message": "Een probleem melden",
+    "description": "Heading on the report bug page"
+  },
+  "reportBugback": {
+    "message": "Terug naar Instellingen",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "reportBugwebsiteLabel": {
+    "message": "Website",
+    "description": "Label for website input field"
+  },
+  "reportBugdescriptionLabel": {
+    "message": "Beschrijving",
+    "description": "Label for description input field"
+  },
+  "reportBugdescriptionPlaceholder": {
+    "message": "Leg kort uit wat er is gebeurd",
+    "description": "Placeholder text for description input field"
+  },
+  "reportBugdescriptionHelpText": {
+    "message": "We kunnen niet beloven dat je een reactie ontvangt.",
+    "description": "Help text for description input field explaining that there will be no response"
+  },
+  "reportBugsubmitButton": {
+    "message": "Verzenden",
+    "description": "Button text to submit bug report"
+  },
+  "reportBugsubmitSuccessheading": {
+    "message": "Probleem ingediend",
+    "description": "Heading on successful report bug toast"
+  },
+  "reportBugsubmitSuccessdetailText": {
+    "message": "Bedankt voor je feedback!",
+    "description": "Detail text on successful report bug toast"
+  },
+  "errorPageheadingtext": {
+    "message": "O, nee...",
+    "description": "Heading text for the error page"
+  },
+  "errorPagebannedDomaintext": {
+    "message": "Sorry, pinnen is niet toegestaan op deze website! Meld een probleem als je denkt dat dit een fout is.",
+    "description": "Error message for when Pinterest prevents pinning on a domain"
+  },
+  "errorPagenoPinDomaintext": {
+    "message": "Deze website staat bewaren op Pinterest niet toe. Neem bij eventuele vragen contact op met de eigenaar.",
+    "description": "Error message for when domain owner prevents pinning on their domain"
+  }
+}

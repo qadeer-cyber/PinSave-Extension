@@ -1,0 +1,498 @@
+{
+  "extensionName": {
+    "message": "บันทึกไปที่ Pinterest",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "บันทึกไอเดียไว้ใน Pinterest",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "บันทึกไปที่ Pinterest",
+    "description": "Title of the Pinterest action button."
+  },
+  "contextMenuSaveActionText": {
+    "message": "บันทึกไปที่ Pinterest",
+    "description": "Context menu Save action name."
+  },
+  "saveButtonText": {
+    "message": "บันทึก",
+    "description": "Save button text."
+  },
+  "imagePickerPageheading": {
+    "message": "บันทึกไอเดียไว้ใน Pinterest",
+    "description": "Heading on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageinfoPrompt": {
+    "message": "เลือกรูปภาพได้สูงสุด 20 ภาพ",
+    "description": "Additional info text on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageemptyStateheading": {
+    "message": "ไม่พบรูปภาพที่ปักพินได้ในหน้า",
+    "description": "Text displayed in empty state when no images are present"
+  },
+  "imagePickerPagereportBugButtontext": {
+    "message": "รายงานปัญหา",
+    "description": "Button text that goes to the report bug page"
+  },
+  "imagePickerPagenextButtontext": {
+    "message": "ถัดไป",
+    "description": "Button text that goes from image selection to picking a board"
+  },
+  "imagePickerPagesignIntext": {
+    "message": "เข้าสู่ระบบ",
+    "description": "Button text that goes to the Sign In page"
+  },
+  "imagePickerPagesettingsEduaccessibilityLabel": {
+    "message": "ป๊อปโอเวอร์ให้ข้อมูลของการตั้งค่า",
+    "description": "Accessibility for settings education popover"
+  },
+  "imagePickerPagesettingsEducontent": {
+    "message": "ปิดใช้งานการวางเมาส์เหนือรูปภาพหรือรายงานข้อบกพร่องจากการตั้งค่า",
+    "description": "Settings education popover message content"
+  },
+  "boardPickerPageheading": {
+    "message": "เลือกบอร์ด",
+    "description": "Heading on the page that shows the board picker interface"
+  },
+  "boardPickerPageheadingloading": {
+    "message": "กำลังโหลดบอร์ด...",
+    "description": "Heading on the page that shows that boards are loading"
+  },
+  "boardPickerPagebackButtontootlipText": {
+    "message": "กลับไปที่การเลือกรูปภาพ",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardPickerPagecreateBoardtopChoiceHeading": {
+    "message": "ตัวเลือกยอดนิยม",
+    "description": "Heading for a setion listing top choices for user's board selection"
+  },
+  "boardPickerPagecreateBoardallBoardHeading": {
+    "message": "บอร์ดทั้งหมด",
+    "description": "Heading for a setion listing all user's boards"
+  },
+  "boardPickerPageemptyStateheading": {
+    "message": "สร้างบอร์ดเพื่อดําเนินการต่อ",
+    "description": "Text displayed in empty state when no boards are present"
+  },
+  "boardPickerPagespinneraccessibility": {
+    "message": "สัญลักษณ์ขณะกำลังบันทึก",
+    "description": "Accessibility label on a Board loading spinner animation icon"
+  },
+  "boardPickerPagecreateBoardbutton": {
+    "message": "สร้างบอร์ด",
+    "description": "Button text to create new board"
+  },
+  "signInPagespinneraccessibilityLabel": {
+    "message": "สัญลักษณ์แสดงความคืบหน้าของการตรวจสอบสิทธิ์",
+    "description": "Accessibility label on a user authentication progress spinner animation icon"
+  },
+  "signInPageconnectHeadingtext": {
+    "message": "เชื่อมต่อบัญชี Pinterest ของคุณ",
+    "description": "Sign in page heading"
+  },
+  "signInPageconnectDescriptiontext": {
+    "message": "ให้สิทธิ์ส่วนขยายบันทึกของ Pinterest บนเบราว์เซอร์เพื่อให้คุณสามารถบันทึกไอเดียจากเว็บไซต์ได้อย่างง่ายดาย",
+    "description": "Description of the sign in page"
+  },
+  "signInPageauthorizeButtontext": {
+    "message": "ตรวจสอบสิทธิ์",
+    "description": "Button for user authorization"
+  },
+  "signInPageretryHeadingtext": {
+    "message": "มีปัญหาใช่ไหม",
+    "description": "Heading for authorization retry state"
+  },
+  "signInPageretryButtontext": {
+    "message": "ลองอีกครั้ง",
+    "description": "Button for retrying authorization"
+  },
+  "appHeaderpinterestLogoaccessibilityLabel": {
+    "message": "Pinterest",
+    "description": "Accessibility label for Pinterest logo"
+  },
+  "appHeadersettingsButtonaccessibilityLabel": {
+    "message": "การตั้งค่า",
+    "description": "Accessibility label for settings button"
+  },
+  "appHeadercloseButtonaccessibilityLabel": {
+    "message": "ปิดส่วนขยาย",
+    "description": "Accessibility label for extension close button"
+  },
+  "boardRepcollaborativeBoardIconaccessibilityLabel": {
+    "message": "บอร์ดประสานงาน",
+    "description": "Accessibility label on an icon indicating a collaborative board"
+  },
+  "boardRepsecretBoardIconaccessibilityLabel": {
+    "message": "บอร์ดลับ",
+    "description": "Accessibility label on a lock icon for a secret board"
+  },
+  "boardRepboardSectionsIconaccessibilityLabel": {
+    "message": "ดูหมวดบอร์ด",
+    "description": "Accessibility label on button that shows board sections"
+  },
+  "boardRepsaveButtontext": {
+    "message": "บันทึก",
+    "description": "Text on a button that saves a new Pin to user's profile"
+  },
+  "buttonIconWithTextaddIconaccessibilityLabel": {
+    "message": "สร้างใหม่",
+    "description": "Accessibility label on a plus icon button"
+  },
+  "pageHeadingWithSearchbackButtonaccessibilityLabel": {
+    "message": "ย้อนกลับไปยังหน้าที่แล้ว",
+    "description": "Accessibility label for back button"
+  },
+  "pageHeadingWithSearchsearchFieldaccessibilityLabel": {
+    "message": "ค้นหาด้วยชื่อ",
+    "description": "Accessibility label on a search field"
+  },
+  "pageHeadingWithSearchsearchFieldplaceholder": {
+    "message": "ค้นหาด้วยชื่อ",
+    "description": "Placeholder text on a search field"
+  },
+  "savePickerpinCreationSuccessIconaccessibilityLabel": {
+    "message": "สร้างพินแล้ว",
+    "description": "Accessibility label for an icon indicating successful Pin creation"
+  },
+  "savePickerpinCreationSuccesshading": {
+    "message": "บันทึกไปที่",
+    "description": "Heading tell the user where their Pin has been saved. This is followed by the board name"
+  },
+  "savePickerpinCreationSuccessviewButton": {
+    "message": "ดู",
+    "description": "Button text to view newly created pin"
+  },
+  "savePickerboardDropdownIconheading": {
+    "message": "บันทึกไปที่บอร์ด",
+    "description": "Heading on a board picker dropdown"
+  },
+  "savePickerboardDropdownIconaccessibilityLabel": {
+    "message": "เลือกบอร์ด",
+    "description": "Accessibility label on a board picker dropdown arrow"
+  },
+  "savePickerspinneraccessibilityLabel": {
+    "message": "สัญลักษณ์ขณะกำลังบันทึก",
+    "description": "Accessibility label on a Pin creation spinner animation icon"
+  },
+  "savePickersaveButtontext": {
+    "message": "บันทึก",
+    "description": "Text on a button to create a Pin"
+  },
+  "boardCreatePagesaveErrortext": {
+    "message": "ระบบของเราเกิดความขัดข้อง",
+    "description": "Board save error text"
+  },
+  "boardCreatePagenameFieldmaxLengthError": {
+    "message": "โปรดป้อนอักขระไม่เกิน 50 ตัว",
+    "description": "New board name validation error"
+  },
+  "boardCreatePageheading": {
+    "message": "สร้างบอร์ด",
+    "description": "Heading on the page that shows the board creation interface"
+  },
+  "boardCreatePagebackButtontootlipText": {
+    "message": "กลับไปที่การเลือกบอร์ด",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardCreatePagenameTextFieldheading": {
+    "message": "ชื่อบอร์ด",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldlabel": {
+    "message": "ชื่อบอร์ด",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldplaceholder": {
+    "message": "ป้อนชื่อบอร์ด",
+    "description": "Placeholder text for new board name text field"
+  },
+  "boardCreatePagesecretSwitchheading": {
+    "message": "ทำให้บอร์ดนี้เป็นบอร์ดลับ",
+    "description": "Label text for a switch to make new board secret"
+  },
+  "boardCreatePagesecretSwitchinfo": {
+    "message": "มีเพียงคุณและผู้ร่วมมือเท่านั้นที่จะเห็นบอร์ดนี้",
+    "description": "Info text for a switch to make new board secret"
+  },
+  "boardCreatePagecreateButtontext": {
+    "message": "สร้าง",
+    "description": "Text on a button that creates new board"
+  },
+  "boardSectionCreatePagesaveErrortext": {
+    "message": "ระบบของเราเกิดความขัดข้อง",
+    "description": "Board section save error text"
+  },
+  "boardSectionCreatePagenameFieldmaxLengthError": {
+    "message": "โปรดป้อนอักขระไม่เกิน 50 ตัว",
+    "description": "Error for when the new board section name is too long"
+  },
+  "boardSectionCreatePageheading": {
+    "message": "สร้างหมวดบอร์ด",
+    "description": "Heading on the page that shows the board section creation interface"
+  },
+  "boardSectionCreatePagebackButtontootlipText": {
+    "message": "กลับไปที่การเลือกหมวดบอร์ด",
+    "description": "Text in tooltip that shows up on Pinterest logo hover"
+  },
+  "boardSectionCreatePagetitleTextFieldheading": {
+    "message": "ชื่อหมวดบอร์ด",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagetitleTextFieldlabel": {
+    "message": "ชื่อหมวดบอร์ด",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagenameTextFieldplaceholder": {
+    "message": "ป้อนชื่อหมวดบอร์ด",
+    "description": "Placeholder text for new board section name text field"
+  },
+  "boardSectionCreatePagecreateButtontext": {
+    "message": "สร้าง",
+    "description": "Text on a button that creates new board section"
+  },
+  "boardSectionPickerPageheading": {
+    "message": "เลือกหมวดบอร์ด",
+    "description": "Heading on the page that shows the board section picker interface"
+  },
+  "boardSectionPickerPagebackButtontootlipText": {
+    "message": "กลับไปที่การเลือกบอร์ด",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardSectionPickerPagecreateSectionbutton": {
+    "message": "เพิ่มหมวดบอร์ด",
+    "description": "Create board section button text"
+  },
+  "pinCreatePagesaveErrortext": {
+    "message": "ระบบของเราเกิดความขัดข้อง",
+    "description": "Pin create error text"
+  },
+  "pinCreatePageheadingInProgresstext": {
+    "message": "กำลังบันทึกไปที่",
+    "description": "Pin create page heading text when saving is in progress. This text is followed by a board name"
+  },
+  "pinCreatePageheadingDonetext": {
+    "message": "บันทึกไปที่",
+    "description": "Pin create page heading text when saving is complete. This text is followed by a board name"
+  },
+  "pinCreatePageviewButtontext": {
+    "message": "ดู",
+    "description": "Text on a button that opens newly created Pin page"
+  },
+  "extName": {
+    "message": "ปุ่มบันทึกของ Pinterest",
+    "description": "The extension's title, seen in gallery and extensions page"
+  },
+  "extDescription": {
+    "message": "บันทึกไอเดียโปรดแบบออนไลน์เพื่อให้กลับมาดูในภายหลังได้ง่ายๆ",
+    "description": "The extension's description, seen in gallery and extensions page"
+  },
+  "noPinDomain": {
+    "message": "ขออภัย โดเมนนี้ไม่อนุญาตให้ปักพิน โปรดติดต่อผู้ดูแลเว็บไซต์หากมีข้อสงสัย",
+    "description": "The default message we alert when someone tries to use the browser button on a forbidden domain"
+  },
+  "optionTitle": {
+    "message": "ตัวเลือกปุ่มบันทึก",
+    "description": "Title for the Options page"
+  },
+  "optionHide": {
+    "message": "ซ่อนปุ่มบันทึกแบบเลื่อนเมาส์มาวาง",
+    "description": "Text next to the checkbox that turns off hoverbuttons"
+  },
+  "searchAction": {
+    "message": "ค้นหา",
+    "description": "Appears in the right-click-to-search menu item"
+  },
+  "saveAction": {
+    "message": "บันทึก",
+    "description": "Appears wherever we show a Save button or menu prompt"
+  },
+  "choosePinMultiSelectHeader": {
+    "message": "บันทึกไอเดียไว้ใน Pinterest",
+    "description": "New header message in the image picker overlay"
+  },
+  "choosePinSelectAllSubHeader": {
+    "message": "เลือกรูปภาพได้สูงสุด 20 ภาพ",
+    "description": "Subheader in the image picker overlay"
+  },
+  "nextAction": {
+    "message": "ถัดไป",
+    "description": "Press this button to go to the Create view when multiple images are selected"
+  },
+  "selectAll": {
+    "message": "เลือกทั้งหมด",
+    "description": "Text next to the checkbox that selects all images on the grid"
+  },
+  "boardPickerOpenerLabel": {
+    "message": "บันทึกไปที่บอร์ด",
+    "description": "Label in inline board picker"
+  },
+  "boardPickerSuccessLabel": {
+    "message": "บันทึกไปที่",
+    "description": "Label in inline board picker after pin creation"
+  },
+  "visitButton": {
+    "message": "เข้าชม",
+    "description": "Pin create success button to visit pin"
+  },
+  "help": {
+    "message": "ความช่วยเหลือ",
+    "description": "Get help after a Pin create failure"
+  },
+  "chooseBoard": {
+    "message": "เลือกบอร์ด",
+    "description": "main header in Save form"
+  },
+  "topChoices": {
+    "message": "ตัวเลือกยอดนิยม",
+    "description": "interstitial header in board list"
+  },
+  "allBoards": {
+    "message": "บอร์ดทั้งหมด",
+    "description": "interstitial header in board list"
+  },
+  "createBoard": {
+    "message": "สร้างบอร์ด",
+    "description": "header in Create form"
+  },
+  "addFormSecretLabel": {
+    "message": "เป็นความลับ",
+    "description": "label over secret/not-secret switch"
+  },
+  "chooseSection": {
+    "message": "เลือกหมวดบอร์ด",
+    "description": "label for board sections"
+  },
+  "addSection": {
+    "message": "เพิ่มหมวดบอร์ด",
+    "description": "label to add section"
+  },
+  "optYes": {
+    "message": "ใช่",
+    "description": "switch option yes"
+  },
+  "optNo": {
+    "message": "ไม่",
+    "description": "switch option no"
+  },
+  "closeAddForm": {
+    "message": "ยกเลิก",
+    "description": "cancel create"
+  },
+  "submitAddForm": {
+    "message": "สร้าง",
+    "description": "create new board"
+  },
+  "msgBoardFail": {
+    "message": "ไม่สามารถสร้างบอร์ดใหม่",
+    "description": "board create fail"
+  },
+  "msgPinFail": {
+    "message": "ไม่สามารถบันทึกหน้านี้",
+    "description": "pin create fail"
+  },
+  "msgLoginFail": {
+    "message": "ขออภัย มีบางอย่างผิดปกติ โปรดตรวจสอบว่าคุณลงชื่อเข้าใช้ Pinterest แล้วลองอีกครั้ง",
+    "description": "Message shown when someone's login changes while the board picker is open"
+  },
+  "msgOops": {
+    "message": "อ๊ะ!",
+    "description": "error header"
+  },
+  "msgHelp": {
+    "message": "ขอความช่วยเหลือ",
+    "description": "get help button"
+  },
+  "authHelpHead": {
+    "message": "นี่ๆ",
+    "description": "You're not signed in. Let's get your attention with this headline. Might also be Hey! or Oops!"
+  },
+  "authHelpBody": {
+    "message": "ดูเหมือนว่าคุณไม่ได้ลงชื่อเข้าใช้ Pinterest มาแก้ไขกันเถอะ",
+    "description": "If you're not signed in, here's what we'll do when you click the button below"
+  },
+  "signIn": {
+    "message": "เข้าสู่ระบบ",
+    "description": "Click this button to sign in on Pinterest"
+  },
+  "extensionSetting_hideHoverButtons": {
+    "message": "ซ่อนปุ่มบันทึกบนรูปภาพ",
+    "description": "User setting to disable Save hover button on images"
+  },
+  "settingsPageheading": {
+    "message": "การตั้งค่า",
+    "description": "Heading on the settings page"
+  },
+  "settingsPageback": {
+    "message": "ย้อนกลับ",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "settingsPagedisableHover": {
+    "message": "ปิดใช้งานการวางเมาส์เหนือรูปภาพ",
+    "description": "Settings toggle for disabling image hover mode"
+  },
+  "settingsPagereportBug": {
+    "message": "รายงานปัญหา",
+    "description": "Settings link to report bug page"
+  },
+  "settingsPagerevokeAccess": {
+    "message": "เพิกถอนสิทธิ์เข้าถึงและออกจากระบบ",
+    "description": "Settings link to revoke app access and sign out"
+  },
+  "settingsPagelogOut": {
+    "message": "ออกจากระบบ",
+    "description": "Settings link to logout for non-Safari browsers"
+  },
+  "settingsPagedoneButton": {
+    "message": "เสร็จ",
+    "description": "Button text to leave settings"
+  },
+  "reportBugheading": {
+    "message": "รายงานปัญหา",
+    "description": "Heading on the report bug page"
+  },
+  "reportBugback": {
+    "message": "กลับไปที่การตั้งค่า",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "reportBugwebsiteLabel": {
+    "message": "เว็บไซต์",
+    "description": "Label for website input field"
+  },
+  "reportBugdescriptionLabel": {
+    "message": "คำอธิบาย",
+    "description": "Label for description input field"
+  },
+  "reportBugdescriptionPlaceholder": {
+    "message": "อธิบายสั้นๆ ว่าเกิดอะไรขึ้น",
+    "description": "Placeholder text for description input field"
+  },
+  "reportBugdescriptionHelpText": {
+    "message": "Pinterest ไม่รับรองว่าจะตอบกลับข้อความนี้",
+    "description": "Help text for description input field explaining that there will be no response"
+  },
+  "reportBugsubmitButton": {
+    "message": "ส่ง",
+    "description": "Button text to submit bug report"
+  },
+  "reportBugsubmitSuccessheading": {
+    "message": "ส่งปัญหาแล้ว",
+    "description": "Heading on successful report bug toast"
+  },
+  "reportBugsubmitSuccessdetailText": {
+    "message": "ขอบคุณสำหรับความคิดเห็นของคุณ",
+    "description": "Detail text on successful report bug toast"
+  },
+  "errorPageheadingtext": {
+    "message": "ต้องขออภัย",
+    "description": "Heading text for the error page"
+  },
+  "errorPagebannedDomaintext": {
+    "message": "ขออภัย เว็บไซต์นี้ไม่อนุญาตให้ปักพิน โปรดรายงานปัญหาหากคุณคิดว่านี่คือข้อผิดพลาด",
+    "description": "Error message for when Pinterest prevents pinning on a domain"
+  },
+  "errorPagenoPinDomaintext": {
+    "message": "เว็บไซต์นี้ไม่อนุญาตให้บันทึกไปยัง Pinterest โปรดติดต่อเจ้าของเว็บไซต์หากมีข้อสงสัย",
+    "description": "Error message for when domain owner prevents pinning on their domain"
+  }
+}

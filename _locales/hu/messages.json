@@ -1,0 +1,498 @@
+{
+  "extensionName": {
+    "message": "Pinterest-mentés",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Ments ötleteket a Pinterestre.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "Pinterest-mentés",
+    "description": "Title of the Pinterest action button."
+  },
+  "contextMenuSaveActionText": {
+    "message": "Pinterest-mentés",
+    "description": "Context menu Save action name."
+  },
+  "saveButtonText": {
+    "message": "Mentés",
+    "description": "Save button text."
+  },
+  "imagePickerPageheading": {
+    "message": "Ments egy ötletet a Pinterestre",
+    "description": "Heading on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageinfoPrompt": {
+    "message": "Válassz ki maximum húsz képet",
+    "description": "Additional info text on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageemptyStateheading": {
+    "message": "Az oldalon nem található pinelhető kép",
+    "description": "Text displayed in empty state when no images are present"
+  },
+  "imagePickerPagereportBugButtontext": {
+    "message": "Probléma bejelentése",
+    "description": "Button text that goes to the report bug page"
+  },
+  "imagePickerPagenextButtontext": {
+    "message": "Tovább",
+    "description": "Button text that goes from image selection to picking a board"
+  },
+  "imagePickerPagesignIntext": {
+    "message": "Bejelentkezés",
+    "description": "Button text that goes to the Sign In page"
+  },
+  "imagePickerPagesettingsEduaccessibilityLabel": {
+    "message": "A beállításokkal kapcsolatos tájékoztatás előugró ablaka",
+    "description": "Accessibility for settings education popover"
+  },
+  "imagePickerPagesettingsEducontent": {
+    "message": "Kapcsold ki a lebegő gombot, vagy jelentsd a hibát a beállításokból",
+    "description": "Settings education popover message content"
+  },
+  "boardPickerPageheading": {
+    "message": "Válassz ki egy táblát",
+    "description": "Heading on the page that shows the board picker interface"
+  },
+  "boardPickerPageheadingloading": {
+    "message": "Táblák betöltése...",
+    "description": "Heading on the page that shows that boards are loading"
+  },
+  "boardPickerPagebackButtontootlipText": {
+    "message": "Vissza a kép kiválasztásához",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardPickerPagecreateBoardtopChoiceHeading": {
+    "message": "Legtöbbször választott",
+    "description": "Heading for a setion listing top choices for user's board selection"
+  },
+  "boardPickerPagecreateBoardallBoardHeading": {
+    "message": "Minden tábla",
+    "description": "Heading for a setion listing all user's boards"
+  },
+  "boardPickerPageemptyStateheading": {
+    "message": "A folytatáshoz hozz létre egy táblát",
+    "description": "Text displayed in empty state when no boards are present"
+  },
+  "boardPickerPagespinneraccessibility": {
+    "message": "Mentést jelző forgó elem",
+    "description": "Accessibility label on a Board loading spinner animation icon"
+  },
+  "boardPickerPagecreateBoardbutton": {
+    "message": "Hozz létre táblát",
+    "description": "Button text to create new board"
+  },
+  "signInPagespinneraccessibilityLabel": {
+    "message": "A hitelesítés folyamatjelző forgó eleme",
+    "description": "Accessibility label on a user authentication progress spinner animation icon"
+  },
+  "signInPageconnectHeadingtext": {
+    "message": "Pinterest-fiókod csatlakoztatása",
+    "description": "Sign in page heading"
+  },
+  "signInPageconnectDescriptiontext": {
+    "message": "Engedélyezd a Pinterest Save böngészőbővítményt, hogy egyszerűen menthess ötleteket a különböző webhelyekről",
+    "description": "Description of the sign in page"
+  },
+  "signInPageauthorizeButtontext": {
+    "message": "Engedélyezés",
+    "description": "Button for user authorization"
+  },
+  "signInPageretryHeadingtext": {
+    "message": "Gondod támadt?",
+    "description": "Heading for authorization retry state"
+  },
+  "signInPageretryButtontext": {
+    "message": "Próbáld újra",
+    "description": "Button for retrying authorization"
+  },
+  "appHeaderpinterestLogoaccessibilityLabel": {
+    "message": "Pinterest",
+    "description": "Accessibility label for Pinterest logo"
+  },
+  "appHeadersettingsButtonaccessibilityLabel": {
+    "message": "Beállítások",
+    "description": "Accessibility label for settings button"
+  },
+  "appHeadercloseButtonaccessibilityLabel": {
+    "message": "A bővítmény bezárása",
+    "description": "Accessibility label for extension close button"
+  },
+  "boardRepcollaborativeBoardIconaccessibilityLabel": {
+    "message": "Csoportos tábla",
+    "description": "Accessibility label on an icon indicating a collaborative board"
+  },
+  "boardRepsecretBoardIconaccessibilityLabel": {
+    "message": "Titkos tábla",
+    "description": "Accessibility label on a lock icon for a secret board"
+  },
+  "boardRepboardSectionsIconaccessibilityLabel": {
+    "message": "Táblaszakaszok megtekintése",
+    "description": "Accessibility label on button that shows board sections"
+  },
+  "boardRepsaveButtontext": {
+    "message": "Mentés",
+    "description": "Text on a button that saves a new Pin to user's profile"
+  },
+  "buttonIconWithTextaddIconaccessibilityLabel": {
+    "message": "Új létrehozása",
+    "description": "Accessibility label on a plus icon button"
+  },
+  "pageHeadingWithSearchbackButtonaccessibilityLabel": {
+    "message": "Vissza az előző képernyőre",
+    "description": "Accessibility label for back button"
+  },
+  "pageHeadingWithSearchsearchFieldaccessibilityLabel": {
+    "message": "Név szerinti keresés",
+    "description": "Accessibility label on a search field"
+  },
+  "pageHeadingWithSearchsearchFieldplaceholder": {
+    "message": "Név szerinti keresés",
+    "description": "Placeholder text on a search field"
+  },
+  "savePickerpinCreationSuccessIconaccessibilityLabel": {
+    "message": "Pin létrehozva",
+    "description": "Accessibility label for an icon indicating successful Pin creation"
+  },
+  "savePickerpinCreationSuccesshading": {
+    "message": "Mentve ide:",
+    "description": "Heading tell the user where their Pin has been saved. This is followed by the board name"
+  },
+  "savePickerpinCreationSuccessviewButton": {
+    "message": "Megtekintés",
+    "description": "Button text to view newly created pin"
+  },
+  "savePickerboardDropdownIconheading": {
+    "message": "Mentés táblára",
+    "description": "Heading on a board picker dropdown"
+  },
+  "savePickerboardDropdownIconaccessibilityLabel": {
+    "message": "Tábla kiválasztása",
+    "description": "Accessibility label on a board picker dropdown arrow"
+  },
+  "savePickerspinneraccessibilityLabel": {
+    "message": "Mentést jelző forgó elem",
+    "description": "Accessibility label on a Pin creation spinner animation icon"
+  },
+  "savePickersaveButtontext": {
+    "message": "Mentés",
+    "description": "Text on a button to create a Pin"
+  },
+  "boardCreatePagesaveErrortext": {
+    "message": "Hiba történt a rendszerünkben",
+    "description": "Board save error text"
+  },
+  "boardCreatePagenameFieldmaxLengthError": {
+    "message": "Kérjük, legfeljebb 50 karaktert adj meg",
+    "description": "New board name validation error"
+  },
+  "boardCreatePageheading": {
+    "message": "Tábla létrehozása",
+    "description": "Heading on the page that shows the board creation interface"
+  },
+  "boardCreatePagebackButtontootlipText": {
+    "message": "Vissza a tábla kiválasztásához",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardCreatePagenameTextFieldheading": {
+    "message": "Tábla neve",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldlabel": {
+    "message": "Tábla neve",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldplaceholder": {
+    "message": "Add meg a tábla nevét",
+    "description": "Placeholder text for new board name text field"
+  },
+  "boardCreatePagesecretSwitchheading": {
+    "message": "Tábla titkossá tétele",
+    "description": "Label text for a switch to make new board secret"
+  },
+  "boardCreatePagesecretSwitchinfo": {
+    "message": "Csak te és a közreműködők látjátok ezt a táblát",
+    "description": "Info text for a switch to make new board secret"
+  },
+  "boardCreatePagecreateButtontext": {
+    "message": "Létrehozás",
+    "description": "Text on a button that creates new board"
+  },
+  "boardSectionCreatePagesaveErrortext": {
+    "message": "Hiba történt a rendszerünkben",
+    "description": "Board section save error text"
+  },
+  "boardSectionCreatePagenameFieldmaxLengthError": {
+    "message": "Kérjük, legfeljebb 50 karaktert adj meg",
+    "description": "Error for when the new board section name is too long"
+  },
+  "boardSectionCreatePageheading": {
+    "message": "Táblaszakasz létrehozva",
+    "description": "Heading on the page that shows the board section creation interface"
+  },
+  "boardSectionCreatePagebackButtontootlipText": {
+    "message": "Vissza a táblaszakasz kiválasztásához",
+    "description": "Text in tooltip that shows up on Pinterest logo hover"
+  },
+  "boardSectionCreatePagetitleTextFieldheading": {
+    "message": "Táblaszakasznév",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagetitleTextFieldlabel": {
+    "message": "Táblaszakasznév",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagenameTextFieldplaceholder": {
+    "message": "Add meg a táblaszakasz nevét",
+    "description": "Placeholder text for new board section name text field"
+  },
+  "boardSectionCreatePagecreateButtontext": {
+    "message": "Létrehozás",
+    "description": "Text on a button that creates new board section"
+  },
+  "boardSectionPickerPageheading": {
+    "message": "Táblaszakasz kiválasztása",
+    "description": "Heading on the page that shows the board section picker interface"
+  },
+  "boardSectionPickerPagebackButtontootlipText": {
+    "message": "Vissza a tábla kiválasztásához",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardSectionPickerPagecreateSectionbutton": {
+    "message": "Táblaszakasz hozzáadása",
+    "description": "Create board section button text"
+  },
+  "pinCreatePagesaveErrortext": {
+    "message": "Hiba történt a rendszerünkben",
+    "description": "Pin create error text"
+  },
+  "pinCreatePageheadingInProgresstext": {
+    "message": "Mentés ide:",
+    "description": "Pin create page heading text when saving is in progress. This text is followed by a board name"
+  },
+  "pinCreatePageheadingDonetext": {
+    "message": "Mentve ide:",
+    "description": "Pin create page heading text when saving is complete. This text is followed by a board name"
+  },
+  "pinCreatePageviewButtontext": {
+    "message": "Megtekintés",
+    "description": "Text on a button that opens newly created Pin page"
+  },
+  "extName": {
+    "message": "Pinterest Mentés gomb",
+    "description": "The extension's title, seen in gallery and extensions page"
+  },
+  "extDescription": {
+    "message": "Mentsd a kedvenc ötleteidet online, hogy később könnyedén visszatérhess hozzájuk.",
+    "description": "The extension's description, seen in gallery and extensions page"
+  },
+  "noPinDomain": {
+    "message": "Sajnáljuk, ebből a tartományból nem lehet pinelni. Kérjük, kérdéseiddel fordulj a webhely üzemeltetőjéhez.",
+    "description": "The default message we alert when someone tries to use the browser button on a forbidden domain"
+  },
+  "optionTitle": {
+    "message": "A Mentés gomb beállításai",
+    "description": "Title for the Options page"
+  },
+  "optionHide": {
+    "message": "A lebegő Mentés gombok elrejtése",
+    "description": "Text next to the checkbox that turns off hoverbuttons"
+  },
+  "searchAction": {
+    "message": "Keresés",
+    "description": "Appears in the right-click-to-search menu item"
+  },
+  "saveAction": {
+    "message": "Mentés",
+    "description": "Appears wherever we show a Save button or menu prompt"
+  },
+  "choosePinMultiSelectHeader": {
+    "message": "Ments egy ötletet a Pinterestre",
+    "description": "New header message in the image picker overlay"
+  },
+  "choosePinSelectAllSubHeader": {
+    "message": "Válassz ki maximum húsz képet",
+    "description": "Subheader in the image picker overlay"
+  },
+  "nextAction": {
+    "message": "Tovább",
+    "description": "Press this button to go to the Create view when multiple images are selected"
+  },
+  "selectAll": {
+    "message": "Összes kijelölése",
+    "description": "Text next to the checkbox that selects all images on the grid"
+  },
+  "boardPickerOpenerLabel": {
+    "message": "Mentés táblára",
+    "description": "Label in inline board picker"
+  },
+  "boardPickerSuccessLabel": {
+    "message": "Mentve ide:",
+    "description": "Label in inline board picker after pin creation"
+  },
+  "visitButton": {
+    "message": "Megnyitás",
+    "description": "Pin create success button to visit pin"
+  },
+  "help": {
+    "message": "Súgó",
+    "description": "Get help after a Pin create failure"
+  },
+  "chooseBoard": {
+    "message": "Válassz táblát",
+    "description": "main header in Save form"
+  },
+  "topChoices": {
+    "message": "Legtöbbször választott",
+    "description": "interstitial header in board list"
+  },
+  "allBoards": {
+    "message": "Minden tábla",
+    "description": "interstitial header in board list"
+  },
+  "createBoard": {
+    "message": "Hozz létre táblát",
+    "description": "header in Create form"
+  },
+  "addFormSecretLabel": {
+    "message": "Titkos",
+    "description": "label over secret/not-secret switch"
+  },
+  "chooseSection": {
+    "message": "Táblaszakasz kiválasztása",
+    "description": "label for board sections"
+  },
+  "addSection": {
+    "message": "Adj hozzá szakaszt",
+    "description": "label to add section"
+  },
+  "optYes": {
+    "message": "Igen",
+    "description": "switch option yes"
+  },
+  "optNo": {
+    "message": "Nem",
+    "description": "switch option no"
+  },
+  "closeAddForm": {
+    "message": "Mégsem",
+    "description": "cancel create"
+  },
+  "submitAddForm": {
+    "message": "Létrehozás",
+    "description": "create new board"
+  },
+  "msgBoardFail": {
+    "message": "Az új tábla létrehozása nem sikerült",
+    "description": "board create fail"
+  },
+  "msgPinFail": {
+    "message": "Az oldal mentése nem sikerült",
+    "description": "pin create fail"
+  },
+  "msgLoginFail": {
+    "message": "Sajnáljuk, valami nincs rendben. Kérjük, ellenőrizd, hogy be vagy-e jelentkezve a Pinterestbe, majd próbálkozz újra.",
+    "description": "Message shown when someone's login changes while the board picker is open"
+  },
+  "msgOops": {
+    "message": "Hoppá!",
+    "description": "error header"
+  },
+  "msgHelp": {
+    "message": "Segítségkérés",
+    "description": "get help button"
+  },
+  "authHelpHead": {
+    "message": "Pszt!",
+    "description": "You're not signed in. Let's get your attention with this headline. Might also be Hey! or Oops!"
+  },
+  "authHelpBody": {
+    "message": "Úgy tűnik, hogy nem vagy bejelentkezve a Pinterestre. Ezt hozzuk helyre!",
+    "description": "If you're not signed in, here's what we'll do when you click the button below"
+  },
+  "signIn": {
+    "message": "Bejelentkezés",
+    "description": "Click this button to sign in on Pinterest"
+  },
+  "extensionSetting_hideHoverButtons": {
+    "message": "Mentés gomb elrejtése képeken",
+    "description": "User setting to disable Save hover button on images"
+  },
+  "settingsPageheading": {
+    "message": "Beállítások",
+    "description": "Heading on the settings page"
+  },
+  "settingsPageback": {
+    "message": "Vissza",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "settingsPagedisableHover": {
+    "message": "Lebegő gomb letiltása",
+    "description": "Settings toggle for disabling image hover mode"
+  },
+  "settingsPagereportBug": {
+    "message": "Probléma bejelentése",
+    "description": "Settings link to report bug page"
+  },
+  "settingsPagerevokeAccess": {
+    "message": "Hozzáférés visszavonása és kijelentkezés",
+    "description": "Settings link to revoke app access and sign out"
+  },
+  "settingsPagelogOut": {
+    "message": "Kijelentkezés",
+    "description": "Settings link to logout for non-Safari browsers"
+  },
+  "settingsPagedoneButton": {
+    "message": "Kész",
+    "description": "Button text to leave settings"
+  },
+  "reportBugheading": {
+    "message": "Probléma bejelentése",
+    "description": "Heading on the report bug page"
+  },
+  "reportBugback": {
+    "message": "Vissza a beállításokhoz",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "reportBugwebsiteLabel": {
+    "message": "Webhely",
+    "description": "Label for website input field"
+  },
+  "reportBugdescriptionLabel": {
+    "message": "Leírás",
+    "description": "Label for description input field"
+  },
+  "reportBugdescriptionPlaceholder": {
+    "message": "Röviden magyarázd el, mi történt",
+    "description": "Placeholder text for description input field"
+  },
+  "reportBugdescriptionHelpText": {
+    "message": "A Pinterest nem garantálja, hogy válaszolni fog az üzenetre.",
+    "description": "Help text for description input field explaining that there will be no response"
+  },
+  "reportBugsubmitButton": {
+    "message": "Küldés",
+    "description": "Button text to submit bug report"
+  },
+  "reportBugsubmitSuccessheading": {
+    "message": "Probléma beküldve",
+    "description": "Heading on successful report bug toast"
+  },
+  "reportBugsubmitSuccessdetailText": {
+    "message": "Köszönjük a visszajelzést!",
+    "description": "Detail text on successful report bug toast"
+  },
+  "errorPageheadingtext": {
+    "message": "Ajjaj…",
+    "description": "Heading text for the error page"
+  },
+  "errorPagebannedDomaintext": {
+    "message": "Sajnáljuk, ezen a webhelyen nem lehet pinelni. Ha úgy gondolod, hiba történt, jelentsd be.",
+    "description": "Error message for when Pinterest prevents pinning on a domain"
+  },
+  "errorPagenoPinDomaintext": {
+    "message": "Ezen a webhelyen nem lehet tartalmakat menteni a Pinterestre. Kérjük, kérdéseiddel fordulj az oldal tulajdonosához.",
+    "description": "Error message for when domain owner prevents pinning on their domain"
+  }
+}

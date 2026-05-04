@@ -1,80 +1,74 @@
 {
+"update_url": "https://clients2.google.com/service/update2/crx",
+
   "manifest_version": 3,
-  "name": "Affiliate Pin Saver",
-  "version": "1.5.1",
-  "description": "Save Amazon affiliate product pins to Pinterest directly from Facebook group posts.",
-
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
+  "version": "6.13.0",
+  "default_locale": "en",
+  "permissions": [
+    "contextMenus",
+    "cookies",
+    "storage",
+    "activeTab",
+    "declarativeNetRequest"
+  ],
+  "incognito": "split",
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
+      "19": "icons/icon_toolbar.png",
+      "38": "icons/icon_toolbar@2x.png"
     },
-    "default_title": "Affiliate Pin Saver"
+    "default_title": "__MSG_actionTitle__"
   },
-
+  "host_permissions": [
+    "*://*/*",
+    "<all_urls>"
+  ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "backgroundScript.js",
+    "type": "module"
   },
-
   "content_scripts": [
     {
       "matches": [
-        "https://facebook.com/*",
-        "https://www.facebook.com/*",
-        "https://m.facebook.com/*",
-        "https://web.facebook.com/*"
+        "*://*/*"
       ],
-      "js": ["content.js"],
-      "css": ["content.css"],
-      "run_at": "document_idle",
-      "all_frames": false
+      "js": [
+        "contentScript.js"
+      ],
+      "allFrames": false
     }
   ],
-
-  "permissions": [
-    "storage",
-    "tabs",
-    "contextMenus",
-    "clipboardWrite",
-    "scripting"
-  ],
-
-  "host_permissions": [
-    "https://facebook.com/*",
-    "https://www.facebook.com/*",
-    "https://m.facebook.com/*",
-    "https://web.facebook.com/*",
-    "https://www.amazon.com/*",
-    "https://amazon.com/*",
-    "https://*.amazon.com/*",
-    "https://amzn.to/*",
-    "https://a.co/*",
-    "https://pinterest.com/*",
-    "https://www.pinterest.com/*"
-  ],
-
-  "options_ui": {
-    "page": "options.html",
-    "open_in_tab": true
-  },
-
-  "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
-  },
-
   "web_accessible_resources": [
     {
-      "resources": ["icons/*"],
+      "resources": [
+        "index.html",
+        "style.css"
+      ],
       "matches": [
-        "https://facebook.com/*",
-        "https://www.facebook.com/*",
-        "https://m.facebook.com/*",
-        "https://web.facebook.com/*"
-      ]
+        "*://*/*"
+      ],
+      "use_dynamic_url": true
     }
-  ]
+  ],
+  "content_security_policy": {
+    "img-src": "self"
+  },
+  "icons": {
+    "16": "icons/icon_16.png",
+    "48": "icons/icon_48.png",
+    "128": "icons/icon_128.png",
+    "140": "icons/icon_140.png",
+    "256": "icons/icon_256.png"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "assets/rules.json"
+      }
+    ]
+  }
 }

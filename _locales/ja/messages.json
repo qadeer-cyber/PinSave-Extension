@@ -1,0 +1,498 @@
+{
+  "extensionName": {
+    "message": "Pinterest に保存する",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Pinterest にアイデアを保存しよう。",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "Pinterest に保存する",
+    "description": "Title of the Pinterest action button."
+  },
+  "contextMenuSaveActionText": {
+    "message": "Pinterest に保存する",
+    "description": "Context menu Save action name."
+  },
+  "saveButtonText": {
+    "message": "保存",
+    "description": "Save button text."
+  },
+  "imagePickerPageheading": {
+    "message": "Pinterest にアイデアを保存しよう",
+    "description": "Heading on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageinfoPrompt": {
+    "message": "最大 20 件の画像を選択できます",
+    "description": "Additional info text on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageemptyStateheading": {
+    "message": "ピンにできる画像がページに見つかりませんでした",
+    "description": "Text displayed in empty state when no images are present"
+  },
+  "imagePickerPagereportBugButtontext": {
+    "message": "問題を報告する",
+    "description": "Button text that goes to the report bug page"
+  },
+  "imagePickerPagenextButtontext": {
+    "message": "次へ",
+    "description": "Button text that goes from image selection to picking a board"
+  },
+  "imagePickerPagesignIntext": {
+    "message": "ログイン",
+    "description": "Button text that goes to the Sign In page"
+  },
+  "imagePickerPagesettingsEduaccessibilityLabel": {
+    "message": "設定の説明用ポップオーバー",
+    "description": "Accessibility for settings education popover"
+  },
+  "imagePickerPagesettingsEducontent": {
+    "message": "画像ホバーを無効にするか、設定からバグを報告してください",
+    "description": "Settings education popover message content"
+  },
+  "boardPickerPageheading": {
+    "message": "ボードを選択する",
+    "description": "Heading on the page that shows the board picker interface"
+  },
+  "boardPickerPageheadingloading": {
+    "message": "ボードを読み込み中...",
+    "description": "Heading on the page that shows that boards are loading"
+  },
+  "boardPickerPagebackButtontootlipText": {
+    "message": "画像選択に戻る",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardPickerPagecreateBoardtopChoiceHeading": {
+    "message": "人気のボード",
+    "description": "Heading for a setion listing top choices for user's board selection"
+  },
+  "boardPickerPagecreateBoardallBoardHeading": {
+    "message": "すべてのボード",
+    "description": "Heading for a setion listing all user's boards"
+  },
+  "boardPickerPageemptyStateheading": {
+    "message": "続行するにはボードを作成してください",
+    "description": "Text displayed in empty state when no boards are present"
+  },
+  "boardPickerPagespinneraccessibility": {
+    "message": "保存中スピナー",
+    "description": "Accessibility label on a Board loading spinner animation icon"
+  },
+  "boardPickerPagecreateBoardbutton": {
+    "message": "新規ボードを作成する",
+    "description": "Button text to create new board"
+  },
+  "signInPagespinneraccessibilityLabel": {
+    "message": "認証の進行状況スピナー",
+    "description": "Accessibility label on a user authentication progress spinner animation icon"
+  },
+  "signInPageconnectHeadingtext": {
+    "message": "アカウントを連携",
+    "description": "Sign in page heading"
+  },
+  "signInPageconnectDescriptiontext": {
+    "message": "Pinterest の保存ブラウザ拡張機能を認証すると、ウェブサイトからアイデアを簡単に保存できます",
+    "description": "Description of the sign in page"
+  },
+  "signInPageauthorizeButtontext": {
+    "message": "認証する",
+    "description": "Button for user authorization"
+  },
+  "signInPageretryHeadingtext": {
+    "message": "トラブルが発生した場合",
+    "description": "Heading for authorization retry state"
+  },
+  "signInPageretryButtontext": {
+    "message": "もう一度試す",
+    "description": "Button for retrying authorization"
+  },
+  "appHeaderpinterestLogoaccessibilityLabel": {
+    "message": "Pinterest",
+    "description": "Accessibility label for Pinterest logo"
+  },
+  "appHeadersettingsButtonaccessibilityLabel": {
+    "message": "設定",
+    "description": "Accessibility label for settings button"
+  },
+  "appHeadercloseButtonaccessibilityLabel": {
+    "message": "拡張機能を閉じる",
+    "description": "Accessibility label for extension close button"
+  },
+  "boardRepcollaborativeBoardIconaccessibilityLabel": {
+    "message": "コラボレーションボード",
+    "description": "Accessibility label on an icon indicating a collaborative board"
+  },
+  "boardRepsecretBoardIconaccessibilityLabel": {
+    "message": "シークレットボード",
+    "description": "Accessibility label on a lock icon for a secret board"
+  },
+  "boardRepboardSectionsIconaccessibilityLabel": {
+    "message": "ボードのサブボードを表示する",
+    "description": "Accessibility label on button that shows board sections"
+  },
+  "boardRepsaveButtontext": {
+    "message": "保存",
+    "description": "Text on a button that saves a new Pin to user's profile"
+  },
+  "buttonIconWithTextaddIconaccessibilityLabel": {
+    "message": "新規作成する",
+    "description": "Accessibility label on a plus icon button"
+  },
+  "pageHeadingWithSearchbackButtonaccessibilityLabel": {
+    "message": "前の画面に戻る",
+    "description": "Accessibility label for back button"
+  },
+  "pageHeadingWithSearchsearchFieldaccessibilityLabel": {
+    "message": "名前で検索する",
+    "description": "Accessibility label on a search field"
+  },
+  "pageHeadingWithSearchsearchFieldplaceholder": {
+    "message": "名前で検索する",
+    "description": "Placeholder text on a search field"
+  },
+  "savePickerpinCreationSuccessIconaccessibilityLabel": {
+    "message": "ピンを作成しました",
+    "description": "Accessibility label for an icon indicating successful Pin creation"
+  },
+  "savePickerpinCreationSuccesshading": {
+    "message": "保存先ボード：",
+    "description": "Heading tell the user where their Pin has been saved. This is followed by the board name"
+  },
+  "savePickerpinCreationSuccessviewButton": {
+    "message": "表示",
+    "description": "Button text to view newly created pin"
+  },
+  "savePickerboardDropdownIconheading": {
+    "message": "ボードに保存する",
+    "description": "Heading on a board picker dropdown"
+  },
+  "savePickerboardDropdownIconaccessibilityLabel": {
+    "message": "ボードを選択する",
+    "description": "Accessibility label on a board picker dropdown arrow"
+  },
+  "savePickerspinneraccessibilityLabel": {
+    "message": "保存中スピナー",
+    "description": "Accessibility label on a Pin creation spinner animation icon"
+  },
+  "savePickersaveButtontext": {
+    "message": "保存",
+    "description": "Text on a button to create a Pin"
+  },
+  "boardCreatePagesaveErrortext": {
+    "message": "エラーが発生しました",
+    "description": "Board save error text"
+  },
+  "boardCreatePagenameFieldmaxLengthError": {
+    "message": "50 文字以内で入力してください",
+    "description": "New board name validation error"
+  },
+  "boardCreatePageheading": {
+    "message": "新規ボードを作成",
+    "description": "Heading on the page that shows the board creation interface"
+  },
+  "boardCreatePagebackButtontootlipText": {
+    "message": "ボードの選択に戻る",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardCreatePagenameTextFieldheading": {
+    "message": "ボード名",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldlabel": {
+    "message": "ボード名",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldplaceholder": {
+    "message": "ボード名を入力してください",
+    "description": "Placeholder text for new board name text field"
+  },
+  "boardCreatePagesecretSwitchheading": {
+    "message": "このボードを非公開にする",
+    "description": "Label text for a switch to make new board secret"
+  },
+  "boardCreatePagesecretSwitchinfo": {
+    "message": "あなたとボード参加者のみがこのボードを見ることができます",
+    "description": "Info text for a switch to make new board secret"
+  },
+  "boardCreatePagecreateButtontext": {
+    "message": "作成する",
+    "description": "Text on a button that creates new board"
+  },
+  "boardSectionCreatePagesaveErrortext": {
+    "message": "エラーが発生しました",
+    "description": "Board section save error text"
+  },
+  "boardSectionCreatePagenameFieldmaxLengthError": {
+    "message": "50 文字以内で入力してください",
+    "description": "Error for when the new board section name is too long"
+  },
+  "boardSectionCreatePageheading": {
+    "message": "サブボードを作成する",
+    "description": "Heading on the page that shows the board section creation interface"
+  },
+  "boardSectionCreatePagebackButtontootlipText": {
+    "message": "サブボードの選択に戻る",
+    "description": "Text in tooltip that shows up on Pinterest logo hover"
+  },
+  "boardSectionCreatePagetitleTextFieldheading": {
+    "message": "サブボード名",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagetitleTextFieldlabel": {
+    "message": "サブボード名",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagenameTextFieldplaceholder": {
+    "message": "サブボード名を入力してください",
+    "description": "Placeholder text for new board section name text field"
+  },
+  "boardSectionCreatePagecreateButtontext": {
+    "message": "作成する",
+    "description": "Text on a button that creates new board section"
+  },
+  "boardSectionPickerPageheading": {
+    "message": "サブボードを選択する",
+    "description": "Heading on the page that shows the board section picker interface"
+  },
+  "boardSectionPickerPagebackButtontootlipText": {
+    "message": "ボードの選択に戻る",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardSectionPickerPagecreateSectionbutton": {
+    "message": "サブボードを追加",
+    "description": "Create board section button text"
+  },
+  "pinCreatePagesaveErrortext": {
+    "message": "エラーが発生しました",
+    "description": "Pin create error text"
+  },
+  "pinCreatePageheadingInProgresstext": {
+    "message": "保存先：",
+    "description": "Pin create page heading text when saving is in progress. This text is followed by a board name"
+  },
+  "pinCreatePageheadingDonetext": {
+    "message": "保存先ボード：",
+    "description": "Pin create page heading text when saving is complete. This text is followed by a board name"
+  },
+  "pinCreatePageviewButtontext": {
+    "message": "表示",
+    "description": "Text on a button that opens newly created Pin page"
+  },
+  "extName": {
+    "message": "Pinterest 保存ボタン",
+    "description": "The extension's title, seen in gallery and extensions page"
+  },
+  "extDescription": {
+    "message": "オンラインで見つけたお気に入りのアイデアを保存すると、後からいつでも簡単にアクセスすることができます。",
+    "description": "The extension's description, seen in gallery and extensions page"
+  },
+  "noPinDomain": {
+    "message": "申し訳ありません。このドメインからピンを作成することはできません。質問がある場合は、サイト管理者にお問い合わせください。",
+    "description": "The default message we alert when someone tries to use the browser button on a forbidden domain"
+  },
+  "optionTitle": {
+    "message": "保存ボタンのオプション",
+    "description": "Title for the Options page"
+  },
+  "optionHide": {
+    "message": "保存のホバーボタンを非表示にする",
+    "description": "Text next to the checkbox that turns off hoverbuttons"
+  },
+  "searchAction": {
+    "message": "検索する",
+    "description": "Appears in the right-click-to-search menu item"
+  },
+  "saveAction": {
+    "message": "保存",
+    "description": "Appears wherever we show a Save button or menu prompt"
+  },
+  "choosePinMultiSelectHeader": {
+    "message": "Pinterest にアイデアを保存しよう",
+    "description": "New header message in the image picker overlay"
+  },
+  "choosePinSelectAllSubHeader": {
+    "message": "最大 20 件の画像を選択できます",
+    "description": "Subheader in the image picker overlay"
+  },
+  "nextAction": {
+    "message": "次へ",
+    "description": "Press this button to go to the Create view when multiple images are selected"
+  },
+  "selectAll": {
+    "message": "すべて選択する",
+    "description": "Text next to the checkbox that selects all images on the grid"
+  },
+  "boardPickerOpenerLabel": {
+    "message": "ボードに保存する",
+    "description": "Label in inline board picker"
+  },
+  "boardPickerSuccessLabel": {
+    "message": "保存先ボード：",
+    "description": "Label in inline board picker after pin creation"
+  },
+  "visitButton": {
+    "message": "アクセス",
+    "description": "Pin create success button to visit pin"
+  },
+  "help": {
+    "message": "ヘルプ",
+    "description": "Get help after a Pin create failure"
+  },
+  "chooseBoard": {
+    "message": "ボードを選択する",
+    "description": "main header in Save form"
+  },
+  "topChoices": {
+    "message": "人気のボード",
+    "description": "interstitial header in board list"
+  },
+  "allBoards": {
+    "message": "すべてのボード",
+    "description": "interstitial header in board list"
+  },
+  "createBoard": {
+    "message": "新規ボードを作成する",
+    "description": "header in Create form"
+  },
+  "addFormSecretLabel": {
+    "message": "シークレット（非公開）",
+    "description": "label over secret/not-secret switch"
+  },
+  "chooseSection": {
+    "message": "サブボードを選択する",
+    "description": "label for board sections"
+  },
+  "addSection": {
+    "message": "サブボードを追加する",
+    "description": "label to add section"
+  },
+  "optYes": {
+    "message": "はい",
+    "description": "switch option yes"
+  },
+  "optNo": {
+    "message": "いいえ",
+    "description": "switch option no"
+  },
+  "closeAddForm": {
+    "message": "キャンセル",
+    "description": "cancel create"
+  },
+  "submitAddForm": {
+    "message": "作成する",
+    "description": "create new board"
+  },
+  "msgBoardFail": {
+    "message": "新しいボードを作成できませんでした",
+    "description": "board create fail"
+  },
+  "msgPinFail": {
+    "message": "このページを保存できませんでした",
+    "description": "pin create fail"
+  },
+  "msgLoginFail": {
+    "message": "エラーが発生しました。Pinterest にログインしていることを確認して、もう一度やり直してください。",
+    "description": "Message shown when someone's login changes while the board picker is open"
+  },
+  "msgOops": {
+    "message": "エラー：",
+    "description": "error header"
+  },
+  "msgHelp": {
+    "message": "お問い合わせ",
+    "description": "get help button"
+  },
+  "authHelpHead": {
+    "message": "※",
+    "description": "You're not signed in. Let's get your attention with this headline. Might also be Hey! or Oops!"
+  },
+  "authHelpBody": {
+    "message": "Pinterest にログインしていないようです。今すぐログインしましょう。",
+    "description": "If you're not signed in, here's what we'll do when you click the button below"
+  },
+  "signIn": {
+    "message": "ログイン",
+    "description": "Click this button to sign in on Pinterest"
+  },
+  "extensionSetting_hideHoverButtons": {
+    "message": "画像の「保存」ボタンを非表示にする",
+    "description": "User setting to disable Save hover button on images"
+  },
+  "settingsPageheading": {
+    "message": "設定",
+    "description": "Heading on the settings page"
+  },
+  "settingsPageback": {
+    "message": "戻る",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "settingsPagedisableHover": {
+    "message": "画像ホバーを無効にする",
+    "description": "Settings toggle for disabling image hover mode"
+  },
+  "settingsPagereportBug": {
+    "message": "問題を報告する",
+    "description": "Settings link to report bug page"
+  },
+  "settingsPagerevokeAccess": {
+    "message": "アクセス権を取り消してログアウトする",
+    "description": "Settings link to revoke app access and sign out"
+  },
+  "settingsPagelogOut": {
+    "message": "ログアウト",
+    "description": "Settings link to logout for non-Safari browsers"
+  },
+  "settingsPagedoneButton": {
+    "message": "完了",
+    "description": "Button text to leave settings"
+  },
+  "reportBugheading": {
+    "message": "問題を報告する",
+    "description": "Heading on the report bug page"
+  },
+  "reportBugback": {
+    "message": "設定に戻る",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "reportBugwebsiteLabel": {
+    "message": "ウェブサイト",
+    "description": "Label for website input field"
+  },
+  "reportBugdescriptionLabel": {
+    "message": "説明文",
+    "description": "Label for description input field"
+  },
+  "reportBugdescriptionPlaceholder": {
+    "message": "報告内容を簡単に説明してください",
+    "description": "Placeholder text for description input field"
+  },
+  "reportBugdescriptionHelpText": {
+    "message": "Pinterest からの返信を保証するものではありません。また本件について対応いたしかねる場合もございますので、あらかじめご了承ください。",
+    "description": "Help text for description input field explaining that there will be no response"
+  },
+  "reportBugsubmitButton": {
+    "message": "送信する",
+    "description": "Button text to submit bug report"
+  },
+  "reportBugsubmitSuccessheading": {
+    "message": "問題が送信されました",
+    "description": "Heading on successful report bug toast"
+  },
+  "reportBugsubmitSuccessdetailText": {
+    "message": "フィードバックをありがとうございます！",
+    "description": "Detail text on successful report bug toast"
+  },
+  "errorPageheadingtext": {
+    "message": "エラー",
+    "description": "Heading text for the error page"
+  },
+  "errorPagebannedDomaintext": {
+    "message": "このサイトからピンを作成することはできません。これが誤りだと思われる場合は、問題を報告してください。",
+    "description": "Error message for when Pinterest prevents pinning on a domain"
+  },
+  "errorPagenoPinDomaintext": {
+    "message": "このサイトからは Pinterest に保存できません。ご質問は、サイト所有者にお問い合わせください。",
+    "description": "Error message for when domain owner prevents pinning on their domain"
+  }
+}

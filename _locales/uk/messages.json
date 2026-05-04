@@ -1,0 +1,498 @@
+{
+  "extensionName": {
+    "message": "Зберегти в Pinterest",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Зберігайте ідеї в Pinterest.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "Зберегти в Pinterest",
+    "description": "Title of the Pinterest action button."
+  },
+  "contextMenuSaveActionText": {
+    "message": "Зберегти в Pinterest",
+    "description": "Context menu Save action name."
+  },
+  "saveButtonText": {
+    "message": "Зберегти",
+    "description": "Save button text."
+  },
+  "imagePickerPageheading": {
+    "message": "Збережіть ідею в Pinterest",
+    "description": "Heading on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageinfoPrompt": {
+    "message": "Виберіть до двадцяти зображень",
+    "description": "Additional info text on the page that shows all scraped images from a page"
+  },
+  "imagePickerPageemptyStateheading": {
+    "message": "На сторінці не знайдено зображень, які можна опублікувати як піни",
+    "description": "Text displayed in empty state when no images are present"
+  },
+  "imagePickerPagereportBugButtontext": {
+    "message": "Повідомити про помилку",
+    "description": "Button text that goes to the report bug page"
+  },
+  "imagePickerPagenextButtontext": {
+    "message": "Далі",
+    "description": "Button text that goes from image selection to picking a board"
+  },
+  "imagePickerPagesignIntext": {
+    "message": "Увійти",
+    "description": "Button text that goes to the Sign In page"
+  },
+  "imagePickerPagesettingsEduaccessibilityLabel": {
+    "message": "Спливне вікно налаштувань із підказкою",
+    "description": "Accessibility for settings education popover"
+  },
+  "imagePickerPagesettingsEducontent": {
+    "message": "Вимкніть спливну кнопку або повідомте про помилку в налаштуваннях",
+    "description": "Settings education popover message content"
+  },
+  "boardPickerPageheading": {
+    "message": "Виберіть дошку",
+    "description": "Heading on the page that shows the board picker interface"
+  },
+  "boardPickerPageheadingloading": {
+    "message": "Завантаження дошок…",
+    "description": "Heading on the page that shows that boards are loading"
+  },
+  "boardPickerPagebackButtontootlipText": {
+    "message": "Повернутися до вибору зображення",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardPickerPagecreateBoardtopChoiceHeading": {
+    "message": "Найкращі варіанти",
+    "description": "Heading for a setion listing top choices for user's board selection"
+  },
+  "boardPickerPagecreateBoardallBoardHeading": {
+    "message": "Усі дошки",
+    "description": "Heading for a setion listing all user's boards"
+  },
+  "boardPickerPageemptyStateheading": {
+    "message": "Створіть дошку, щоб продовжити",
+    "description": "Text displayed in empty state when no boards are present"
+  },
+  "boardPickerPagespinneraccessibility": {
+    "message": "Значок збереження",
+    "description": "Accessibility label on a Board loading spinner animation icon"
+  },
+  "boardPickerPagecreateBoardbutton": {
+    "message": "Створити дошку",
+    "description": "Button text to create new board"
+  },
+  "signInPagespinneraccessibilityLabel": {
+    "message": "Індикатор виконання автентифікації",
+    "description": "Accessibility label on a user authentication progress spinner animation icon"
+  },
+  "signInPageconnectHeadingtext": {
+    "message": "Підключіть обліковий запис Pinterest",
+    "description": "Sign in page heading"
+  },
+  "signInPageconnectDescriptiontext": {
+    "message": "Надайте розширенню Pinterest «Зберегти» для браузера доступ до облікового запису, щоб із легкістю зберігати ідеї із сайтів",
+    "description": "Description of the sign in page"
+  },
+  "signInPageauthorizeButtontext": {
+    "message": "Надати доступ",
+    "description": "Button for user authorization"
+  },
+  "signInPageretryHeadingtext": {
+    "message": "Виникли проблеми?",
+    "description": "Heading for authorization retry state"
+  },
+  "signInPageretryButtontext": {
+    "message": "Повторити спробу",
+    "description": "Button for retrying authorization"
+  },
+  "appHeaderpinterestLogoaccessibilityLabel": {
+    "message": "Pinterest",
+    "description": "Accessibility label for Pinterest logo"
+  },
+  "appHeadersettingsButtonaccessibilityLabel": {
+    "message": "Настройки",
+    "description": "Accessibility label for settings button"
+  },
+  "appHeadercloseButtonaccessibilityLabel": {
+    "message": "Закрити розширення",
+    "description": "Accessibility label for extension close button"
+  },
+  "boardRepcollaborativeBoardIconaccessibilityLabel": {
+    "message": "Спільна дошка",
+    "description": "Accessibility label on an icon indicating a collaborative board"
+  },
+  "boardRepsecretBoardIconaccessibilityLabel": {
+    "message": "Прихована дошка",
+    "description": "Accessibility label on a lock icon for a secret board"
+  },
+  "boardRepboardSectionsIconaccessibilityLabel": {
+    "message": "Переглянути розділи дощок",
+    "description": "Accessibility label on button that shows board sections"
+  },
+  "boardRepsaveButtontext": {
+    "message": "Зберегти",
+    "description": "Text on a button that saves a new Pin to user's profile"
+  },
+  "buttonIconWithTextaddIconaccessibilityLabel": {
+    "message": "Створити",
+    "description": "Accessibility label on a plus icon button"
+  },
+  "pageHeadingWithSearchbackButtonaccessibilityLabel": {
+    "message": "Назад на попередню сторінку",
+    "description": "Accessibility label for back button"
+  },
+  "pageHeadingWithSearchsearchFieldaccessibilityLabel": {
+    "message": "Пошук за ім’ям",
+    "description": "Accessibility label on a search field"
+  },
+  "pageHeadingWithSearchsearchFieldplaceholder": {
+    "message": "Пошук за ім’ям",
+    "description": "Placeholder text on a search field"
+  },
+  "savePickerpinCreationSuccessIconaccessibilityLabel": {
+    "message": "Пін створено",
+    "description": "Accessibility label for an icon indicating successful Pin creation"
+  },
+  "savePickerpinCreationSuccesshading": {
+    "message": "Збережено на дошці:",
+    "description": "Heading tell the user where their Pin has been saved. This is followed by the board name"
+  },
+  "savePickerpinCreationSuccessviewButton": {
+    "message": "Переглянути",
+    "description": "Button text to view newly created pin"
+  },
+  "savePickerboardDropdownIconheading": {
+    "message": "Збережіть на дошці",
+    "description": "Heading on a board picker dropdown"
+  },
+  "savePickerboardDropdownIconaccessibilityLabel": {
+    "message": "Вибір дошки",
+    "description": "Accessibility label on a board picker dropdown arrow"
+  },
+  "savePickerspinneraccessibilityLabel": {
+    "message": "Значок збереження",
+    "description": "Accessibility label on a Pin creation spinner animation icon"
+  },
+  "savePickersaveButtontext": {
+    "message": "Зберегти",
+    "description": "Text on a button to create a Pin"
+  },
+  "boardCreatePagesaveErrortext": {
+    "message": "Сталася помилка",
+    "description": "Board save error text"
+  },
+  "boardCreatePagenameFieldmaxLengthError": {
+    "message": "Максимальна кількість символів: 50",
+    "description": "New board name validation error"
+  },
+  "boardCreatePageheading": {
+    "message": "Створити дошку",
+    "description": "Heading on the page that shows the board creation interface"
+  },
+  "boardCreatePagebackButtontootlipText": {
+    "message": "Назад до вибору дошки",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardCreatePagenameTextFieldheading": {
+    "message": "Назва дошки",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldlabel": {
+    "message": "Назва дошки",
+    "description": "Label for new board name text field"
+  },
+  "boardCreatePagenameTextFieldplaceholder": {
+    "message": "Введіть назву дошки",
+    "description": "Placeholder text for new board name text field"
+  },
+  "boardCreatePagesecretSwitchheading": {
+    "message": "Приховати дошку",
+    "description": "Label text for a switch to make new board secret"
+  },
+  "boardCreatePagesecretSwitchinfo": {
+    "message": "Лише ви та ваші співробітники побачите цю дошку",
+    "description": "Info text for a switch to make new board secret"
+  },
+  "boardCreatePagecreateButtontext": {
+    "message": "Створити",
+    "description": "Text on a button that creates new board"
+  },
+  "boardSectionCreatePagesaveErrortext": {
+    "message": "Сталася помилка",
+    "description": "Board section save error text"
+  },
+  "boardSectionCreatePagenameFieldmaxLengthError": {
+    "message": "Максимальна кількість символів: 50",
+    "description": "Error for when the new board section name is too long"
+  },
+  "boardSectionCreatePageheading": {
+    "message": "Створіть розділ",
+    "description": "Heading on the page that shows the board section creation interface"
+  },
+  "boardSectionCreatePagebackButtontootlipText": {
+    "message": "Назад до вибору розділу",
+    "description": "Text in tooltip that shows up on Pinterest logo hover"
+  },
+  "boardSectionCreatePagetitleTextFieldheading": {
+    "message": "Назва розділу",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagetitleTextFieldlabel": {
+    "message": "Назва розділу",
+    "description": "Label for new board section name text field"
+  },
+  "boardSectionCreatePagenameTextFieldplaceholder": {
+    "message": "Введіть назву розділу",
+    "description": "Placeholder text for new board section name text field"
+  },
+  "boardSectionCreatePagecreateButtontext": {
+    "message": "Створити",
+    "description": "Text on a button that creates new board section"
+  },
+  "boardSectionPickerPageheading": {
+    "message": "Виберіть розділ",
+    "description": "Heading on the page that shows the board section picker interface"
+  },
+  "boardSectionPickerPagebackButtontootlipText": {
+    "message": "Назад до вибору дошки",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "boardSectionPickerPagecreateSectionbutton": {
+    "message": "Додати розділ",
+    "description": "Create board section button text"
+  },
+  "pinCreatePagesaveErrortext": {
+    "message": "Сталася помилка",
+    "description": "Pin create error text"
+  },
+  "pinCreatePageheadingInProgresstext": {
+    "message": "Збереження:",
+    "description": "Pin create page heading text when saving is in progress. This text is followed by a board name"
+  },
+  "pinCreatePageheadingDonetext": {
+    "message": "Збережено на дошці:",
+    "description": "Pin create page heading text when saving is complete. This text is followed by a board name"
+  },
+  "pinCreatePageviewButtontext": {
+    "message": "Переглянути",
+    "description": "Text on a button that opens newly created Pin page"
+  },
+  "extName": {
+    "message": "Кнопка Pinterest «Зберегти»",
+    "description": "The extension's title, seen in gallery and extensions page"
+  },
+  "extDescription": {
+    "message": "Зберігайте свої улюблені ідеї в інтернеті, щоб легко повертатися до них пізніше.",
+    "description": "The extension's description, seen in gallery and extensions page"
+  },
+  "noPinDomain": {
+    "message": "На жаль, зберігати піни із цього домену заборонено. Якщо у вас виникли запитання, зв’яжіться з оператором сайту.",
+    "description": "The default message we alert when someone tries to use the browser button on a forbidden domain"
+  },
+  "optionTitle": {
+    "message": "Опції кнопки «Зберегти»",
+    "description": "Title for the Options page"
+  },
+  "optionHide": {
+    "message": "Приховати кнопки «Зберегти», які з'являються під час наведення",
+    "description": "Text next to the checkbox that turns off hoverbuttons"
+  },
+  "searchAction": {
+    "message": "Пошук",
+    "description": "Appears in the right-click-to-search menu item"
+  },
+  "saveAction": {
+    "message": "Зберегти",
+    "description": "Appears wherever we show a Save button or menu prompt"
+  },
+  "choosePinMultiSelectHeader": {
+    "message": "Збережіть ідею в Pinterest",
+    "description": "New header message in the image picker overlay"
+  },
+  "choosePinSelectAllSubHeader": {
+    "message": "Виберіть до двадцяти зображень",
+    "description": "Subheader in the image picker overlay"
+  },
+  "nextAction": {
+    "message": "Далі",
+    "description": "Press this button to go to the Create view when multiple images are selected"
+  },
+  "selectAll": {
+    "message": "Вибрати всі",
+    "description": "Text next to the checkbox that selects all images on the grid"
+  },
+  "boardPickerOpenerLabel": {
+    "message": "Зберегти на дошці",
+    "description": "Label in inline board picker"
+  },
+  "boardPickerSuccessLabel": {
+    "message": "Збережено на дошці:",
+    "description": "Label in inline board picker after pin creation"
+  },
+  "visitButton": {
+    "message": "Перейти",
+    "description": "Pin create success button to visit pin"
+  },
+  "help": {
+    "message": "Довідка",
+    "description": "Get help after a Pin create failure"
+  },
+  "chooseBoard": {
+    "message": "Обрати дошку",
+    "description": "main header in Save form"
+  },
+  "topChoices": {
+    "message": "Найкращі варіанти",
+    "description": "interstitial header in board list"
+  },
+  "allBoards": {
+    "message": "Усі дошки",
+    "description": "interstitial header in board list"
+  },
+  "createBoard": {
+    "message": "Створити дошку",
+    "description": "header in Create form"
+  },
+  "addFormSecretLabel": {
+    "message": "Прихована",
+    "description": "label over secret/not-secret switch"
+  },
+  "chooseSection": {
+    "message": "Вибрати розділ дошки",
+    "description": "label for board sections"
+  },
+  "addSection": {
+    "message": "Додати розділ",
+    "description": "label to add section"
+  },
+  "optYes": {
+    "message": "Так",
+    "description": "switch option yes"
+  },
+  "optNo": {
+    "message": "Ні",
+    "description": "switch option no"
+  },
+  "closeAddForm": {
+    "message": "Скасувати",
+    "description": "cancel create"
+  },
+  "submitAddForm": {
+    "message": "Створити",
+    "description": "create new board"
+  },
+  "msgBoardFail": {
+    "message": "Не вдалося створити нову дошку",
+    "description": "board create fail"
+  },
+  "msgPinFail": {
+    "message": "Не вдалося зберегти сторінку",
+    "description": "pin create fail"
+  },
+  "msgLoginFail": {
+    "message": "Схоже, сталася помилка. Переконайтеся, що ви ввійшли в Pinterest, і повторіть спробу.",
+    "description": "Message shown when someone's login changes while the board picker is open"
+  },
+  "msgOops": {
+    "message": "Ой!",
+    "description": "error header"
+  },
+  "msgHelp": {
+    "message": "Отримати довідку",
+    "description": "get help button"
+  },
+  "authHelpHead": {
+    "message": "Овва!",
+    "description": "You're not signed in. Let's get your attention with this headline. Might also be Hey! or Oops!"
+  },
+  "authHelpBody": {
+    "message": "Схоже, ви не ввійшли в Pinterest. Нумо це виправляти!",
+    "description": "If you're not signed in, here's what we'll do when you click the button below"
+  },
+  "signIn": {
+    "message": "Увійти",
+    "description": "Click this button to sign in on Pinterest"
+  },
+  "extensionSetting_hideHoverButtons": {
+    "message": "Приховати кнопку «Зберегти» для зображень",
+    "description": "User setting to disable Save hover button on images"
+  },
+  "settingsPageheading": {
+    "message": "Настройки",
+    "description": "Heading on the settings page"
+  },
+  "settingsPageback": {
+    "message": "Назад",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "settingsPagedisableHover": {
+    "message": "Вимкнути наведення курсору на зображення",
+    "description": "Settings toggle for disabling image hover mode"
+  },
+  "settingsPagereportBug": {
+    "message": "Повідомити про помилку",
+    "description": "Settings link to report bug page"
+  },
+  "settingsPagerevokeAccess": {
+    "message": "Скасувати доступ і вийти з облікового запису",
+    "description": "Settings link to revoke app access and sign out"
+  },
+  "settingsPagelogOut": {
+    "message": "Вийти",
+    "description": "Settings link to logout for non-Safari browsers"
+  },
+  "settingsPagedoneButton": {
+    "message": "Готово",
+    "description": "Button text to leave settings"
+  },
+  "reportBugheading": {
+    "message": "Повідомлення про помилку",
+    "description": "Heading on the report bug page"
+  },
+  "reportBugback": {
+    "message": "Повернутися до настройок",
+    "description": "Text in tooltip that shows up on back button hover"
+  },
+  "reportBugwebsiteLabel": {
+    "message": "Сайт",
+    "description": "Label for website input field"
+  },
+  "reportBugdescriptionLabel": {
+    "message": "Опис",
+    "description": "Label for description input field"
+  },
+  "reportBugdescriptionPlaceholder": {
+    "message": "Коротко опишіть проблему",
+    "description": "Placeholder text for description input field"
+  },
+  "reportBugdescriptionHelpText": {
+    "message": "Pinterest не зобов’язується відповісти на це повідомлення.",
+    "description": "Help text for description input field explaining that there will be no response"
+  },
+  "reportBugsubmitButton": {
+    "message": "Надіслати",
+    "description": "Button text to submit bug report"
+  },
+  "reportBugsubmitSuccessheading": {
+    "message": "Повідомлення про проблему надіслано",
+    "description": "Heading on successful report bug toast"
+  },
+  "reportBugsubmitSuccessdetailText": {
+    "message": "Дякуємо за ваш відгук!",
+    "description": "Detail text on successful report bug toast"
+  },
+  "errorPageheadingtext": {
+    "message": "Ой…",
+    "description": "Heading text for the error page"
+  },
+  "errorPagebannedDomaintext": {
+    "message": "На жаль, зберігати піни на цьому сайті заборонено. Якщо ви вважаєте, що сталася помилка, повідомте про неї.",
+    "description": "Error message for when Pinterest prevents pinning on a domain"
+  },
+  "errorPagenoPinDomaintext": {
+    "message": "Цей сайт не дозволяє зберігати ідеї в Pinterest. Якщо у вас є запитання, зверніться до власника сайту.",
+    "description": "Error message for when domain owner prevents pinning on their domain"
+  }
+}
