@@ -384,6 +384,79 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
+  /* ---------- Pinterest boards panel ---------- */
+
+  const BOARDS_KEY = 'user_boards';
+
+  function setBoardsStatus(text, isError) {
+    const el = document.getElementById('boardsStatus');
+    if (!el) return;
+    el.textContent = text || '';
+    el.style.color = isError ? '#e60023' : '';
+  }
+
+  function renderBoards(boards) {
+    const list = document.getElementById('boardsList');
+    if (!list) return;
+    list.innerHTML = '';
+    if (!Array.isArray(boards) || !boards.length) {
+      const empty = document.createElement('div');
+      empty.className = 'muted';
+      empty.style.padding = '16px 4px';
+      empty.textContent = 'No boards loaded yet. Click "Refresh boards" while signed into pinterest.com.';
+      list.appendChild(empty);
+      return;
+    }
+    boards.forEach(function (b) {
+      const row = document.createElement('div');
+      row.className = 'bar-list-row';
+      const left = document.createElement('div');
+      left.className = 'bar-list-label';
+      left.textContent = b.name + (b.privacy && b.privacy !== 'public' ? '  -  ' + b.privacy : '');
+      const right = document.createElement('div');
+      right.className = 'bar-list-count';
+      right.style.fontFamily = 'monospace';
+      right.style.fontSize = '11px';
+      right.textContent = b.id || '';
+      row.appendChild(left);
+      row.appendChild(right);
+      list.appendChild(row);
+    });
+  }
+
+  function loadCachedBoards() {
+    if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local) {
+      renderBoards([]);
+      return;
+    }
+    chrome.storage.local.get([BOARDS_KEY], function (items) {
+      const list = items[BOARDS_KEY];
+      renderBoards(Array.isArray(list) ? list : []);
+      if (Array.isArray(list) && list.length) {
+        setBoardsStatus('Cached: ' + list.length + ' board' + (list.length === 1 ? '' : 's') + '.');
+      }
+    });
+  }
+
+  function refreshBoards() {
+    if (!window.__pbe_PinterestApi) {
+      setBoardsStatus('Pinterest API helper not loaded.', true);
+      return;
+    }
+    setBoardsStatus('Loading from pinterest.com...');
+    window.__pbe_PinterestApi.getBoards().then(function (boards) {
+      renderBoards(boards);
+      if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+        const u = {}; u[BOARDS_KEY] = boards;
+        chrome.storage.local.set(u);
+      }
+      setBoardsStatus('Loaded ' + boards.length + ' board' + (boards.length === 1 ? '' : 's') + '.');
+    }).catch(function (err) {
+      const msg = (err && err.message) || 'unknown error';
+      setBoardsStatus('Failed: ' + msg + '. Sign in to pinterest.com and try again.', true);
+    });
+  }
+
   /* ---------- bootstrap ---------- */
 
   function refresh() {
@@ -392,6 +465,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     refresh();
+    loadCachedBoards();
 
     document.getElementById('refreshBtn').addEventListener('click', refresh);
 
@@ -405,9 +479,13 @@
       clearHistory().then(refresh);
     });
 
+    const refreshBoardsBtn = document.getElementById('refreshBoardsBtn');
+    if (refreshBoardsBtn) refreshBoardsBtn.addEventListener('click', refreshBoards);
+
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.onChanged) {
       chrome.storage.onChanged.addListener(function (changes, area) {
         if (area === 'local' && changes[STORAGE_KEY]) refresh();
+        if (area === 'local' && changes[BOARDS_KEY]) loadCachedBoards();
       });
     }
   });
