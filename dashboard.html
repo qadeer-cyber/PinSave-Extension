@@ -87,6 +87,17 @@
         </article>
       </section>
 
+      <section class="card" aria-label="Pinterest boards">
+        <header class="card-head">
+          <h2>Your Pinterest boards</h2>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="muted" id="boardsStatus">Sign in to pinterest.com, then click Refresh.</span>
+            <button id="refreshBoardsBtn" type="button" class="btn btn-secondary">Refresh boards</button>
+          </div>
+        </header>
+        <div id="boardsList" class="bar-list"></div>
+      </section>
+
       <section class="card" aria-label="Recent pins">
         <header class="card-head">
           <h2>Recent pins</h2>
@@ -119,6 +130,7 @@
       </section>
     </main>
 
+    <script src="pinterestInternalApi.js"></script>
     <script src="dashboard.js"></script>
   </body>
 </html>
