@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Affiliate Pin Analytics</title>
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
+    <header class="dash-header">
+      <div class="dash-header-inner">
+        <div>
+          <h1>Affiliate Pin Analytics</h1>
+          <p class="dash-sub">Every pin you save through the manual destination link is logged locally.</p>
+        </div>
+        <div class="dash-actions">
+          <button id="refreshBtn" type="button" class="btn btn-secondary">Refresh</button>
+          <button id="exportBtn" type="button" class="btn btn-secondary">Export CSV</button>
+          <button id="clearBtn" type="button" class="btn btn-danger">Clear history</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dash-main">
+      <section class="stat-grid" aria-label="Headline stats">
+        <article class="stat-card">
+          <div class="stat-label">All time</div>
+          <div class="stat-value" id="statAll">0</div>
+          <div class="stat-foot">pins recorded</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-label">Today</div>
+          <div class="stat-value" id="statToday">0</div>
+          <div class="stat-foot" id="statTodayFoot">vs. yesterday: 0</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-label">This week</div>
+          <div class="stat-value" id="statWeek">0</div>
+          <div class="stat-foot" id="statWeekFoot">last 7 days</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-label">This month</div>
+          <div class="stat-value" id="statMonth">0</div>
+          <div class="stat-foot" id="statMonthFoot">last 30 days</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-label">Unique tags</div>
+          <div class="stat-value" id="statTags">0</div>
+          <div class="stat-foot">distinct affiliate tags</div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-label">Unique products</div>
+          <div class="stat-value" id="statAsins">0</div>
+          <div class="stat-foot">distinct ASINs</div>
+        </article>
+      </section>
+
+      <section class="card" aria-label="Pins per day">
+        <header class="card-head">
+          <h2>Pins per day (last 30 days)</h2>
+          <span class="muted" id="chartTotal">0 total</span>
+        </header>
+        <div class="chart" id="chart"></div>
+      </section>
+
+      <section class="grid-2">
+        <article class="card" aria-label="Top affiliate tags">
+          <header class="card-head"><h2>Top affiliate tags</h2></header>
+          <div class="bar-list" id="topTags"></div>
+        </article>
+
+        <article class="card" aria-label="Top marketplaces">
+          <header class="card-head"><h2>Top marketplaces</h2></header>
+          <div class="bar-list" id="topMarkets"></div>
+        </article>
+      </section>
+
+      <section class="grid-2">
+        <article class="card" aria-label="Top destination domains">
+          <header class="card-head"><h2>Top destination domains</h2></header>
+          <div class="bar-list" id="topDomains"></div>
+        </article>
+
+        <article class="card" aria-label="Top products">
+          <header class="card-head"><h2>Top products (ASIN)</h2></header>
+          <div class="bar-list" id="topAsins"></div>
+        </article>
+      </section>
+
+      <section class="card" aria-label="Recent pins">
+        <header class="card-head">
+          <h2>Recent pins</h2>
+          <span class="muted" id="recentCount">0 shown</span>
+        </header>
+        <div class="table-wrap">
+          <table class="recent-table">
+            <thead>
+              <tr>
+                <th class="col-thumb">Image</th>
+                <th>When</th>
+                <th>Marketplace</th>
+                <th>ASIN</th>
+                <th>Affiliate tag</th>
+                <th>Destination</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="recentBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card empty-card" id="emptyState" hidden>
+        <h2>No pins recorded yet</h2>
+        <p>Open the Pinterest popup, paste a destination link, and save a pin. Each save will show up here automatically.</p>
+        <p class="muted">Bookmark this page (right-click the toolbar icon &rarr; Options) so you can reach it again quickly.</p>
+      </section>
+    </main>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>

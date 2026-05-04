@@ -38,6 +38,16 @@
         "contentScript.js"
       ],
       "allFrames": false
+    },
+    {
+      "matches": [
+        "*://*.pinterest.com/pin/create/*"
+      ],
+      "js": [
+        "dashboardLogger.js"
+      ],
+      "run_at": "document_start",
+      "allFrames": false
     }
   ],
   "web_accessible_resources": [
@@ -50,8 +60,22 @@
         "*://*/*"
       ],
       "use_dynamic_url": true
+    },
+    {
+      "resources": [
+        "dashboard.html",
+        "dashboard.css",
+        "dashboard.js"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
     }
   ],
+  "options_ui": {
+    "page": "dashboard.html",
+    "open_in_tab": true
+  },
   "content_security_policy": {
     "img-src": "self"
   },
