@@ -263,6 +263,17 @@
       const tdTag = document.createElement('td');
       tdTag.textContent = r.affiliateTag || '\u2014';
 
+      const tdDesc = document.createElement('td');
+      if (r.description) {
+        const span = document.createElement('span');
+        span.className = 'truncate';
+        span.title = r.description;
+        span.textContent = r.description;
+        tdDesc.appendChild(span);
+      } else {
+        tdDesc.textContent = '\u2014';
+      }
+
       const tdDest = document.createElement('td');
       if (r.destinationUrl) {
         const a = document.createElement('a');
@@ -300,6 +311,7 @@
       tr.appendChild(tdMarket);
       tr.appendChild(tdAsin);
       tr.appendChild(tdTag);
+      tr.appendChild(tdDesc);
       tr.appendChild(tdDest);
       tr.appendChild(tdSource);
       body.appendChild(tr);
