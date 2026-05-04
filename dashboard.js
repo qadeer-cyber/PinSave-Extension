@@ -263,6 +263,17 @@
       const tdTag = document.createElement('td');
       tdTag.textContent = r.affiliateTag || '\u2014';
 
+      const tdTitle = document.createElement('td');
+      if (r.title) {
+        const span = document.createElement('span');
+        span.className = 'truncate';
+        span.title = r.title;
+        span.textContent = r.title;
+        tdTitle.appendChild(span);
+      } else {
+        tdTitle.textContent = '\u2014';
+      }
+
       const tdDesc = document.createElement('td');
       if (r.description) {
         const span = document.createElement('span');
@@ -311,6 +322,7 @@
       tr.appendChild(tdMarket);
       tr.appendChild(tdAsin);
       tr.appendChild(tdTag);
+      tr.appendChild(tdTitle);
       tr.appendChild(tdDesc);
       tr.appendChild(tdDest);
       tr.appendChild(tdSource);
@@ -345,7 +357,7 @@
   }
 
   function exportCsv(history) {
-    const headers = ['timestamp_iso', 'marketplace', 'domain', 'asin', 'affiliate_tag', 'destination_url', 'image_url', 'source_url', 'description'];
+    const headers = ['timestamp_iso', 'marketplace', 'domain', 'asin', 'affiliate_tag', 'title', 'description', 'destination_url', 'image_url', 'source_url'];
     const rows = [headers.join(',')];
     history.slice().sort(function (a, b) { return b.timestamp - a.timestamp; }).forEach(function (r) {
       rows.push([
@@ -354,10 +366,11 @@
         r.domain || '',
         r.asin || '',
         r.affiliateTag || '',
+        r.title || '',
+        r.description || '',
         r.destinationUrl || '',
         r.imageUrl || '',
-        r.sourceUrl || '',
-        r.description || ''
+        r.sourceUrl || ''
       ].map(csvEscape).join(','));
     });
     const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8' });
